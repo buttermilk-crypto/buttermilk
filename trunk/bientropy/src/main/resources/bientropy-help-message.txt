@@ -1,0 +1,71 @@
+Buttermilk BiEntropy Command Line Client
+------------------------------------------------------------------------------------------------
+
+Usage:
+
+java -jar bientropy.jar BIENTROPY
+			 -i|--item <string>
+			[-a|--armor hex|base16|base64|base64url|none]
+			[-f|--outputFormat json|csv|none]
+			[-s|--stdin]
+
+-i|--item 
+	a command line value to process (possibly in armored form)
+-a|--armor 
+	specifies the content encoding of the input items (for binary data) such as base64
+	use "none" for ascii text input
+[-f|--outputFormat json|csv|none]
+        the output format
+[-s|--stdin]
+        accept piped input.
+        
+    Example:
+        java -jar bientropyApp.jar bientropy -a base16 -f none -s < input.txt
+			
+For one byte, the BiEntropy algorithm variant will be used (Power Series).
+For multiple bytes, the TresBiEntropy algorithm variant will be used (Logarithmic Series).
+
+************************************************************************************************
+
+To generate some cryptographically strong random binary data:
+
+java -jar bientropy.jar RAND
+			 -l|--length
+			 -c| --count
+			[-a|--armor none|hex|base16|base64|base64url]
+			
+	Example:
+	     java -jar bientropyApp.jar rand -a hex -c 10 -l 32
+			
+************************************************************************************************
+			
+To show bits and see bientropy in a slightly different format:
+
+java -jar bientropy.jar SHOWBITS
+			 [-i|--item]
+			 --long|--columns
+			 [-s|--stdin]
+			 
+-i|--item 
+	a command line value to process (a UTF-8 encoded string)
+--long 
+	the long line format variant
+--column 
+	the columnar format variant
+[-s|--stdin]
+        accept piped input.
+        
+    Examples:
+    	java -jar bientropyApp.jar showbits --column --item="Hello"
+        java -jar bientropyApp.jar showbits --long -s < input.txt
+			
+			
+*************************************************************************************************
+
+NOTE ABOUT UTF-8 and Microsoft WINDOWS
+
+Console output and input is not going to work in all cases. Windows 7 Enterprise and Ultimate versions
+supports multiple language packs which would give UTF-8 support on the console. Other more recent versions
+might also do this. Apparently Home Premium (which I use) does not. However, the code works as expected when 
+run from within Eclipse Luna. 
+
