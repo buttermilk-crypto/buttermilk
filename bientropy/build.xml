@@ -1,0 +1,21 @@
+<project basedir="." default="build">
+	
+<property name="version" value="1.0"/>
+
+<target name="build">
+	
+	<mkdir dir="target/package"/>
+	<mkdir dir="target/package/license"/>
+	
+	 <copy todir="target/package/license">
+	    <fileset dir="license"/>
+	  </copy>
+	
+	<copy file="target/bientropyApp-jar-with-dependencies.jar" tofile="target/package/bientropyApp.jar"/>
+	
+	<zip destfile="bientropy-${version}.zip" basedir="target/package" update="true" />
+	
+ </target>
+	
+  
+</project>

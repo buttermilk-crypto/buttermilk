@@ -1,0 +1,45 @@
+{
+  "Version" : "Buttermilk Key Materials 1.0",
+  "RegHandle" : "Chinese Knees",
+  "Email" : "xxx",
+  "Contacts" : {
+    "6332cc23-be94-4e0b-b6b9-a64b58a9966d" : {
+      "contactType" : "Person",
+      "GivenName.0" : "DAVE",
+      "FamilyName.0" : "SMITH",
+      "Email.0" : "dave.smith10@gmail.com",
+      "MobilePhone.0" : "0123456789",
+      "Country" : "AU"
+    }
+  },
+  "Data" : {
+    "Local" : {
+      "0e592758-1786-457b-9db3-174be42546f9" : {
+        "Copyright" : "Copyright 2015 by DAVE SMITH. All Rights Reserved",
+        "TermsOfServiceAgreement" : "I agree to cryptoregistry.com's Terms of Service",
+        "InfoAffirmation" : "I affirm the information I have entered is valid and correct."
+      }
+    }
+  },
+  "Keys" : {
+    "fc58ffdc-e043-4d31-9a99-203763312333-P" : {
+      "KeyAlgorithm" : "RSA",
+      "CreatedOn" : "2015-06-22T10:00:08+0000",
+      "Encoding" : "Base64url",
+      "Strength" : "2048",
+      "Modulus" : "AO11Kz23GmIApYEjcHyNxk3tACAf3jIdyKUzSIfvAXi3OjhqxWBQAM7kivdJvndldX9sFaJy-Q701zPdoFS3Y0kIzXSMf2seELxeGhplyggC7MQiVApciSwO0qxBee2UOccOlENx2diOBKBc-7RUlT3deshW3-Q6X7sWAMRN-RDhDTg-QZi66qIUWsbwgaA_OmuQUYAxfk30l0P-eYQKyOYHnyRvKeE7tsl2sLsmnYAbzOMBc0e_iaKXMwHj0ciL3opQA2xGVzml9fCKP4neG_moXj7haeZBKFir9mLgsZpuQJZzXd0VaVYQDGf-wmquGr5IGxvEXi8ZO0wqTXDZ5tM=",
+      "PublicExponent" : "EQ=="
+    }
+  },
+  "Signatures" : {
+    "996d11bd-dccf-4fdc-a111-7743b98c04d1" : {
+      "CreatedOn" : "2015-06-22T10:00:42+0000",
+      "SignedWith" : "fc58ffdc-e043-4d31-9a99-203763312333",
+      "SignedBy" : "Chinese Knees",
+      "SignatureAlgorithm" : "RSA",
+      "DigestAlgorithm" : "SHA-256",
+      "s" : "rtYhnoy-rXzK6xoHDWLe_XRD3nQj_ufgA4QIqmkksUnPZmHAUjwjtDAyXDNRGht3T0eGAJmrzw6zKPjj79Qp1Ow44TQ_pdogfGbZEMNCg4TxW9o5geZIS32NoItY4xBI2tndGBYv1gKzaknluAgkI5uw5qQDMw0C5t2mE3xcNe20fylD98YxTx48nyPU4MqsvepuWBv55Kq861KVwaUs9pIe0NFt4QAuPk5RvJtkgjEtnXyvA_K0q6yaA8UK2IC8cxMq1hScYmUM4XN2t4NRQfBfPhhL-RWf16msJoRRU7MNyQ1exD8URD26ElxDcxbgQApAeRVK1hq9ii_10-TLaQ==",
+      "DataRefs" : "996d11bd-dccf-4fdc-a111-7743b98c04d1:SignedBy, .SignedWith, fc58ffdc-e043-4d31-9a99-203763312333:Handle, .CreatedOn, .KeyAlgorithm, .Modulus, .PublicExponent, 6332cc23-be94-4e0b-b6b9-a64b58a9966d:contactType, .GivenName.0, .FamilyName.0, .Email.0, .MobilePhone.0, .Country, 0e592758-1786-457b-9db3-174be42546f9:Copyright, .TermsOfServiceAgreement, .InfoAffirmation"
+    }
+  }
+}
