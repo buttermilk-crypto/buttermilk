@@ -21,9 +21,10 @@ import com.cryptoregistry.protos.Frame.AuthenticatedStringProto;
 import com.cryptoregistry.symmetric.AESCBCPKCS7;
 
 /**
- * Collector runs as a different thread and gathers bytes from the underlying incoming stream 
+ * <p>Collector runs as a different thread and gathers bytes from the underlying incoming stream 
  * which has been wrapped by a FrameInputStream. The bytes are in the form of frames which must be
- * decoded or decrypted. 
+ * decoded or decrypted. Using a different thread helps to provide for consumption of bytes on
+ * the main thread while collection (e.g., decryption) might be going using the other.</p>
  * 
  * @author Dave
  *

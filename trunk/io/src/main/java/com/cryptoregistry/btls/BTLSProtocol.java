@@ -6,7 +6,7 @@
 package com.cryptoregistry.btls;
 
 /**
- * BTLSProtocol defines various constants and code values used in the protocol 
+ * BTLSProtocol defines various constants and code values used in the security protocol 
  * 
  * @author Dave
  *
@@ -17,7 +17,6 @@ public class BTLSProtocol {
 	public final static int ALERT = 10;
 	public final static int APPLICATION = 11;
 	public final static int HANDSHAKE = 12;
-	public final static int HEARTBEAT = 14;
 	
 	public final static int STRING = 24;
 	
