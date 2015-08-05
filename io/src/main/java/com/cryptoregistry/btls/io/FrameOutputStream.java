@@ -122,7 +122,8 @@ public class FrameOutputStream extends FilterOutputStream {
 	}
 	
 	/**
-	 * Send a frame as data on the encrypted stream
+	 * Send a frame as data on the encrypted stream. This is using the frame concept on
+	 * top of the encrypted channel.
 	 * 
 	 * @param frame
 	 * @throws IOException
