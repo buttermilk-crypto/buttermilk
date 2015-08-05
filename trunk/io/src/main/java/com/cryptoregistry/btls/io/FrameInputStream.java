@@ -17,7 +17,29 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.cryptoregistry.btls.BTLSProtocol;
+import com.cryptoregistry.protocol.frame.StringFrameReader;
 
+/**
+ * FrameInputStream parses the BTLs Protocol frames coming over the underlying InputStream. A
+ * Collector is used to do some of this work on a different thread. What it does is to unpackage
+ * byte arrays from the frames and push them into a blocking queue. The FrameInputStream then has
+ * the simple task of pulling a unified stream of bytes from the byte arrays it sequentially
+ * consumes out of the BlockingQueue. Currently the BlockingQueue is an ArrayBlockingQueue with
+ * a 1024 size. This is not a byte capacity but a byte array capacity. It basically means the
+ * Collector can read ahead by 1024 frames prior to blocking. Because the collector is doing the
+ * hard work of decryption, it is conjectured that this capacity will rarely be met if the 
+ * FrameInputStream is being steadily drained. 
+ * 
+ * FrameInputStream provides the normal read() input methods as well as some frame reading methods. 
+ * 
+ * "Frames" are essentially Google ProtocolBuffers prepended with a type code and a length as
+ * a header. See the frames package for more details.
+ * 
+ * @author Dave
+ * @see Collector
+ *
+ */
 public class FrameInputStream extends FilterInputStream implements FrameEventConsumer {
 	
 	static final Logger logger = LogManager.getLogger(FrameInputStream.class.getName());
@@ -47,6 +69,20 @@ public class FrameInputStream extends FilterInputStream implements FrameEventCon
 	public void start(){
 		collectorThread = new Thread(collector);
 		collectorThread.start();
+	}
+	
+	/**
+	 * For this call to work the FrameOutputStream must have actually sent a StringOutputFrame:
+	 * 
+	 * byte0 = BTLSProtocol.STRING
+	 * byte1-5 = integer length of the StringProto data
+	 * remainder = StringProto data
+	 *  
+	 * @return
+	 */
+	public String readStringFrame() {
+		StringFrameReader sr = new StringFrameReader(BTLSProtocol.STRING);
+		return sr.read(this);
 	}
 
 	/**
@@ -194,6 +230,9 @@ public class FrameInputStream extends FilterInputStream implements FrameEventCon
 		}
 	}
 	
+	/**
+	 * Return what is in the current source byte array. 
+	 */
 	@Override
 	public int available() throws IOException {
 		if(currentSource == null || currentSource.length==0) return 0;

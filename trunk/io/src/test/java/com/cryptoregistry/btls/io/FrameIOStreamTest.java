@@ -11,6 +11,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.cryptoregistry.btls.BTLSProtocol;
+import com.cryptoregistry.protocol.frame.StringOutputFrame;
 
 public class FrameIOStreamTest implements AlertListener {
 	
@@ -232,8 +233,6 @@ public class FrameIOStreamTest implements AlertListener {
 		byte [] buf = new byte[1024];
 		int ct = 0;
 		try {
-			
-		
 			while((ct = fin.read(buf)) != -1) {
 					byte [] got = new byte[ct];
 					System.arraycopy(buf, 0, got, 0, ct);
@@ -249,4 +248,50 @@ public class FrameIOStreamTest implements AlertListener {
 		
 		Assert.assertEquals(length, collectorBytes.length);
 	}
+	
+	
+	@Test
+	public void testReadStringFrame() {
+		
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		String expected = "Hello", actual = "";
+		String expected1 = "普通话/普通話", actual1 = "";
+		StringOutputFrame frame = new StringOutputFrame(BTLSProtocol.STRING, expected);
+		StringOutputFrame frame1 = 
+				new StringOutputFrame(
+						BTLSProtocol.STRING, 
+						StandardCharsets.UTF_8, 
+						expected1.getBytes(StandardCharsets.UTF_8)
+				);
+		
+		try (
+			FrameOutputStream fout = new FrameOutputStream(out,key,iv);
+		){
+			fout.writeFrameContents(frame);
+			fout.writeFrameContents(frame1);
+			fout.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+	
+		try (
+			FrameInputStream fin = new FrameInputStream(in,key);
+		){
+			fin.start();
+			fin.addAlertListener(this);
+			actual = fin.readStringFrame();
+			actual1 = fin.readStringFrame();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		Assert.assertEquals(expected, actual);
+		Assert.assertEquals(expected1, actual1);
+		
+	}
+	
+	
 }
