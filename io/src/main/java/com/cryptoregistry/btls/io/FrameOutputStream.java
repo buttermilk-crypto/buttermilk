@@ -358,6 +358,13 @@ public class FrameOutputStream extends FilterOutputStream {
 		IVPerFrame = iVPerFrame;
 	}
 
+	/**
+	 * Return the number of bytes written so far via the write() methods. This does
+	 * not take into account flushing (is not a measure of what was sent). It only
+	 * measures what has been fed in
+	 * 
+	 * @return
+	 */
 	public int getCount() {
 		return count;
 	}

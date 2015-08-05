@@ -32,7 +32,7 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>com.cryptoregistry.protocol</groupId>
+			<groupId>com.cryptoregistry</groupId>
 			<artifactId>frame</artifactId>
 			<version>1.0.0</version>
 		</dependency>
