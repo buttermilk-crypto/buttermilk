@@ -279,7 +279,7 @@ public class FrameOutputStream extends FilterOutputStream {
 			// get the encrypted bytes
 			byte [] payload = buffer.toByteArray();
 			
-			// make a mac of the bytes
+			// make a mac of the encrypted bytes
 			HMac mac = new HMac(digest);
 			mac.init(macParam);
 			mac.update(payload, 0, payload.length);

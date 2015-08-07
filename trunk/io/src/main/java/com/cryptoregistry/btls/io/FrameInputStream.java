@@ -52,7 +52,7 @@ public class FrameInputStream extends FilterInputStream implements FrameEventCon
 	private byte [] currentSource;
 	private int index = 0;
 	
-	final int POLLING_TIMEOUT_SECS = 30;
+	final int POLLING_TIMEOUT_SECS = 300;
 	
 	private Set<AlertListener> alertListeners;
 	
