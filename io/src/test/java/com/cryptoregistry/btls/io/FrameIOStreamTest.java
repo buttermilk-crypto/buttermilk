@@ -2,10 +2,15 @@ package com.cryptoregistry.btls.io;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Arrays;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,6 +29,44 @@ public class FrameIOStreamTest implements AlertListener {
 		0x24,0x25,0x26,0x27,0x28,0x29,0x30,0x32
 	};
 	
+	@Test
+	public void testSmallBuffer() {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		FrameOutputStream fout = new FrameOutputStream(out,key,iv);
+		String hello0 = "Hi there, how are you?";
+		byte [] inputBytes = hello0.getBytes(StandardCharsets.UTF_8);
+		try {
+			fout.write(inputBytes);
+			fout.flush();
+			fout.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+		FrameInputStream fin = new FrameInputStream(in,key);
+		fin.addAlertListener(this);
+		fin.start();
+		StringBuffer mybuf = new StringBuffer();
+		byte [] buf = new byte[8];
+		int ct = 0;
+		try {
+			
+			while((ct = fin.read(buf)) != -1){
+					byte [] got = new byte[ct];
+					System.arraycopy(buf, 0, got, 0, ct);
+					mybuf.append(new String(got, "UTF-8"));
+			}
+		
+			fin.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		Assert.assertEquals(hello0, mybuf.toString());
+		
+	}
 	
 	
 	@Test
@@ -113,44 +156,7 @@ public class FrameIOStreamTest implements AlertListener {
 		
 	}
 	
-	@Test
-	public void testSmallBuffer() {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		FrameOutputStream fout = new FrameOutputStream(out,key,iv);
-		String hello0 = "Hi there, how are you?";
-		byte [] inputBytes = hello0.getBytes(StandardCharsets.UTF_8);
-		try {
-			fout.write(inputBytes);
-			fout.flush();
-			fout.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-		FrameInputStream fin = new FrameInputStream(in,key);
-		fin.addAlertListener(this);
-		fin.start();
-		StringBuffer mybuf = new StringBuffer();
-		byte [] buf = new byte[8];
-		int ct = 0;
-		try {
-			
-			while((ct = fin.read(buf)) != -1){
-					byte [] got = new byte[ct];
-					System.arraycopy(buf, 0, got, 0, ct);
-					mybuf.append(new String(got, "UTF-8"));
-			}
-		
-			fin.close();
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		Assert.assertEquals(hello0, mybuf.toString());
-		
-	}
+	
 	
 	
 
@@ -293,5 +299,92 @@ public class FrameIOStreamTest implements AlertListener {
 		
 	}
 	
+	@Test
+	public void testCollectRoutine1() {
+		byte [] bytesInBranch1 = "Hello World Collector".getBytes();
+		ByteArrayInputStream in = new ByteArrayInputStream(bytesInBranch1);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try {
+			collect(in,out,bytesInBranch1.length);
+			byte [] result = out.toByteArray();
+			Assert.assertTrue(Arrays.equals(bytesInBranch1,result));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testCollectRoutine2() throws IOException {
+		byte [] bytesInBranch2 = Files.readAllBytes(new File("./src/test/resources/firstlensman.txt").toPath());
+		ByteArrayInputStream in = new ByteArrayInputStream(bytesInBranch2);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try {
+			collect(in,out,bytesInBranch2.length);
+			byte [] result = out.toByteArray();
+			Assert.assertTrue(Arrays.equals(bytesInBranch2,result));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	/**
+	 * get length bytes from "in" and write those to the output stream called "collector"
+	 * 
+	 * @param in
+	 * @param collector
+	 * @param length
+	 * @throws IOException
+	 */
+	private final void collect(InputStream in, OutputStream collector, int length)
+			throws IOException {
+		
+		int SMALL_BUF_SIZE = 1024;
+		BigDecimal szBd = new BigDecimal(SMALL_BUF_SIZE);
+		
+		// if length is small then just fill one buffer. If length is large, run a loop to fill the buffer repeatedly
+		if(length<=SMALL_BUF_SIZE){
+			byte [] buf = new byte[length];
+			readFully(in, buf,0,length);
+			collector.write(buf,0,buf.length);
+		//	mac.update(buf, 0, buf.length);
+		}else{
+			
+			BigDecimal szLength = new BigDecimal(length);
+			BigDecimal [] result = szLength.divideAndRemainder(szBd);
+			int loopCount = result[0].intValue();
+			int rem = result[1].intValue();
+			byte [] buf = new byte[SMALL_BUF_SIZE];
+			
+			// loop for loopCount iterations
+			for(int i = 0;i<loopCount;i++){
+				readFully(in, buf,0,SMALL_BUF_SIZE);
+				collector.write(buf,0,buf.length);
+			//	mac.update(buf, 0, buf.length);
+			}
+			// now collect the remainder
+			buf = new byte[rem];
+			readFully(in, buf,0,rem);
+			collector.write(buf,0,buf.length);
+		//	mac.update(buf, 0, buf.length);
+			
+			collector.flush();
+		}
+	}
+	
+	private final void readFully(InputStream in, byte [] buf, int off, int len)
+			throws IOException {
+		if (len < 0)
+			throw new IndexOutOfBoundsException();
+		int n = 0;
+		while (n < len) {
+			int count = in.read(buf, off + n, len - n);
+			if (count < 0)
+				throw new EOFException();
+			n += count;
+		}
+	}
 	
 }

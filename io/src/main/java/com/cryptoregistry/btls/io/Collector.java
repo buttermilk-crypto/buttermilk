@@ -1,8 +1,11 @@
 package com.cryptoregistry.btls.io;
 
+import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
@@ -10,7 +13,11 @@ import java.util.concurrent.BlockingQueue;
 
 import x.org.bouncycastle.crypto.Digest;
 import x.org.bouncycastle.crypto.digests.SHA256Digest;
+import x.org.bouncycastle.crypto.engines.AESFastEngine;
+import x.org.bouncycastle.crypto.io.CipherOutputStream;
 import x.org.bouncycastle.crypto.macs.HMac;
+import x.org.bouncycastle.crypto.modes.CBCBlockCipher;
+import x.org.bouncycastle.crypto.paddings.PKCS7Padding;
 import x.org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
 import x.org.bouncycastle.crypto.params.KeyParameter;
 import x.org.bouncycastle.crypto.params.ParametersWithIV;
@@ -18,7 +25,6 @@ import x.org.bouncycastle.crypto.params.ParametersWithIV;
 import com.cryptoregistry.btls.BTLSProtocol;
 import com.cryptoregistry.proto.reader.AuthenticatedStringProtoReader;
 import com.cryptoregistry.protos.Frame.AuthenticatedStringProto;
-import com.cryptoregistry.symmetric.AESCBCPKCS7;
 
 /**
  * <p>Collector runs as a different thread and gathers bytes from the underlying incoming stream 
@@ -31,10 +37,12 @@ import com.cryptoregistry.symmetric.AESCBCPKCS7;
  */
 public class Collector implements Runnable {
 	
-	final byte [] key;
 	protected ParametersWithIV params;
-	protected KeyParameter hmacParam;
+	
+	final byte [] key;
+	final KeyParameter hmacParam;
 	final Digest digest;
+	final HMac mac;
 	protected PaddedBufferedBlockCipher aesCipher;
 
 	final BlockingQueue<byte[]> queue;
@@ -44,14 +52,18 @@ public class Collector implements Runnable {
 	boolean running;
 	protected Exception exception;
 	
-	final int COLLECTOR_PAUSE_MILLISEC = 10;
+	static final int COLLECTOR_PAUSE_MILLISEC = 10;
+	static final int SMALL_BUF_SIZE = 1024;
+	static final BigDecimal szBd = new BigDecimal(SMALL_BUF_SIZE);
 	
 	public Collector(FrameEventConsumer frameInputStream) {
 		this.queue= frameInputStream.queue();
 		this.in = frameInputStream.in();
 		this.key = frameInputStream.key();
+		this.hmacParam = new KeyParameter(key,0,key.length);
 		this.alertListeners = frameInputStream.alertListeners();
 		this.digest = new SHA256Digest();
+		this.mac = this.createHMac(hmacParam);
 	}
 
 	@Override
@@ -65,6 +77,7 @@ public class Collector implements Runnable {
 			} catch (Exception e) {
 				running = false;
 				exception=e;
+				e.printStackTrace();
 			}
 		}
 		running = false;
@@ -100,7 +113,7 @@ public class Collector implements Runnable {
 					AuthenticatedStringProtoReader aspr = new AuthenticatedStringProtoReader(asp);
 					String alertText = aspr.read();
 					byte [] hmacBytes = asp.getHmac().toByteArray();
-					hmacParam = new KeyParameter(key,0,key.length);
+				//	hmacParam = new KeyParameter(key,0,key.length);
 					
 					if(!validateHMac(hmacParam, hmacBytes, alertText.getBytes("UTF-8"))) {
 						throw new SecurityException("Alert Frame appears to have been tampered with...bailing out.");
@@ -127,31 +140,35 @@ public class Collector implements Runnable {
 					
 					// second there is the encrypted contents, max length is Integer.MAX_VALUE, about 2.15Gb
 					int contentsSz = this.readInt32(in);
-					byte [] contents = new byte[contentsSz];
-					this.readFully(in, contents, 0, contentsSz);
+					
+					// collect the encrypted contents and decrypt as we collect it
+					
+					ByteArrayOutputStream collectorStream = new ByteArrayOutputStream(contentsSz);
+					CBCBlockCipher blockCipher = new CBCBlockCipher(new AESFastEngine());
+					aesCipher = new PaddedBufferedBlockCipher(blockCipher, new PKCS7Padding());
+					aesCipher.init(false, buildKey(key,iv));
+					CipherOutputStream collector = new CipherOutputStream(collectorStream,aesCipher);
+					
+					this.collect(in, collector, contentsSz);
+					byte [] contents = collectorStream.toByteArray();
 					
 					// third, validate
 					int macSz = this.readShort16(in);
 					if(macSz == 0) break;// bail if no hmac provided
-					hmacParam = new KeyParameter(key,0,key.length);
+				
 					byte [] hmacBytes = new byte[macSz];
 					this.readFully(in, hmacBytes, 0, macSz);
-					if(!validateHMac(hmacParam, hmacBytes, contents)) {
-						throw new SecurityException("Application Frame appears to have been tampered with...bailing out.");
+					
+					byte [] hmacCollected = new byte[mac.getMacSize()];
+					
+					mac.doFinal(hmacCollected, 0);
+					if(Arrays.equals(hmacBytes, hmacCollected)) {
+						// all good
 					}else{
-					//	System.err.println("validation of hmac successful!");
+						throw new SecurityException("HMac does not match - Application Frame appears to have been tampered with...bailing out.");
 					}
 					
-					// we've passed validation, decrypt
-					
-					// use the iv from the message along with the key to initialize the cipher
-					params = buildKey(key,iv);
-					
-					//decrypt
-					AESCBCPKCS7 aes = new AESCBCPKCS7(key,iv);
-					byte [] unencrypted = aes.decrypt(contents);
-					
-					queue.put(unencrypted);
+					queue.put(contents);
 				
 					break;
 				}
@@ -195,17 +212,70 @@ public class Collector implements Runnable {
 		return ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
 	}
 	
-	private final void readFully(InputStream in, byte b[], int off, int len)
+	/**
+	 * Fill the buf array. Blocks if required
+	 * @param in
+	 * @param buf
+	 * @param off
+	 * @param len
+	 * @throws IOException
+	 */
+	private final void readFully(InputStream in, byte [] buf, int off, int len)
 			throws IOException {
 		if (len < 0)
 			throw new IndexOutOfBoundsException();
 		int n = 0;
 		while (n < len) {
-			int count = in.read(b, off + n, len - n);
+			int count = in.read(buf, off + n, len - n);
 			if (count < 0)
 				throw new EOFException();
 			n += count;
 		}
+	}
+	
+	/**
+	 * get length bytes from "in" and write those to the output stream called "collector"
+	 * 
+	 * @param in
+	 * @param collector
+	 * @param length
+	 * @throws IOException
+	 */
+	private final void collect(InputStream in, OutputStream collector, int length)
+			throws IOException {
+		
+		// if length is small then just fill one buffer. If length is large, run a loop to fill the buffer repeatedly
+		if(length<=SMALL_BUF_SIZE){
+			byte [] buf = new byte[length];
+			readFully(in, buf,0,length);
+			collector.write(buf,0,buf.length);
+			collector.flush();
+			collector.close(); //needed to call doFinal
+			mac.update(buf, 0, buf.length);
+		}else{
+			
+			BigDecimal szLength = new BigDecimal(length);
+			BigDecimal [] result = szLength.divideAndRemainder(szBd);
+			int loopCount = result[0].intValue();
+			int rem = result[1].intValue();
+			byte [] buf = new byte[SMALL_BUF_SIZE];
+			
+			// loop for loopCount iterations
+			for(int i = 0;i<loopCount;i++){
+				readFully(in, buf,0,SMALL_BUF_SIZE);
+				collector.write(buf,0,buf.length);
+				mac.update(buf, 0, buf.length);
+			}
+			// now collect the remainder
+			buf = new byte[rem];
+			readFully(in, buf,0,rem);
+			collector.write(buf,0,buf.length);
+			mac.update(buf, 0, buf.length);
+			
+			collector.flush();
+			collector.close();
+		}
+		
 	}
 	
 	private final boolean validateHMac(KeyParameter kp, byte [] hmac, byte [] contents){
@@ -215,6 +285,13 @@ public class Collector implements Runnable {
 		byte [] result = new byte[hmac.length];
 		mac.doFinal(result, 0);
 		return Arrays.equals(hmac, result);
+	}
+	
+	
+	private final HMac createHMac(KeyParameter kp){
+		HMac mac = new HMac(digest);
+		mac.init(kp);
+		return mac;
 	}
 	
 	private final ParametersWithIV buildKey(byte [] key, byte[] iv) {
