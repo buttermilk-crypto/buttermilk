@@ -14,7 +14,7 @@ import com.cryptoregistry.proto.builder.StringProtoBuilder;
 
 /**
  * StringOutputFrames have a max length payload of Integer.MAX_LENGTH. The String encoding may be of 
- * any Charset which is valid on the sending and receiving systems. 
+ * any Charset which is valid on both of the sending and receiving systems. 
  * 
  * @author Dave
  *

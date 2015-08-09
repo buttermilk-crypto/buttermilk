@@ -3,39 +3,52 @@ package com.cryptoregistry.protocol.frame;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 import com.cryptoregistry.proto.reader.StringProtoReader;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class StringFrameReader extends InputFrameBase {
+/**
+ * Expects a String frame which contains a valid JSON that needs parsing
+ * 
+ * @author Dave
+ *
+ */
+public class JSONFrameReader extends InputFrameBase {
 
 	final int expectedCode;
 	
-	public StringFrameReader(int expectedCode) {
+	public JSONFrameReader(int expectedCode) {
 		this.expectedCode=expectedCode;
 	}
 	
-	public String readFromBytes(byte [] bytes) {
+	@SuppressWarnings("unchecked")
+	public Map<String,Object> readFromBytes(byte [] bytes) {
 		try {
 			int code = bytes[0];
 			if(code != expectedCode){
 				throw new RuntimeException("Not expected code: "+code);
 			}
-			byte [] four = new byte [4];
-			System.arraycopy(bytes, 1, four, 0, 4);
-			int length = this.intFromBytes(four);
+			
+			int length = this.intFromBytes(bytes,1);
+			System.out.println("Length from StringFrameReader:"+length);
 			if(length < 0){
 				throw new EOFException();
 			}
 			byte [] buf = new byte[length];
 			System.arraycopy(bytes, 5, buf, 0, length);
 			StringProtoReader reader = new StringProtoReader(buf);
-			return reader.read();
+			String json = reader.read();
+			ObjectMapper mapper = new ObjectMapper();
+			return mapper.readValue(json, Map.class);
+			
 		}catch(IOException x) {
 			throw new RuntimeException(x);
 		}
 	}
 	
-	public String read(InputStream in) {
+	@SuppressWarnings("unchecked")
+	public Map<String,Object> read(InputStream in) {
 		try {
 			int code = in.read();
 			if(code != expectedCode){
@@ -50,7 +63,9 @@ public class StringFrameReader extends InputFrameBase {
 			byte [] buf = new byte[length];
 			in.read(buf, 0, length);
 			StringProtoReader reader = new StringProtoReader(buf);
-			return reader.read();
+			String json = reader.read();
+			ObjectMapper mapper = new ObjectMapper();
+			return mapper.readValue(json, Map.class);
 		}catch(IOException x) {
 			throw new RuntimeException(x);
 		}

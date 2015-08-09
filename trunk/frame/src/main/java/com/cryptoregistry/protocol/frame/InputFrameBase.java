@@ -58,23 +58,19 @@ public class InputFrameBase {
 		return ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
 	}
 	
-	public final int intFromBytes(byte [] bytes) throws IOException {
+	public final int intFromBytes(byte [] bytes) {
 		int ch1 = bytes[0];
 		int ch2 = bytes[1];
 		int ch3 = bytes[2];
 		int ch4 = bytes[3];
-		if ((ch1 | ch2 | ch3 | ch4) < 0)
-			throw new EOFException();
 		return ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
 	}
 	
-	public final int intFromBytes(byte [] bytes, int off) throws IOException {
+	public final int intFromBytes(byte [] bytes, int off) {
 		int ch1 = bytes[0+off];
 		int ch2 = bytes[1+off];
 		int ch3 = bytes[2+off];
 		int ch4 = bytes[3+off];
-		if ((ch1 | ch2 | ch3 | ch4) < 0)
-			throw new EOFException();
 		return ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
 	}
 
