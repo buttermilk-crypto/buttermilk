@@ -1,0 +1,155 @@
+bTLS 1.0 protocol description
+
+Handshake #1 - Basic Handshake with two parties (no third party) and no key caching, JSON encoded
+Asymmetric Algorithm:  Curve25519
+Shared Secret: Diffie-Hellman 256 bit key, digested with SHA-256 prior to use
+Sample Data Encryption Algorithm: AESCBCPKCS7 with 256 bit key
+
+
+Exchange 1) Client sends client CONNECT-SECURE request:
+
+{
+  "Version" : "bTLS 1.0",
+  "Request" : "CONNECT-SECURE",
+  "HandshakeNumber" : "1" 
+  "RegHandle" : "Chinese Eyes",
+  "Keys" : {
+    "b7a90f74-1b8d-478e-b169-79ce5611864b-P" : {
+      "KeyAlgorithm" : "Curve25519",
+      "CreatedOn" : "2015-07-15T04:57:07+0000",
+      "Encoding" : "Base64url",
+      "P" : "StY0Zs7CQNM7ZXOrZhFCeA5Mg3Dr-7vMkJMGARJOd3Q="
+    }
+  }
+}
+
+Server responds with either "OK" and the Server's intended key...
+
+{
+  "Version" : "bTLS 1.0",
+  "Response" : "OK",
+  "RegHandle" : "cryptoregistry.com",
+  "Keys" : {
+    "ae826dc5-bd2c-4f74-bf25-47c4b8bdbe3c-P" : {
+         "KeyAlgorithm" : "Curve25519",
+         "CreatedOn" : "2015-07-15T04:54:14+0000",
+         "Encoding" : "Base64url",
+      	 "P" : "9hBysueNKkfbbE9s6ZEWrqxp7m-58hpQH4t7Nu2n4To="
+    }
+  }
+}
+
+...Or "Rejected" and a human readable error message
+
+{
+  "Version" : "bTLS 1.0",
+  "Response" : "Rejected",
+  "ErrorCode" : 2,
+  "ErrorMsg" : "You are persona non grata"
+}
+
+exchange 2)
+
+Assuming server response was "OK", Client and Server now each have two keys. Client performs Diffie-Hellman and creates a 256 bit secret key. 
+Client generates 32 random bytes and encrypts them, then base64url encodes them. Client then sends the following:
+
+
+{
+  "Version" : "bTLS 1.0",
+  "Request" : "CONFIRM-ENCRYPT",
+  "HandshakeNumber" : "1" 
+  "RegHandle" : "Chinese Eyes",
+   "Data" : {
+      "Local" : {
+        "3cfd0ec2-c667-440b-b90b-44203060a54e" : {
+          "Sample.Data" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "Sample.Data.Encrypted" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "Sample.Size" : "32",
+          "Sample.Encoding" : "Base64url",
+          "EncryptionAlg" : "AES/CBC/PKCS7Padding"
+        }
+      }
+  }
+}
+
+Validate that the UUID has not been seen before.
+
+On receipt of the message, the Server now performs Diffie-Hellman as well. The server then validates the encryption by decrypting
+the sample the client sent and comparing that to the Sample.Data. 
+
+If this routine fails, the server sends the following and terminates the socket:
+
+{
+  "Version" : "bTLS 1.0",
+  "Response" : "Rejected",
+  "ErrorCode" : 3,
+  "ErrorMsg" : "Encryption check failed, terminating socket"
+}
+
+If the client encryption check is successful, the process above is now repeated by the server, who sends this message to the client using
+freshly generated random bytes:
+
+{
+  "Version" : "bTLS 1.0",
+  "Request" : "CONFIRM-ENCRYPT",
+  "HandshakeNumber" : "1" 
+  "RegHandle" : "cryptoregistry.com",
+   "Data" : {
+      "Local" : {
+        "3cfd0ec2-c667-440b-b90b-44203060a54e" : {
+          "Sample.Data" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "Sample.Data.Encrypted" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "Sample.Size" : "32",
+          "Sample.Encoding" : "Base64url",
+          "EncryptionAlg" : "AES/CBC/PKCS7Padding"
+        }
+      }
+  }
+}
+
+On receipt of the message, the Client now validates the encryption by decrypting the sample the Server sent and comparing that to the Sample.Data. 
+If the Client confirmation of the Server's data fails, the client should close the socket. 
+
+
+Exchange #3)
+
+Assuming the above has been successful, the client now sends the server an HMac of the all bytes the client has sent the server up until now. The
+HMac is constructed using the secret key:
+
+{
+  "Version" : "bTLS 1.0",
+  "Request" : "CONFIRM-HMAC",
+  "HandshakeNumber" : "1" 
+  "RegHandle" : "Chinese Eyes",
+   "Data" : {
+      "Local" : {
+        "3cfd0ec2-c667-440b-b90b-44203060a54e" : {
+          "HMac" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "Encoding" : "Base64url",
+          "EncryptionAlg" : ""
+        }
+      }
+  }
+}
+
+The Server now validates this HMac. If successful, the Server now repeats the process with all the bytes it has sent the Client:
+
+{
+  "Version" : "bTLS 1.0",
+  "Request" : "CONFIRM-HMAC",
+  "HandshakeNumber" : "1" 
+  "RegHandle" : "cryptoregistry.com",
+   "Data" : {
+      "Local" : {
+        "3cfd0ec2-c667-440b-b90b-44203060a54e" : {
+          "HMac" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "Encoding" : "Base64url",
+          "EncryptionAlg" : ""
+        }
+      }
+  }
+}
+
+At this point, both Client and server switch to secure mode. Any additional bytes must pass through a FrameOutputStream and be
+processed by a FrameInputStream.
+

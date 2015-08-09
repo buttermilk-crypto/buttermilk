@@ -16,7 +16,13 @@
 		<dependency>
 			<groupId>com.cryptoregistry</groupId>
 			<artifactId>buttermilk-core</artifactId>
-			<version>1.0.0</version>
+			<version>LATEST</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.cryptoregistry</groupId>
+			<artifactId>frame</artifactId>
+			<version>LATEST</version>
 		</dependency>
 		
 		<dependency>

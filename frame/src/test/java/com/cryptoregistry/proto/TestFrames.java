@@ -11,10 +11,11 @@ public class TestFrames {
 
 	@Test
 	public void test0() {
-		String inVal = "Hello";
+		// long enough to use more than one byte to express length
+		String inVal = "Hello, this is a string. Hello, this is a string. Hello, this is a string. "+
+				"Hello, this is a string. Hello, this is a string.";
 		StringOutputFrame frame = new StringOutputFrame(24,inVal);
 		byte [] bytes = frame.outputFrameContents();
-		System.err.println(bytes.length);
 		ByteArrayInputStream in = new ByteArrayInputStream(bytes);
 		StringFrameReader reader = new StringFrameReader(24);
 		String outVal = reader.read(in);

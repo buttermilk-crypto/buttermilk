@@ -23,7 +23,7 @@ public class StringProtoReader {
 		try {
 			this.proto = StringProto.parseFrom(bytes);
 		} catch (InvalidProtocolBufferException e) {
-			throw new RuntimeException("StringProto failed to initialize");
+			throw new RuntimeException(e);
 		}
 	}
 
