@@ -15,7 +15,7 @@ import com.cryptoregistry.MapData;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 
-class MapDataFormatter {
+public class MapDataFormatter {
 
 	private List<MapData> mapData;
 

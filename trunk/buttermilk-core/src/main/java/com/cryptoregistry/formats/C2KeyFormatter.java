@@ -22,7 +22,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 
-class C2KeyFormatter {
+public class C2KeyFormatter {
 
 	protected final Curve25519KeyForPublication c2Keys;
 	protected final KeyFormat format;
