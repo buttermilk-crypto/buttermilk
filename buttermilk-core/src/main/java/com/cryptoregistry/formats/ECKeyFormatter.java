@@ -25,7 +25,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 
-class ECKeyFormatter {
+public class ECKeyFormatter {
 
 	protected ECKeyForPublication ecKeys;
 	protected final KeyFormat format;
