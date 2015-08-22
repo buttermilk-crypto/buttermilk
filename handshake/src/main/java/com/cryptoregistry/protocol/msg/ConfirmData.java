@@ -1,4 +1,4 @@
-package com.cryptoregistry.protocol;
+package com.cryptoregistry.protocol.msg;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -6,32 +6,32 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.cryptoregistry.MapData;
 import com.cryptoregistry.formats.MapDataFormatter;
+import com.cryptoregistry.protocol.BTLSData;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 
 /**
 <pre>
-Client sends client CONFIRM-ENCRYPT request:
+Client sends server CONFIRM-ENCRYPT request:
 
 {
   "Version" : "bTLS 1.0",
-  "Request" : "CONFIRM-ENCRYPT",
-  "HandshakeNumber" : "1" 
   "RegHandle" : "Chinese Eyes",
    "Data" : {
       "Local" : {
         "3cfd0ec2-c667-440b-b90b-44203060a54e" : {
+          "Action" : "CONFIRM-ENCRYPT",
           "Sample.Data" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
           "Sample.Data.Encrypted" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-          "Sample.Size" : "32",
           "Sample.Encoding" : "Base64url",
           "EncryptionAlg" : "AES/CBC/PKCS7Padding"
         }
       }
   }
 }
+
+Server checks data. 
 
 
 </pre>
@@ -40,10 +40,12 @@ Client sends client CONFIRM-ENCRYPT request:
  */
 public class ConfirmData {
 	
+	// just for the header
 	final Map<String,String> attributes;
-	final MapData data;
+	// specific data embedded here
+	final BTLSData data;
 	
-	public ConfirmData(MapData data) {
+	public ConfirmData(BTLSData data) {
 		super();
 		this.attributes = new LinkedHashMap<String,String>();
 		this.data = data;
