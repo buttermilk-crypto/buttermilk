@@ -132,9 +132,12 @@ public class JSONReader {
 				return String.valueOf(map.get("RegHandle"));
 			}
 			
+			@Override
 			public String email() {
 				return String.valueOf(map.get("Email"));
 			}
+			
+		
 
 			/**
 			 * Create a list of CryptoKeyWrappers
@@ -605,6 +608,8 @@ public class JSONReader {
 			public Map<String, Object> baseMap() {
 				return map;
 			}
+
+		
 			
 		};
 		

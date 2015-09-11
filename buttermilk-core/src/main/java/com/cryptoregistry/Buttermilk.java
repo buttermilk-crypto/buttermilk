@@ -18,7 +18,8 @@ import com.cryptoregistry.rsa.RSAKeyMetadata;
 import com.cryptoregistry.symmetric.SymmetricKeyContents;
 
 /**
- * Master Factory for crypto operations. This is just syntatic sugar
+ * Master Factory for crypto-operations. This is just syntactic sugar but it helps due to the Factory class names being the
+ * same in different packages.
  * 
  * @author Dave
  *
