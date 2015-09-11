@@ -84,6 +84,8 @@ public class RSATest {
 		format.format(writer);
 		String serialized = writer.toString();
 		
+		System.err.println(serialized);
+		
 		// now validate the serialized text
 		
 		SelfContainedJSONResolver resolver = new SelfContainedJSONResolver(serialized);
@@ -143,6 +145,25 @@ public class RSATest {
 					e.printStackTrace();
 				}
 		}
+	}
+	
+	@Test
+	public void test6() {
+		
+		String signedBy = "Chinese Eyes"; // my registration handle
+		
+		RSAKeyContents rKeys = CryptoFactory.INSTANCE.generateKeys("password1".toCharArray());
+		
+		JSONFormatter format = new JSONFormatter(signedBy);
+		format.add(rKeys);
+		
+		StringWriter writer = new StringWriter();
+		format.format(writer);
+		String serialized = writer.toString();
+		
+		System.err.println(serialized);
+		
+		
 	}
 
 }
