@@ -3,8 +3,11 @@ package com.cryptoregistry.protocol.frame;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.util.Map;
 
+import com.cryptoregistry.KeyMaterials;
+import com.cryptoregistry.formats.JSONReader;
 import com.cryptoregistry.proto.reader.StringProtoReader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -17,6 +20,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class JSONFrameReader extends InputFrameBase {
 
 	final int expectedCode;
+	
+	byte [] readBytes;
 	
 	public JSONFrameReader(int expectedCode) {
 		this.expectedCode=expectedCode;
@@ -63,12 +68,41 @@ public class JSONFrameReader extends InputFrameBase {
 			byte [] buf = new byte[length];
 			in.read(buf, 0, length);
 			StringProtoReader reader = new StringProtoReader(buf);
+			readBytes = buf;
 			String json = reader.read();
 			ObjectMapper mapper = new ObjectMapper();
 			return mapper.readValue(json, Map.class);
 		}catch(IOException x) {
 			throw new RuntimeException(x);
 		}
+	}
+	
+	public KeyMaterials readKM(InputStream in) {
+		try {
+			int code = in.read();
+			if(code != expectedCode){
+				throw new RuntimeException("Not expected code: "+code);
+			}
+			
+			int length = this.readInt32(in);
+		
+			if(length < 0){
+				throw new EOFException();
+			}
+			byte [] buf = new byte[length];
+			in.read(buf, 0, length);
+			StringProtoReader reader = new StringProtoReader(buf);
+			readBytes = buf;
+			String json = reader.read();
+			JSONReader jreader = new JSONReader(new StringReader(json));
+			return jreader.parse();
+		}catch(IOException x) {
+			throw new RuntimeException(x);
+		}
+	}
+
+	public byte[] getReadBytes() {
+		return readBytes;
 	}
 
 }

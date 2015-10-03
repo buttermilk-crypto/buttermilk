@@ -21,7 +21,10 @@ import com.fasterxml.jackson.core.JsonGenerator;
 
 /**
  * <pre>
- * Client sends client CONNECT-SECURE request:
+ * 
+ * Start the process of connecting
+ * 
+ * Client sends CONNECT-SECURE request:
  * 
  * {
  *   "Version" : "BTLS 1.0",
@@ -29,7 +32,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
  *   "Data" : {
  *     "Local" : {
  *   	  "Action" : "CONNECT-SECURE",
- *   	  "Handshake" : "ECDH/PeersOnly"
+ *   	  "Handshake" : "Curve25519/PeersOnly"
  *   	},
  *   },
  *   "Keys" : {
@@ -127,12 +130,6 @@ public class ConnectSecure {
 			case Curve25519: {
 				Curve25519KeyForPublication contents = (Curve25519KeyForPublication) key;
 				C2KeyFormatter formatter = new C2KeyFormatter(contents);
-				formatter.formatKeys(g, writer);
-				break;
-			}
-			case EC: {
-				ECKeyForPublication contents = (ECKeyForPublication) key;
-				ECKeyFormatter formatter = new ECKeyFormatter(contents);
 				formatter.formatKeys(g, writer);
 				break;
 			}

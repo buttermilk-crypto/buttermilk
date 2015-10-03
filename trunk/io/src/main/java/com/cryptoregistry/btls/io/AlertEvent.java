@@ -8,7 +8,8 @@ package com.cryptoregistry.btls.io;
 import java.util.EventObject;
 
 /**
- * Applications interested in getting alters from the remote side can receive these
+ * Applications interested in getting alerts from the remote side can receive these events by implementing AlertListener
+ * 
  * @author Dave
  *
  */
