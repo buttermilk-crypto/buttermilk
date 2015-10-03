@@ -26,9 +26,9 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>com.github.oxo42</groupId>
-			<artifactId>stateless4j</artifactId>
-			<version>2.5.0</version>
+			<groupId>com.cryptoregistry</groupId>
+			<artifactId>io</artifactId>
+			<version>LATEST</version>
 		</dependency>
 
 	</dependencies>

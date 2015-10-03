@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 
 /**
- * Interface for FrameInputStream to make interacting with the Collector a bit easier
+ * Kind of a lame name. Interface for FrameInputStream to make interacting with the Collector a bit easier.
  * 
  * @author Dave
  *

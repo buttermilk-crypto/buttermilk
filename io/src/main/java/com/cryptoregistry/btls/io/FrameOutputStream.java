@@ -331,7 +331,8 @@ public class FrameOutputStream extends FilterOutputStream {
 	}
 	
 	protected ParametersWithIV buildKeyWithRandomIV(byte [] key) {
-		if(rand != null) rand = new SecureRandom();
+		if(key == null) throw new RuntimeException("Need to provide key");
+		if(rand == null) rand = new SecureRandom();
 		byte [] iv = new byte[16];
 		rand.nextBytes(iv);
 		ParametersWithIV holder = new ParametersWithIV(

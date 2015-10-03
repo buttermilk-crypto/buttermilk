@@ -9,10 +9,12 @@ import x.org.bouncycastle.crypto.digests.SHA256Digest;
 import x.org.bouncycastle.crypto.io.DigestInputStream;
 import x.org.bouncycastle.crypto.io.DigestOutputStream;
 
+import com.cryptoregistry.c2.CryptoFactory;
 import com.cryptoregistry.c2.key.Curve25519KeyContents;
 import com.cryptoregistry.c2.key.Curve25519KeyForPublication;
+import com.cryptoregistry.c2.key.SecretKey;
 
-public class Handshake {
+public class Handshake implements Runnable {
 
 	List<Module> modules;
 	
@@ -23,6 +25,8 @@ public class Handshake {
 	
 	public Curve25519KeyContents myC2Key;
 	public Curve25519KeyForPublication remoteC2Key;
+	
+	private SecretKey secretKey;
 	
 	public State currentState;
 	
@@ -45,7 +49,7 @@ public class Handshake {
 		modules.add(mod);
 	}
 	
-	public void start() {
+	public void run() {
 		
 		for(Module mod: modules){
 			if(this.currentState==State.Error){
@@ -53,6 +57,26 @@ public class Handshake {
 			}
 			mod.run();
 		}
+		
+		if(this.currentState == State.Success) calculateSecret();
+		
+		if (secretKey!=null){
+			currentState=State.Success;
+		}
+		
+	}
+	
+	private void calculateSecret() {
+		secretKey = CryptoFactory.INSTANCE.keyAgreement(this.remoteC2Key.publicKey, this.myC2Key.agreementPrivateKey);
+	}
+
+	/**
+	 * May be null if something failed
+	 * 
+	 * @return
+	 */
+	public SecretKey getSecretKey() {
+		return secretKey;
 	}
 
 }

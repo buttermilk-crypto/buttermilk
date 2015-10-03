@@ -18,10 +18,11 @@ import com.cryptoregistry.c2.key.C2KeyMetadata;
 import com.cryptoregistry.c2.key.Curve25519KeyContents;
 import com.cryptoregistry.protocol.BTLSData;
 import com.cryptoregistry.protocol.BTLSMessageFactory;
-import com.cryptoregistry.protocol.Handshake1;
+import com.cryptoregistry.protocol.Handshake;
 import com.cryptoregistry.protocol.HandshakeConstants;
 import com.cryptoregistry.protocol.frame.JSONFrameReader;
 import com.cryptoregistry.protocol.frame.StringOutputFrame;
+import com.cryptoregistry.protocol.module.ConnectSecureModule;
 import com.cryptoregistry.protocol.msg.ConfirmData;
 import com.cryptoregistry.protocol.msg.ConnectSecure;
 import com.cryptoregistry.protocol.msg.Status;
@@ -142,17 +143,21 @@ public class TestBTLSFormats {
 		PipedInputStream serverIn = new PipedInputStream(clientOut);
 		
 		
-		Handshake1 hClient = new Handshake1(true, 
+		Handshake hClient = new Handshake(true, 
 				clientIn, 
 				clientOut, 
 				keys0,
 				"Chinese Knees");
 		
-		Handshake1 hServer = new Handshake1(false, 
+		hClient.add(new ConnectSecureModule(hClient));
+		
+		Handshake hServer = new Handshake(false, 
 				serverIn, 
 				serverOut, 
 				keys1,
 				"cryptoregistry.com");
+		
+		hServer.add(new ConnectSecureModule(hServer));
 		
 		Thread t0 = new Thread(hClient);
 		Thread t1 = new Thread(hServer);
@@ -160,9 +165,8 @@ public class TestBTLSFormats {
 		t1.start();
 		t0.start();
 		t0.join();
-		t1.join();
-		System.err.println(hClient.getCurrentState());
-		System.err.println(hServer.getCurrentState());
+		
+	
 	}
 
 }

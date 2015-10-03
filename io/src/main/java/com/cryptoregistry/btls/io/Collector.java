@@ -27,10 +27,10 @@ import com.cryptoregistry.proto.reader.AuthenticatedStringProtoReader;
 import com.cryptoregistry.protos.Frame.AuthenticatedStringProto;
 
 /**
- * <p>Collector runs as a different thread and gathers bytes from the underlying incoming stream 
+ * <p>Collector runs as a different thread and gathers bytes as they come in from the underlying inputstream 
  * which has been wrapped by a FrameInputStream. The bytes are in the form of frames which must be
- * decoded or decrypted. Using a different thread helps to provide for consumption of bytes on
- * the main thread while collection (e.g., decryption) might be going using the other.</p>
+ * decoded or decrypted. Using a different thread helps to provide for consumption of bytes (I/O) on
+ * the main thread while decryption might be going using the other.</p>
  * 
  * @author Dave
  *
