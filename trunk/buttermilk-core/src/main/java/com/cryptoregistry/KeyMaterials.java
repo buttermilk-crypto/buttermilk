@@ -21,7 +21,7 @@ public interface KeyMaterials {
 	
 	String version();
 	String regHandle();
-	String email();
+	String email(); // sort of like an admin contact
 	
 	// value object support
 	List<CryptoKeyWrapper> keys();
