@@ -134,6 +134,7 @@ public class JSONReader {
 			
 			@Override
 			public String email() {
+				if(!map.containsKey("Email")) return "";
 				return String.valueOf(map.get("Email"));
 			}
 			
@@ -151,6 +152,8 @@ public class JSONReader {
 				// returns a map with the key uuids as keys
 				
 				Map<String, Object> uuids = (Map<String, Object>) map.get("Keys");
+				if(uuids == null) return list;
+				
 				Iterator<String> iter = uuids.keySet().iterator();
 				while(iter.hasNext()) {
 					
@@ -431,6 +434,8 @@ public class JSONReader {
 				ArrayList<CryptoContact> list = new ArrayList<CryptoContact>();
 				
 				Map<String, Object> uuids = (Map<String, Object>) map.get("Contacts");
+				// return list empty if none found
+				if(uuids == null) return list;
 				Iterator<String> iter = uuids.keySet().iterator();
 				while(iter.hasNext()) {
 					String handle = iter.next();
@@ -445,6 +450,7 @@ public class JSONReader {
 			public List<CryptoSignature> signatures() {
 				ArrayList<CryptoSignature> list = new ArrayList<CryptoSignature>();
 				Map<String, Object> uuids = (Map<String, Object>) map.get("Signatures");
+				if(uuids == null) return list;
 				Iterator<String> iter = uuids.keySet().iterator();
 				while(iter.hasNext()) {
 					String handle = iter.next();
@@ -500,6 +506,8 @@ public class JSONReader {
 				Map<String, Object> data = (Map<String, Object>) map.get("Data");
 				
 				Map<String, Object> uuids = (Map<String, Object>) data.get("Local");
+				// check for empty here, bail if none
+				if(uuids == null) return list;
 				Iterator<String> iter = uuids.keySet().iterator();
 				while(iter.hasNext()) {
 					String handle = iter.next();
@@ -516,6 +524,8 @@ public class JSONReader {
 				ArrayList<ListData> list = new ArrayList<ListData>();
 				Map<String, Object> data = (Map<String, Object>) map.get("Data");
 				List<Object> urls = (List<Object>) data.get("Remote");
+				// a check here, if no remote data, bail
+				if(urls == null) return list;
 				ListData rd = new ListData();
 				for(Object url: urls){
 					rd.addURL(String.valueOf(url));
