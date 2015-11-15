@@ -82,12 +82,12 @@ public class SettingsPanel extends JPanel {
 			
 		});
 		
-		JLabel lblPrivateEmail = new JLabel("Private Email");
+		JLabel lblPrivateEmail = new JLabel("Admin Email");
 		
 		privateEmailTextField = new JTextField();
 		privateEmailTextField.setColumns(10);
 		
-		JLabel lblThisEmailAddress = new JLabel("<html><i>This email address is used in the registration process only<br>and is not publicly displayed on the web site</i></html>");
+		JLabel lblThisEmailAddress = new JLabel("<html><i>This email address is used as a default contact for this registration</i></html>");
 		
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
