@@ -43,6 +43,7 @@ public class RegHandleChecker {
 	        .setHost(props.get("registration.checkhandle.hostname"))
 	        .setPath(props.get("registration.checkhandle.path"))
 	        .setPort(props.intValue("registration.checkhandle.port"))
+	        .setParameter("action", "c")
 	        .setParameter("h", handle);
 		return builder.build();
 	}
@@ -55,7 +56,7 @@ public class RegHandleChecker {
 	        	
 	            HttpGet httpget = new HttpGet(url(regHandle));
 
-	       //     System.out.println("Executing request " + httpget.getRequestLine());
+	            System.out.println("Executing request: " + httpget.getRequestLine());
 
 	            // Create a custom response handler
 	            ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
@@ -74,7 +75,7 @@ public class RegHandleChecker {
 	            
 	           String responseBody = httpclient.execute(httpget, responseHandler);
 	           // check if handle is registered (exists). If it is not registered, we assume it is available 
-	           if(responseBody.contains("false")) return true;
+	           if(responseBody.contains("true")) return true;
 	            
 	        }catch(Exception x){
 	        	throw new RuntimeException("Server may be down. Please try later.", x);

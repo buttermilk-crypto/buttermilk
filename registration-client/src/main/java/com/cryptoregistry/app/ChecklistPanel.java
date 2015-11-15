@@ -13,6 +13,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -26,8 +27,9 @@ import org.apache.http.client.fluent.Request;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 
-import asia.redact.bracket.properties.Properties;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import asia.redact.bracket.properties.Properties;
 import static java.nio.file.Files.readAllBytes;
 import static java.nio.file.Paths.get;
 
@@ -37,12 +39,12 @@ public class ChecklistPanel extends JPanel implements PropertyChangeListener {
 	
 	JLabel lblKMPath, lblRegHandleSelected, lblPasswordSet, lblSecureKey, lblKeyForPublication;
 	
-	JLabel lblContactSet, lblSignatureCompleted, lblRegistrationSent;
+	JLabel lblContactSet, lblSignatureCompleted, lblRegistrationSent, lblRegMsg;
 	
 	KM km;
 	Properties props;
 	
-	JButton btnRegister;
+	final JButton btnRegister;
 	
 	public ChecklistPanel(KM km, Properties props) {
 		this();
@@ -99,13 +101,34 @@ public class ChecklistPanel extends JPanel implements PropertyChangeListener {
 		btnRegister.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
 				if(e.getActionCommand().equals("send-reg")){
 					String resp = postRegistration(props);
 					System.out.println(resp);
+					ObjectMapper mapper = new ObjectMapper();
+					try {
+						Map<String,Object> status = (Map<String,Object>) mapper.readValue(resp, Map.class);
+						String err = (String) status.get("error");
+						String stat = (String) status.get("status");
+						String detail = (String) status.get("detail");
+						if(err == null) {
+							btnRegister.setEnabled(false);
+							lblRegistrationSent.setIcon(createImageIcon("/checkbox_full.png", ""));
+							lblRegMsg.setText(stat+": "+detail);
+						}else{
+							lblRegMsg.setText(err+": "+detail);
+						}
+						
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					} 
 				}
+				
 			}
 		});
 		panel1.add(btnRegister);
+		this.lblRegMsg = new JLabel("Result of Registration Here");
+		panel1.add(lblRegMsg);
 		
 		add(panel1);
 		
@@ -176,7 +199,7 @@ public class ChecklistPanel extends JPanel implements PropertyChangeListener {
 	}
 	
 	/**
-	 * Port the request. This is done over SSL
+	 * Post the request. This is done over SSL if the protocol in the url requires it
 	 * 
 	 * @param props
 	 * @return
@@ -200,7 +223,7 @@ public class ChecklistPanel extends JPanel implements PropertyChangeListener {
 			        .version(HttpVersion.HTTP_1_1)
 			        .bodyString(regJSON, ContentType.APPLICATION_JSON)
 			        .execute().returnContent().asBytes();
-			return new String(res);
+			return new String(res, "UTF-8");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
