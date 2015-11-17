@@ -6,6 +6,7 @@
 package com.cryptoregistry.app;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,11 +17,14 @@ import java.io.IOException;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
 
 import org.apache.http.HttpVersion;
 import org.apache.http.client.fluent.Request;
@@ -39,7 +43,9 @@ public class ChecklistPanel extends JPanel implements PropertyChangeListener {
 	
 	JLabel lblKMPath, lblRegHandleSelected, lblPasswordSet, lblSecureKey, lblKeyForPublication;
 	
-	JLabel lblContactSet, lblSignatureCompleted, lblRegistrationSent, lblRegMsg;
+	JLabel lblContactSet, lblSignatureCompleted, lblRegistrationSent;
+	
+	JTextPane resultPane;
 	
 	KM km;
 	Properties props;
@@ -93,6 +99,7 @@ public class ChecklistPanel extends JPanel implements PropertyChangeListener {
 		add(panel);
 		
 		JPanel panel1 = new JPanel();
+		panel1.setLayout(new BoxLayout(panel1,BoxLayout.PAGE_AXIS));
 		panel1.setBackground(new Color(208, 228, 254));
 		panel1.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		btnRegister = new JButton("Send Registration Request");
@@ -114,9 +121,9 @@ public class ChecklistPanel extends JPanel implements PropertyChangeListener {
 						if(err == null) {
 							btnRegister.setEnabled(false);
 							lblRegistrationSent.setIcon(createImageIcon("/checkbox_full.png", ""));
-							lblRegMsg.setText(stat+": "+detail);
+							resultPane.setText(stat+": "+detail);
 						}else{
-							lblRegMsg.setText(err+": "+detail);
+							resultPane.setText(err+": "+detail);
 						}
 						
 					} catch (Exception e1) {
@@ -127,8 +134,10 @@ public class ChecklistPanel extends JPanel implements PropertyChangeListener {
 			}
 		});
 		panel1.add(btnRegister);
-		this.lblRegMsg = new JLabel("Result of Registration Here");
-		panel1.add(lblRegMsg);
+		panel1.add(Box.createRigidArea(new Dimension(20,20)));
+		this.resultPane = new JTextPane();
+		this.resultPane.setText("...registration response appears here...");
+		panel1.add(new JScrollPane(this.resultPane));
 		
 		add(panel1);
 		
