@@ -78,7 +78,7 @@ public class SwingRegistrationWizardGUI {
 	     }
      }
      
-     private static JMenuBar createMenuBar(Properties props) {
+     private static JMenuBar createMenuBar(final Properties props) {
     	 
     	 final Properties myprops = props;
     	 
@@ -87,6 +87,21 @@ public class SwingRegistrationWizardGUI {
     	//Build the first menu.
     	JMenu fileMenu = new JMenu("File");
     	menuBar.add(fileMenu);
+    	
+    	JMenu manageMenu = new JMenu("Management");
+    	menuBar.add(manageMenu);
+    	JMenuItem itemSession = new JMenuItem("Create Session");
+    	manageMenu.add(itemSession);
+    	itemSession.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFrame myframe = new JFrame();
+				myframe.setIconImages(new IconLister().getIconList());
+				new SessionDialog(myframe, "Create Session", props);
+			}
+    		
+    	});
     	
     	JMenu utilityMenu = new JMenu("Utility");
     	menuBar.add(utilityMenu);

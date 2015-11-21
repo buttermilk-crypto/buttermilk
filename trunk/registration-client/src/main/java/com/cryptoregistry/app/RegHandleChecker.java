@@ -22,7 +22,7 @@ import org.apache.http.util.EntityUtils;
 import asia.redact.bracket.properties.Properties;
 
 /**
- * Call the check handle interface - returns {"found":false} or {"found":true} on a 200 response
+ * Call the check handle interface 
  * 
  * @author Dave
  *
