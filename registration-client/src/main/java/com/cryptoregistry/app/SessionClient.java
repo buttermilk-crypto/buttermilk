@@ -8,32 +8,19 @@ package com.cryptoregistry.app;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.StringWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-import net.iharder.Base64;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.fluent.Request;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 
 import com.cryptoregistry.CryptoKey;
 import com.cryptoregistry.CryptoKeyWrapper;
 import com.cryptoregistry.KeyMaterials;
-import com.cryptoregistry.MapData;
 import com.cryptoregistry.c2.key.Curve25519KeyContents;
 import com.cryptoregistry.c2.key.Curve25519KeyForPublication;
 import com.cryptoregistry.ec.ECKeyContents;
@@ -42,7 +29,6 @@ import com.cryptoregistry.formats.JSONFormatter;
 import com.cryptoregistry.formats.JSONReader;
 import com.cryptoregistry.passwords.Password;
 import com.cryptoregistry.rsa.CryptoFactory;
-import com.cryptoregistry.rsa.RSAEngineFactory;
 import com.cryptoregistry.rsa.RSAKeyContents;
 import com.cryptoregistry.rsa.RSAKeyForPublication;
 import com.cryptoregistry.signature.C2CryptoSignature;
@@ -104,18 +90,6 @@ public class SessionClient {
 	private void createEphemeralKey() {
 		rsaKey = CryptoFactory.INSTANCE.generateKeys(2048);
 	}
-
-	// private void createLocalData() {
-	// data = new MapData();
-	// byte [] bytes = new byte[128];
-	// rand.nextBytes(bytes);
-	// byte [] encrypted = CryptoFactory.INSTANCE.encrypt(
-	// rsaKey,
-	// RSAEngineFactory.Padding.OAEPWITHSHA256ANDMGF1PADDING,
-	// bytes);
-	// String value = Base64.encodeBytes(encrypted);
-	// data.put("session.token", value);
-	// }
 
 	private String createSignature() {
 

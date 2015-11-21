@@ -9,10 +9,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.GroupLayout;
+import javax.swing.SwingWorker;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -70,6 +72,7 @@ public class SessionPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				btnCreateSession.setEnabled(false);
 				createSession();
 			}
 			
@@ -116,8 +119,27 @@ public class SessionPanel extends JPanel {
 	}
 	
 	private void createSession() {
-		SessionClient client = new SessionClient(props, textField.getText());
-		String res = client.request();
-		textPane.setText(res);
+		
+		textPane.setText("Working...");
+
+		SwingWorker<String,String> worker = new SwingWorker<String,String>() {
+			protected String doInBackground() throws Exception {
+				// send message with ephemeral RSA key, response has our encrypted token
+				SessionClient client = new SessionClient(props, textField.getText());
+				String res = client.request();
+				return res;
+			}
+			 @Override
+			public void done() {
+				try {
+					String res = get();
+					textPane.setText(res);
+					btnCreateSession.setEnabled(true);
+				} catch (InterruptedException | ExecutionException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		worker.execute();
 	}
 }
