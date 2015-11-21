@@ -14,7 +14,6 @@ import com.cryptoregistry.formats.EncodingHint;
 import com.cryptoregistry.formats.KeyFormat;
 import com.cryptoregistry.formats.Mode;
 import com.cryptoregistry.pbe.PBEParams;
-import com.cryptoregistry.pbe.PBEParamsFactory;
 
 public class RSAKeyMetadata implements CryptoKeyMetadata {
 
@@ -24,6 +23,8 @@ public class RSAKeyMetadata implements CryptoKeyMetadata {
 	// these are set on creation of the key from the key generation params
 	public int strength; // requested strength on creation - e.g., 2048 bits
 	public int certainty; // the number of iterations of the Miller-Rabin primality test we passed in
+	
+	public static final int DESIRABLE_STRENGTH_LEVEL = 2048; 
 	
 	public RSAKeyMetadata(String handle, Date createdOn, KeyFormat format) {
 		super();
