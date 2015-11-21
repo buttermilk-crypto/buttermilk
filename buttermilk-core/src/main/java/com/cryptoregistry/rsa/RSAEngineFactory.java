@@ -67,7 +67,7 @@ public class RSAEngineFactory {
 		}
 	}
 	
-	enum Padding {
+	public enum Padding {
 		NOPADDING,
 		PKCS1PADDING,
 		ISO97961PADDING,
