@@ -33,4 +33,23 @@ public enum KeyGenerationAlgorithm {
 		return a;
 	}
 	
+	public static boolean isUsableForSignature(KeyGenerationAlgorithm alg){
+		for(KeyGenerationAlgorithm a: usableForSignature()){
+			if(alg==a) return true;
+		}
+		return false;
+	}
+	
+	public static boolean isRSA(KeyGenerationAlgorithm alg) {
+		return alg == RSA ? true : false;
+	}
+	
+	public static boolean isEC(KeyGenerationAlgorithm alg) {
+		return alg == EC ? true : false;
+	}
+	
+	public static boolean isCurve25519(KeyGenerationAlgorithm alg) {
+		return alg == Curve25519 ? true : false;
+	}
+	
 }
