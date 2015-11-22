@@ -228,10 +228,11 @@ public class JSONReader {
 							case RSA: {
 								int strength = 0;
 								if(keyData.containsKey("Strength")){
-									strength = (Integer) keyData.get("Strength");
+									strength = Integer.parseInt(String.valueOf(keyData.get("Strength")));
+									meta = new RSAKeyMetadata(handle,createdOn,format,strength);
+								}else{
+									meta = new RSAKeyMetadata(handle,createdOn,format);
 								}
-								
-								meta = new RSAKeyMetadata(handle,createdOn,format,strength);
 								
 								BigInteger modulus = FormatUtil.unwrap(encoding, String.valueOf(keyData.get("Modulus")));
 								BigInteger publicExponent = FormatUtil.unwrap(encoding, String.valueOf(keyData.get("PublicExponent")));
