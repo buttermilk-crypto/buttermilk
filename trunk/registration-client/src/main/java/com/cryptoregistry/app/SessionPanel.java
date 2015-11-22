@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JFileChooser;
@@ -38,6 +40,9 @@ public class SessionPanel extends JPanel {
 		super();
 		this.props = props;
 		 fc = new JFileChooser();
+		 Path currentRelativePath = Paths.get("");
+		 String cd = currentRelativePath.toAbsolutePath().toString();
+		 fc.setCurrentDirectory(new File(cd));
 		 fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		JLabel lblLoadKeyTo = new JLabel("Enter path to Signing Key");
 		

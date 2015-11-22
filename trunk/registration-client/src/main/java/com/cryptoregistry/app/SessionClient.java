@@ -85,6 +85,7 @@ public class SessionClient {
 		loadKey(); // loads registration key from file using keyPath to locate
 		createEphemeralKey();
 		sessionReq = createSignature();
+		System.err.println("SessionReq: \n"+sessionReq);
 	}
 
 	private void createEphemeralKey() {
@@ -93,20 +94,22 @@ public class SessionClient {
 
 	private String createSignature() {
 
-		JSONFormatter requestFormatter = new JSONFormatter();
+		JSONFormatter requestFormatter = new JSONFormatter(regHandle);
+		RSAKeyForPublication ephemeralPub = (RSAKeyForPublication) rsaKey.keyForPublication();
+		requestFormatter.add(ephemeralPub);
+		
 		switch (registrationKey.getMetadata().getKeyAlgorithm()) {
 		case Curve25519: {
-			Curve25519KeyForPublication pub = (Curve25519KeyForPublication) registrationKey
-					.keyForPublication();
+			//Curve25519KeyForPublication pub = (Curve25519KeyForPublication) registrationKey.keyForPublication();
 			C2SignatureCollector sigBuilder = new C2SignatureCollector(
 					regHandle, (Curve25519KeyContents) registrationKey);
-			C2KeyContentsIterator iter = new C2KeyContentsIterator(pub);
+			RSAKeyContentsIterator iter = new RSAKeyContentsIterator(ephemeralPub);
 			// key contents
 			while (iter.hasNext()) {
 				String label = iter.next();
 				sigBuilder.collect(label, iter.get(label));
 			}
-			requestFormatter.add(pub);
+		//	requestFormatter.add(pub);
 
 			C2CryptoSignature sig = sigBuilder.build();
 			requestFormatter.add(sig);
@@ -114,17 +117,15 @@ public class SessionClient {
 			break;
 		}
 		case EC: {
-			ECKeyForPublication pub = (ECKeyForPublication) registrationKey
-					.keyForPublication();
-			ECDSASignatureBuilder sigBuilder = new ECDSASignatureBuilder(
-					regHandle, (ECKeyContents) registrationKey);
-			ECKeyContentsIterator iter = new ECKeyContentsIterator(pub);
+			//ECKeyForPublication pub = (ECKeyForPublication) registrationKey.keyForPublication();
+			ECDSASignatureBuilder sigBuilder = new ECDSASignatureBuilder(regHandle, (ECKeyContents) registrationKey);
+			RSAKeyContentsIterator iter = new RSAKeyContentsIterator(ephemeralPub);
 			// key contents
 			while (iter.hasNext()) {
 				String label = iter.next();
 				sigBuilder.update(label, iter.get(label));
 			}
-			requestFormatter.add(pub);
+		//	requestFormatter.add(pub);
 
 			ECDSACryptoSignature sig = sigBuilder.build();
 			requestFormatter.add(sig);
@@ -132,18 +133,16 @@ public class SessionClient {
 			break;
 		}
 		case RSA: {
-			RSAKeyForPublication pub = (RSAKeyForPublication) registrationKey
-					.keyForPublication();
-			RSASignatureBuilder sigBuilder = new RSASignatureBuilder(regHandle,
-					(RSAKeyContents) registrationKey);
-			RSAKeyContentsIterator iter = new RSAKeyContentsIterator(pub);
+			//RSAKeyForPublication pub = (RSAKeyForPublication) registrationKey.keyForPublication();
+			RSASignatureBuilder sigBuilder = new RSASignatureBuilder(regHandle, (RSAKeyContents) registrationKey);
+			RSAKeyContentsIterator iter = new RSAKeyContentsIterator(ephemeralPub);
 			// key contents
 			while (iter.hasNext()) {
 				String label = iter.next();
 				String value = iter.get(label);
 				sigBuilder.update(label, value);
 			}
-			requestFormatter.add(pub);
+		//	requestFormatter.add(pub);
 			RSACryptoSignature sig = sigBuilder.build();
 			requestFormatter.add(sig);
 			break;
