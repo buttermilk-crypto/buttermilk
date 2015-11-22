@@ -226,7 +226,13 @@ public class JSONReader {
 								break;
 							}
 							case RSA: {
-								meta = new RSAKeyMetadata(handle,createdOn,format);
+								int strength = 0;
+								if(keyData.containsKey("Strength")){
+									strength = (Integer) keyData.get("Strength");
+								}
+								
+								meta = new RSAKeyMetadata(handle,createdOn,format,strength);
+								
 								BigInteger modulus = FormatUtil.unwrap(encoding, String.valueOf(keyData.get("Modulus")));
 								BigInteger publicExponent = FormatUtil.unwrap(encoding, String.valueOf(keyData.get("PublicExponent")));
 								RSAKeyForPublication rPub = new RSAKeyForPublication((RSAKeyMetadata)meta,modulus,publicExponent);
