@@ -20,7 +20,7 @@ public class RSAKeyMetadata implements CryptoKeyMetadata {
 	public final String handle;
 	public final Date createdOn;
 	public final KeyFormat format;
-	// these are set on creation of the key from the key generation params
+	// these are set on creation of the key from the key generation params, certainty may not be passed on in formatting
 	public int strength; // requested strength on creation - e.g., 2048 bits
 	public int certainty; // the number of iterations of the Miller-Rabin primality test we passed in
 	
@@ -31,6 +31,14 @@ public class RSAKeyMetadata implements CryptoKeyMetadata {
 		this.handle = handle;
 		this.createdOn = createdOn;
 		this.format = format;
+	}
+	
+	public RSAKeyMetadata(String handle, Date createdOn, KeyFormat format, int strength) {
+		super();
+		this.handle = handle;
+		this.createdOn = createdOn;
+		this.format = format;
+		this.strength=strength;
 	}
 	
 	public RSAKeyMetadata(String handle, Date createdOn, KeyFormat format, int strength, int certainty) {
