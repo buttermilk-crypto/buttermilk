@@ -33,7 +33,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
       "DigestAlgorithm" : "SHA-256",
       "v" : "J60Qj4GeRndjwZHjcW3FrjxNZRdHKLjYkSrzIpp_JgA=",
       "r" : "ymwgBZJYE8cBNJZvH4BLFOtqGLlm4CzKK6l5YzPcn2Q=",
-      "DataRefs" : "6e578818-9108-401d-835e-d399c72d0427:SignedBy, .SignedWith, 4073611e-0c56-4f33-99ba-66faa6fc53ab:Handle, .CreatedOn, .Algorithm, .P, 9b570d10-fdc2-4ef3-9d52-6a3bcba15c55:contactType, .GivenName.0, .FamilyName.0, .Email.0, .MobilePhone.0, .Country, 07e4f62a-88d8-478d-8cf6-cf7e535a53b5:Copyright, .TermsOfServiceAgreement, .InfoAffirmation"
+      "DataRefs" : "6e578818-9108-401d-835e-d399c72d0427:SignedBy, .SignedWith, 4073611e-0c56-4f33-99ba-66faa6fc53ab:Handle, .CreatedOn, .Algorithm, .P, 9b570d10-fdc2-4ef3-9d52-6a3bcba15c55:contactType, .GivenName.0, .FamilyName.0, .Email.0, .MobilePhone.0, .Country, 07e4f62a-88d8-478d-8cf6-cf7e535a53b5:Copyright, .TermsOfServiceAgreement, .InfoAffirmation",
+ 	  "Apropos" : "The IT Girl's registration key"
     }
   }
   
@@ -86,8 +87,14 @@ public class SignatureReader {
 				String signedWith = String.valueOf(sigData.get("SignedWith"));
 				String signedBy = String.valueOf(sigData.get("SignedBy"));
 				String digestAlg = String.valueOf(sigData.get("DigestAlgorithm"));
+				String apropos = null;
+				if(sigData.containsKey("Apropos")){
+					apropos= String.valueOf(sigData.get("Apropos"));
+				}
+				
 				SignatureMetadata meta = 
 						new SignatureMetadata(uuid,createdOn,sigAlg,digestAlg,signedWith,signedBy);
+				meta.setApropos(apropos);
 				List<String> dataRefs = CryptoSignature.parseDataReferenceString(String.valueOf(sigData.get("DataRefs")));
 				
 				// specific to the encoding of each CryptoSignature subclass
