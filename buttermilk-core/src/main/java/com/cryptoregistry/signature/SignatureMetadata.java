@@ -20,6 +20,10 @@ public class SignatureMetadata {
 	public String digestAlg; // associated digest algorithm used
 	public final String signedWith; // handle of key used to sign
 	public final String signedBy; // registration handle of the signer key
+	
+	// a list of string values to anything, usually handles referenced in the signature, or a brief note
+	// normally not part of the signature, advisory only
+	public String apropos;
 
 	public SignatureMetadata(String handle, Date createdOn,
 			SignatureAlgorithm sigAlg, String digestAlg, String signedWith,
@@ -115,6 +119,16 @@ public class SignatureMetadata {
 
 	public String getSignedBy() {
 		return signedBy;
+	}
+
+
+	public String getApropos() {
+		return apropos;
+	}
+
+
+	public void setApropos(String apropos) {
+		this.apropos = apropos;
 	}
 
 }

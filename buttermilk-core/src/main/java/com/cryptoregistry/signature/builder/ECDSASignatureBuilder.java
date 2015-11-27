@@ -112,6 +112,7 @@ public class ECDSASignatureBuilder extends SignatureBuilder {
 		byte [] bytes = new byte[digest.getDigestSize()];
 		digest.doFinal(bytes, 0);
 		digest.reset();
+		if(this.apropos!=null) meta.setApropos(this.apropos);
 		log(meta,bytes);
 		ECDSACryptoSignature sig = CryptoFactory.INSTANCE.sign(meta, sKey, bytes);
 		for(String ref: references) {

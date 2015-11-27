@@ -126,6 +126,7 @@ public class C2SignatureCollector extends SignatureBuilder {
 	
 	public C2CryptoSignature build(){
 		byte [] collected = collector.toByteArray();
+		if(this.apropos!=null) meta.setApropos(this.apropos);
 		this.log(meta, collected.length);
 		
 		SHA1Digest td = new SHA1Digest();

@@ -57,6 +57,12 @@ public class SignatureFormatter {
 			
 			// simplification, cleaner
 			g.writeStringField("DataRefs", CryptoSignature.getDataReferenceString(s));
+			if(s.metadata.apropos != null){
+				if(s.metadata.apropos.length() > 256){
+					throw new RuntimeException("Apropos field contents intended to be shorter than 256 characters.");
+				}
+				g.writeStringField("Apropos", s.metadata.apropos);
+			}
 			
 			g.writeEndObject();
 		}

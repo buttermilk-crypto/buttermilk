@@ -16,6 +16,9 @@ public class SignatureBuilder {
 	
 	protected boolean debugMode;
 	int startIndex=0, endIndex=0;
+	
+	// not part of the signature
+	String apropos;
 
 	public SignatureBuilder() {}
 	
@@ -31,6 +34,14 @@ public class SignatureBuilder {
 		this.debugMode = debugMode;
 	}
 	
+	public String getApropos() {
+		return apropos;
+	}
+
+	public void setApropos(String apropos) {
+		this.apropos = apropos;
+	}
+
 	protected void log(String label, byte [] bytes){
 		if(debugMode){
 			startIndex = endIndex;

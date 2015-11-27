@@ -136,6 +136,7 @@ public class C2SignatureBuilder extends SignatureBuilder {
 		byte [] bytes = new byte[digest.getDigestSize()];
 		digest.doFinal(bytes, 0);
 		digest.reset();
+		if(this.apropos!=null) meta.setApropos(this.apropos);
 		log(meta,bytes);
 		C2CryptoSignature sig = CryptoFactory.INSTANCE.sign(meta, sKey, bytes, digest);
 		for(String ref: references) {
