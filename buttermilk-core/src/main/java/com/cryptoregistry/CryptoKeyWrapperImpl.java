@@ -42,11 +42,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class CryptoKeyWrapperImpl implements CryptoKeyWrapper {
 
+	private Object distinguishedHandle;
 	private Object wrapped;
 
 	public CryptoKeyWrapperImpl(Object wrapped) {
 		super();
 		this.wrapped = wrapped;
+		this.distinguishedHandle = null;
+	}
+	
+	public CryptoKeyWrapperImpl(String distinguishedHandle, Object wrapped) {
+		super();
+		this.wrapped = wrapped;
+		this.distinguishedHandle = distinguishedHandle;
 	}
 
 	@Override
@@ -189,9 +197,19 @@ public class CryptoKeyWrapperImpl implements CryptoKeyWrapper {
 	}
 
 	@Override
+	public String toString() {
+		return "CryptoKeyWrapperImpl [distinguishedHandle="
+				+ distinguishedHandle + ", wrapped=" + wrapped + "]";
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime
+				* result
+				+ ((distinguishedHandle == null) ? 0 : distinguishedHandle
+						.hashCode());
 		result = prime * result + ((wrapped == null) ? 0 : wrapped.hashCode());
 		return result;
 	}
@@ -205,6 +223,11 @@ public class CryptoKeyWrapperImpl implements CryptoKeyWrapper {
 		if (getClass() != obj.getClass())
 			return false;
 		CryptoKeyWrapperImpl other = (CryptoKeyWrapperImpl) obj;
+		if (distinguishedHandle == null) {
+			if (other.distinguishedHandle != null)
+				return false;
+		} else if (!distinguishedHandle.equals(other.distinguishedHandle))
+			return false;
 		if (wrapped == null) {
 			if (other.wrapped != null)
 				return false;
@@ -214,7 +237,7 @@ public class CryptoKeyWrapperImpl implements CryptoKeyWrapper {
 	}
 
 	@Override
-	public String toString() {
-		return "CryptoKeyWrapperImpl [wrapped=" + wrapped + "]";
+	public String distingushedHandle() {
+		return this.distingushedHandle();
 	}
 }
