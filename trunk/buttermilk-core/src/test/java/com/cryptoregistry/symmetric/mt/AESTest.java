@@ -361,7 +361,7 @@ public class AESTest {
 	@Test
 	public void testrun0() {
 		
-		StopWatch.INSTANCE.on();
+		StopWatch.INSTANCE.add("test").start();
 		
 		SecureRandom rand = new SecureRandom();
 		byte [] key = new byte[32];
