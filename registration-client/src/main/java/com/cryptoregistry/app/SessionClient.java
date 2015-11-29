@@ -22,9 +22,7 @@ import com.cryptoregistry.CryptoKey;
 import com.cryptoregistry.CryptoKeyWrapper;
 import com.cryptoregistry.KeyMaterials;
 import com.cryptoregistry.c2.key.Curve25519KeyContents;
-import com.cryptoregistry.c2.key.Curve25519KeyForPublication;
 import com.cryptoregistry.ec.ECKeyContents;
-import com.cryptoregistry.ec.ECKeyForPublication;
 import com.cryptoregistry.formats.JSONFormatter;
 import com.cryptoregistry.formats.JSONReader;
 import com.cryptoregistry.passwords.Password;
@@ -34,10 +32,8 @@ import com.cryptoregistry.rsa.RSAKeyForPublication;
 import com.cryptoregistry.signature.C2CryptoSignature;
 import com.cryptoregistry.signature.ECDSACryptoSignature;
 import com.cryptoregistry.signature.RSACryptoSignature;
-import com.cryptoregistry.signature.builder.C2KeyContentsIterator;
 import com.cryptoregistry.signature.builder.C2SignatureCollector;
 import com.cryptoregistry.signature.builder.ECDSASignatureBuilder;
-import com.cryptoregistry.signature.builder.ECKeyContentsIterator;
 import com.cryptoregistry.signature.builder.RSAKeyContentsIterator;
 import com.cryptoregistry.signature.builder.RSASignatureBuilder;
 
@@ -46,10 +42,10 @@ import asia.redact.bracket.properties.Properties;
 /**
  * Call the session interface. First we generate an RSA ephemeral key. We sign
  * it using our registration key, so CR knows it is us. We send it and get back
- * as a response a token encrypted by our RSA key, plus a signature made by a CR
- * key.
+ * as a response a local data with a token encrypted by our RSA key, plus a 
+ * signature made by a CR-provable key.
  * 
- * The token is then decrypted and used as an HMAC on our further requests.
+ * The token is then decrypted, stored in memory, and used as an HMAC key on our further requests.
  * 
  * @author Dave
  *
@@ -97,6 +93,7 @@ public class SessionClient {
 		JSONFormatter requestFormatter = new JSONFormatter(regHandle);
 		RSAKeyForPublication ephemeralPub = (RSAKeyForPublication) rsaKey.keyForPublication();
 		requestFormatter.add(ephemeralPub);
+		requestFormatter.add(registrationKey.keyForPublication());
 		
 		switch (registrationKey.getMetadata().getKeyAlgorithm()) {
 		case Curve25519: {

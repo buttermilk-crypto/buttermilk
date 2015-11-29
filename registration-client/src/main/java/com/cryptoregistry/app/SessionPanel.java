@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.GroupLayout;
+import javax.swing.JScrollPane;
 import javax.swing.SwingWorker;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
@@ -23,6 +24,8 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JButton;
 import javax.swing.JTextPane;
+
+import com.cryptoregistry.formats.JSONReader;
 
 import asia.redact.bracket.properties.Properties;
 
@@ -32,9 +35,9 @@ public class SessionPanel extends JPanel {
 	private Properties props;
 	private JTextField textField;
 	private JTextPane textPane;
-	JButton btnCreateSession;
+    JButton btnCreateSession;
 	
-	 JFileChooser fc;
+	JFileChooser fc;
 	
 	public SessionPanel(Properties props) {
 		super();
@@ -44,7 +47,7 @@ public class SessionPanel extends JPanel {
 		 String cd = currentRelativePath.toAbsolutePath().toString();
 		 fc.setCurrentDirectory(new File(cd));
 		 fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		JLabel lblLoadKeyTo = new JLabel("Enter path to Signing Key");
+		JLabel lblLoadKeyTo = new JLabel("Enter path to Signing Key, this is what you generated at registration");
 		
 		textField = new JTextField();
 		textField.setColumns(10);
@@ -84,26 +87,21 @@ public class SessionPanel extends JPanel {
 		});
 		
 		textPane = new JTextPane();
+		JScrollPane scroll = new JScrollPane(textPane);
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
+			groupLayout.createParallelGroup(Alignment.TRAILING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(textField, GroupLayout.PREFERRED_SIZE, 272, GroupLayout.PREFERRED_SIZE)
+						.addComponent(scroll, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
+						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+							.addComponent(textField, GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(btnNewButton))
+						.addComponent(btnCreateSession, Alignment.TRAILING)
 						.addComponent(lblLoadKeyTo))
-					.addContainerGap(73, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-					.addContainerGap(351, Short.MAX_VALUE)
-					.addComponent(btnCreateSession)
 					.addContainerGap())
-				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(textPane, GroupLayout.PREFERRED_SIZE, 238, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(202, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -115,19 +113,25 @@ public class SessionPanel extends JPanel {
 						.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(btnNewButton))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(textPane, GroupLayout.PREFERRED_SIZE, 146, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+					.addComponent(scroll, GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(btnCreateSession)
 					.addContainerGap())
 		);
 		setLayout(groupLayout);
 	}
 	
+	/**
+	 * Run in a swing worker
+	 * 
+	 */
 	private void createSession() {
 		
 		textPane.setText("Working...");
 
 		SwingWorker<String,String> worker = new SwingWorker<String,String>() {
+			
+			private byte[]sessionTok;
 			protected String doInBackground() throws Exception {
 				// send message with ephemeral RSA key, response has our encrypted token
 				SessionClient client = new SessionClient(props, textField.getText());
@@ -139,6 +143,9 @@ public class SessionPanel extends JPanel {
 				try {
 					String res = get();
 					textPane.setText(res);
+					if(sessionTok!= null) {
+						SwingRegistrationWizardGUI.km.setSessionToken(sessionTok);
+					}
 					btnCreateSession.setEnabled(true);
 				} catch (InterruptedException | ExecutionException e) {
 					e.printStackTrace();
