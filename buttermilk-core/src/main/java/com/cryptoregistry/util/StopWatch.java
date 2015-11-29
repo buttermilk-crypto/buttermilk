@@ -12,8 +12,6 @@ import java.util.TreeMap;
  */
 public class StopWatch {
 	
-	private boolean on;
-	
 	public static final StopWatch INSTANCE = new StopWatch();
 	
 	private Map<String, Microbenchmark> map;
@@ -22,16 +20,10 @@ public class StopWatch {
 		map = new TreeMap<String,Microbenchmark>();
 	}
 	
-	public void on() {
-		on=true;
-	}
-	
-	public void off() {
-		on=false;
-	}
-	
 	public Microbenchmark add(String name){
-		if(!on) return null;
+		if(map.containsKey(name)) {
+			return map.get(name);
+		}
 		map.put(name, new Microbenchmark(name));
 		return map.get(name);
 	}
@@ -41,7 +33,6 @@ public class StopWatch {
 	}
 	
 	public Microbenchmark start(String name){
-		if(!on) return null;
 		if(!map.containsKey(name)){
 			this.add(name);
 		}
@@ -50,22 +41,19 @@ public class StopWatch {
 	}
 	
 	public Microbenchmark stop(String name){
-		if(!on) return null;
 		if(!map.containsKey(name)){
-			this.add(name);
+			return null;
 		}
 		map.get(name).stop();
 		return map.get(name);
 	}
 	
 	public void print(String name){
-		if(!on) return;
 		if(!map.containsKey(name)) return;
 		System.out.println(map.get(name).toString());
 	}
 	
 	public void clearAll() {
-		if(!on) return;
 		Iterator<String> iter = map.keySet().iterator();
 		while(iter.hasNext()){
 			String name = iter.next();
@@ -74,7 +62,6 @@ public class StopWatch {
 	}
 	
 	public void printAll() {
-		if(!on) return;
 		Iterator<String> iter = map.keySet().iterator();
 		StringBuffer buf = new StringBuffer();
 		while(iter.hasNext()){

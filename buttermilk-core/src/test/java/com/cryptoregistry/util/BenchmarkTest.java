@@ -1,5 +1,6 @@
 package com.cryptoregistry.util;
 
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
@@ -22,15 +23,17 @@ public class BenchmarkTest {
 	@Test
 	public void test0() {
 		
-		String name = this.getClass().getName()+".test0";
+		String name="test";
+		Random rand = new Random();
+		StopWatch.INSTANCE.add(name);
 		
 		try {
 			for(int i = 0;i<10;i++){
-				StopWatch.INSTANCE.add(name).start();
-				Thread.sleep(1000);
+				StopWatch.INSTANCE.find(name).start();
+				Thread.sleep(rand.nextInt(1000));
 				StopWatch.INSTANCE.stop(name);
 			}
-			StopWatch.INSTANCE.print(name);
+			StopWatch.INSTANCE.printAll();
 		
 		} catch (InterruptedException e) {
 			e.printStackTrace();
