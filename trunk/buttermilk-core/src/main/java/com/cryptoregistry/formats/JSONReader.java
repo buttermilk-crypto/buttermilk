@@ -120,6 +120,8 @@ public class JSONReader {
 	
 	public KeyMaterials parse() {
 		
+		// this inner class is defensively programmed - does not side effects on what is in the parsed map
+		// this means you cannot edit the map through the methods such as keys().add(CryptoKeyWrapper) -- does nothing to the backing map
 		KeyMaterials km = new KeyMaterials() {
 
 			@Override
@@ -182,7 +184,7 @@ public class JSONReader {
 								ArmoredString P = new ArmoredString(String.valueOf(keyData.get("P")));
 								PublicKey key = new PublicKey(P.decodeToBytes());
 								Curve25519KeyForPublication p = new Curve25519KeyForPublication((C2KeyMetadata) meta,key);
-								list.add(new CryptoKeyWrapperImpl(p));
+								list.add(new CryptoKeyWrapperImpl(distinguishedKey,p));
 								break;
 							}
 							case EC: {
@@ -191,7 +193,7 @@ public class JSONReader {
 								String qIn = String.valueOf(keyData.get("Q"));
 								ECPoint q=FormatUtil.parseECPoint(curveName, encoding, qIn);
 								ECKeyForPublication p=new ECKeyForPublication((ECKeyMetadata)meta,q,curveName);
-								list.add(new CryptoKeyWrapperImpl(p));
+								list.add(new CryptoKeyWrapperImpl(distinguishedKey,p));
 								break;
 							}
 							case NTRU: {
@@ -221,7 +223,7 @@ public class JSONReader {
 									key = new NTRUKeyForPublication((NTRUKeyMetadata)meta,e,h);
 								}
 								
-								list.add(new CryptoKeyWrapperImpl(key));
+								list.add(new CryptoKeyWrapperImpl(distinguishedKey,key));
 								
 								break;
 							}
@@ -237,7 +239,7 @@ public class JSONReader {
 								BigInteger modulus = FormatUtil.unwrap(encoding, String.valueOf(keyData.get("Modulus")));
 								BigInteger publicExponent = FormatUtil.unwrap(encoding, String.valueOf(keyData.get("PublicExponent")));
 								RSAKeyForPublication rPub = new RSAKeyForPublication((RSAKeyMetadata)meta,modulus,publicExponent);
-								list.add(new CryptoKeyWrapperImpl(rPub));
+								list.add(new CryptoKeyWrapperImpl(distinguishedKey,rPub));
 								break;
 							}
 							case DSA: {
@@ -254,7 +256,7 @@ public class JSONReader {
 						
 						//final String keyAlgorithm = (String) keyData.get("KeyData.Type");
 						final ArmoredPBEResult wrapped = PBEAlg.loadFrom(keyData);
-						wrapper = new CryptoKeyWrapperImpl(wrapped);
+						wrapper = new CryptoKeyWrapperImpl(distinguishedKey,wrapped);
 						list.add(wrapper);
 						
 					}else if(distinguishedKey.endsWith("-U")){
@@ -274,7 +276,7 @@ public class JSONReader {
 								meta = new SymmetricKeyMetadata(handle,createdOn,format);
 								ArmoredString s = new ArmoredString(String.valueOf(keyData.get("s")));
 								SymmetricKeyContents contents = new SymmetricKeyContents((SymmetricKeyMetadata)meta,s.decodeToBytes());
-								list.add(new CryptoKeyWrapperImpl(contents));
+								list.add(new CryptoKeyWrapperImpl(distinguishedKey, contents));
 							}
 							case Curve25519: {
 								meta = new C2KeyMetadata(handle,createdOn,format);
@@ -285,7 +287,7 @@ public class JSONReader {
 								SigningPrivateKey sPrivKey = new SigningPrivateKey(s.decodeToBytes());
 								AgreementPrivateKey aPrivKey = new AgreementPrivateKey(k_.decodeToBytes());
 								Curve25519KeyContents p = new Curve25519KeyContents((C2KeyMetadata) meta,pKey,sPrivKey,aPrivKey);
-								list.add(new CryptoKeyWrapperImpl(p));
+								list.add(new CryptoKeyWrapperImpl(distinguishedKey,p));
 								break;
 							}
 							case EC: {
@@ -297,7 +299,7 @@ public class JSONReader {
 									ECPoint q=FormatUtil.parseECPoint(curveName, encoding, qIn);
 									BigInteger d = FormatUtil.unwrap(encoding, String.valueOf(keyData.get("D")));
 									ECKeyContents p=new ECKeyContents((ECKeyMetadata)meta,q,curveName,d);
-									list.add(new CryptoKeyWrapperImpl(p));
+									list.add(new CryptoKeyWrapperImpl(distinguishedKey,p));
 								}else{
 									
 									// support for custom curve definitions
@@ -320,7 +322,7 @@ public class JSONReader {
 									BigInteger D = FormatUtil.unwrap(enc, String.valueOf(keyData.get("D")));
 									
 									ECKeyContents p=new ECKeyContents((ECKeyMetadata)meta,q,params,D);
-									list.add(new CryptoKeyWrapperImpl(p));
+									list.add(new CryptoKeyWrapperImpl(distinguishedKey,p));
 									
 								}
 								break;
@@ -392,7 +394,7 @@ public class JSONReader {
 									key = new NTRUKeyContents((NTRUKeyMetadata)meta,e,h,t,fp);
 								}
 								
-								list.add(new CryptoKeyWrapperImpl(key));
+								list.add(new CryptoKeyWrapperImpl(distinguishedKey, key));
 								
 								break;
 							}
@@ -416,7 +418,7 @@ public class JSONReader {
 										dP,
 										dQ,
 										qInv);
-								list.add(new CryptoKeyWrapperImpl(rPub));
+								list.add(new CryptoKeyWrapperImpl(distinguishedKey, rPub));
 								break;
 							}
 							case DSA: {
@@ -625,9 +627,6 @@ public class JSONReader {
 			public Map<String, Object> baseMap() {
 				return map;
 			}
-
-		
-			
 		};
 		
 		return km;

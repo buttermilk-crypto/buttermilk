@@ -10,8 +10,14 @@ import com.cryptoregistry.pbe.PBEParams;
 
 public interface CryptoKeyWrapper {
 
+	String distingushedHandle();
+	
+	// this is only set if isSecure == false
 	CryptoKeyMetadata getMetadata();
+	
 	Class<?> getWrappedType();
+	
+	// this is only usable if isSecure == false
 	boolean isForPublication();
 	
 	// capable of being unlocked, if we are for publication this also returns false
