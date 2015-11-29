@@ -128,9 +128,11 @@ public class CryptoKeyWrapperImpl implements CryptoKeyWrapper {
 				@SuppressWarnings("unchecked")
 				Map<String,Object> map = (Map<String,Object>) mapper.readValue(reconstructed, Map.class);
 				// drill down to get key type
+				String distUUID = null;
 				Iterator<String> iter = map.keySet().iterator();
 				if(iter.hasNext()){
-					String distUUID = iter.next();
+					distUUID = iter.next();
+					this.distinguishedHandle = distUUID;
 					@SuppressWarnings("unchecked")
 					Map<String,Object> inner = (Map<String,Object>) map.get(distUUID);
 					keyAlgorithm = String.valueOf(inner.get("KeyAlgorithm"));
@@ -181,9 +183,11 @@ public class CryptoKeyWrapperImpl implements CryptoKeyWrapper {
 	@Override
 	public void lock(PBEParams params) {
 		if(!(wrapped instanceof Signer)) throw new RuntimeException("Cannot lock key unless it implements Signer");
+		String dHandle = this.getMetadata().getHandle()+"-S";
 		KeyHolder holder = new KeyHolder(this.getKeyContents());
 		KeyEncryptor enc = new KeyEncryptor(holder);
 		wrapped = enc.wrap(params);
+		this.distinguishedHandle=dHandle;
 	}
 
 	@Override
