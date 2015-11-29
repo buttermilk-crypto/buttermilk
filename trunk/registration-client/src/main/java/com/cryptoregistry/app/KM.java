@@ -41,8 +41,20 @@ public class KM {
 	private CryptoSignature signature;
 	private JSONFormatter formatter;
 	
+	 // token from server, for use in management activities
+    private byte [] sessionToken;
+	
 	public KM() {
 		contacts = new ArrayList<CryptoContact>();
+	}
+	
+	public byte [] getSessionToken() {
+		return sessionToken;
+	}
+
+	public void setSessionToken(byte[]sessionToken) {
+		pcs.firePropertyChange("sessionToken", this.regHandle, sessionToken);
+		this.sessionToken = sessionToken;
 	}
 
 	public String getRegHandle() {

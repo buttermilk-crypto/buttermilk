@@ -17,10 +17,7 @@ public class SessionDialog extends JDialog {
 
 	public SessionDialog(JFrame parent, String title, Properties props) {
 		super(parent, title);
-		
-
 		getContentPane().add(new SessionPanel(props));
-
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		pack();
 		setVisible(true);
