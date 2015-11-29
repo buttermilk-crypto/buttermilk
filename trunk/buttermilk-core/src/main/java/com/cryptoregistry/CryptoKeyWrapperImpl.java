@@ -42,7 +42,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class CryptoKeyWrapperImpl implements CryptoKeyWrapper {
 
-	private Object distinguishedHandle;
+	private String distinguishedHandle;
 	private Object wrapped;
 
 	public CryptoKeyWrapperImpl(Object wrapped) {
@@ -238,6 +238,6 @@ public class CryptoKeyWrapperImpl implements CryptoKeyWrapper {
 
 	@Override
 	public String distingushedHandle() {
-		return this.distingushedHandle();
+		return this.distinguishedHandle;
 	}
 }
