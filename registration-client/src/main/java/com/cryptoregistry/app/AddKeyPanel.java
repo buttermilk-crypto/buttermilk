@@ -39,7 +39,7 @@ import asia.redact.bracket.properties.Properties;
 
 import com.cryptoregistry.rsa.RSAKeyContents;
 
-public class SessionPanel extends JPanel {
+public class AddKeyPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private Properties props;
@@ -51,7 +51,7 @@ public class SessionPanel extends JPanel {
 	
 	final JLabel lblStatusLabel;
 	
-	public SessionPanel(Properties props) {
+	public AddKeyPanel(Properties props) {
 		super();
 		this.props = props;
 		 fc = new JFileChooser();
@@ -69,7 +69,7 @@ public class SessionPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				 int returnVal = fc.showOpenDialog(SessionPanel.this);
+				 int returnVal = fc.showOpenDialog(AddKeyPanel.this);
 				 
 		            if (returnVal == JFileChooser.APPROVE_OPTION) {
 		                File file = fc.getSelectedFile();
