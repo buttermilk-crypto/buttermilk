@@ -93,15 +93,25 @@ public class SwingRegistrationWizardGUI {
     	JMenuItem itemSession = new JMenuItem("Create Session");
     	manageMenu.add(itemSession);
     	itemSession.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFrame myframe = new JFrame();
 				myframe.setIconImages(new IconLister().getIconList());
 				new SessionDialog(myframe, "Create Session", props);
 			}
-    		
     	});
+    	
+    	JMenuItem itemKey = new JMenuItem("Add Key");
+    	manageMenu.add(itemKey);
+    	itemSession.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFrame myframe = new JFrame();
+				myframe.setIconImages(new IconLister().getIconList());
+				new AddKeyDialog(myframe, "Add New Key", props);
+			}
+    	});
+    	itemSession.setEnabled(false);
     	
     	JMenu utilityMenu = new JMenu("Utility");
     	menuBar.add(utilityMenu);

@@ -212,4 +212,10 @@ public class SessionClient {
 		return null;
 	}
 
+	public RSAKeyContents getEphemeralKey() {
+		return rsaKey;
+	}
+	
+	
+
 }
