@@ -129,5 +129,23 @@ public class JSONGenericReader {
 		}
 		return list;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MapData> macs() {
+		
+		ArrayList<MapData> list = new ArrayList<MapData>();
+		
+		Map<String, Object> uuids = (Map<String, Object>) map.get("Macs");
+		// check for empty here, bail if none
+		if(uuids == null) return list;
+		Iterator<String> iter = uuids.keySet().iterator();
+		while(iter.hasNext()) {
+			String handle = iter.next();
+			Map<String, String> localData = (Map<String, String>) uuids.get(handle);
+			list.add(new MapData(handle,localData));
+		}
+			
+		return list;
+	}
 
 }

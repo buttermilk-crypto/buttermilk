@@ -30,6 +30,8 @@ public interface KeyMaterials {
 	List<MapData> mapData();
 	List<ListData> listData();
 	
+	List<MapData> macs();
+	
 	//serialized Map support
 	
 	List<MapData> keyMaps();
