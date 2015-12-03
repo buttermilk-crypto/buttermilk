@@ -28,60 +28,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 
 /**
- * <pre>
- * Builder which will generate the canonical data structure for a buttermilk format JSON wrapper
- * 
- * It has the general form:
- * 
- * Version
- * Registration Handle
- * Private Notification Email
- * Assertions
- *   uuid
- *     IdentityPoints=100
- *     AssertedBy=registrant
- *     Details=URL
- *     "AssertedOn" : "2014-06-22T03:14:50+0000",
-      "SignedWith" : "CR1.RSA.SHA-256",
-      "s" : "fr_YnzycCZbrlTDbtdjjkqpzSrh7Mjdvmmd1WvBeQnZ980g2e2SSaE7NqzAmcnRVTrGBWb4CIpJpAmEW8PSmIDxBmY7H8-3k5xXvhpW4TpaWK529rrBZ6HGNHndokmwmbVG8Z2etir4UITYMNgpMjbI8l5TDoIe_gpL5vWrYnKLn5Dl2Nuhw7UtyCe1VwCFKcKkmtMzloNnoa9HffxCneYBOGMlyK734VulT--kRV3yjwLinBhrtMfbiwDdCkC-UGmQO-TpPCAbBLPc4sIA7vZEEo-M-zcszWSFDMBXy0YHJ8hghQdZajv-m58-F18e0-wnNLAjAYvEtnsgFHJUANA==",
-      "DataRefs" : [ "uuid:IdentityPoints", ".AssertedBy", ".AssertedOn"]
-   
- *     
- *     
- * Data
- *  \
- *  local
- *     uuid0
- *       key=value
- *     uuid1
- *       key=value
- *     remote
- *     [
- *       url
- *       url
- *       url
- *    ]
- * Keys
- *   \
- *   key-uuid0
- *    key0 attributes
- *   key-uuid1
- *    key1 attributes
- *    
- * Contacts
- *   \
- *   contact-uuid0
- *      contact info0
- *   contact-uuid1
- *      contact info1
- *      
- * Signatures 
- *   \
- *   signature-uuid0
- *     signature info0 
- *     data-refs [ref0, ref1, ref2, ref3 ]
- *    
- *</pre>
+ * A builder which will generate the canonical data structure for a buttermilk format JSON wrapper 
  *    
  * @author Dave
  *
@@ -96,6 +43,7 @@ public class JSONFormatter {
 	protected List<CryptoSignature> signatures;
 	protected List<MapData> mapData;
 	protected List<ListData> listData;
+	protected List<MapData> macs;
 	
 	public JSONFormatter() {
 		this("");
@@ -110,6 +58,7 @@ public class JSONFormatter {
 		signatures = new ArrayList<CryptoSignature>();
 		mapData = new ArrayList<MapData>();
 		listData = new ArrayList<ListData>();
+		macs = new ArrayList<MapData>();
 	}
 	
 	public JSONFormatter(String handle, String email) {
@@ -121,12 +70,13 @@ public class JSONFormatter {
 		signatures = new ArrayList<CryptoSignature>();
 		mapData = new ArrayList<MapData>();
 		listData = new ArrayList<ListData>();
+		macs = new ArrayList<MapData>();
 	}
 
 	public JSONFormatter(String version, String registrationHandle, String email,
 			List<CryptoKey> keys, List<CryptoContact> contacts,
 			List<CryptoSignature> signatures, List<MapData> mapData, 
-			List<ListData> listData) {
+			List<ListData> listData, List<MapData> macs) {
 		super();
 		this.version = version;
 		this.registrationHandle = registrationHandle;
@@ -136,6 +86,7 @@ public class JSONFormatter {
 		this.signatures = signatures;
 		this.mapData = mapData;
 		this.listData = listData;
+		this.macs = macs;
 	}
 	
 	public JSONFormatter add(CryptoContact e) {
@@ -291,6 +242,16 @@ public class JSONFormatter {
 						default: throw new RuntimeException("alg not recognized: "+alg);
 					}
 				}
+				
+				g.writeEndObject();
+			}
+			
+			if(macs.size()>0){
+				
+				g.writeObjectFieldStart("Macs");
+				
+					MapDataFormatter ldf = new MapDataFormatter(macs);
+					ldf.format(g, writer);
 				
 				g.writeEndObject();
 			}
