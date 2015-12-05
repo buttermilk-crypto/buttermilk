@@ -9,7 +9,7 @@ import com.cryptoregistry.formats.JSONGenericReader;
 
 public class HMacSigner {
 
-	public HMacSigner(JSONGenericReader reader, HMac mac, MapData localData) {
+	public HMacSigner(JSONGenericReader reader, HMac mac) {
 		
 		List<MapData> contacts = reader.contacts();
 		List<MapData> keys = reader.keys();

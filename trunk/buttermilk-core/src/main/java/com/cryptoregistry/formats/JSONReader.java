@@ -118,6 +118,10 @@ public class JSONReader {
 		}
 	}
 	
+	public JSONGenericReader genericReader() {
+		return new JSONGenericReader(map);
+	}
+	
 	public KeyMaterials parse() {
 		
 		// this inner class is defensively programmed - does not side effects on what is in the parsed map
