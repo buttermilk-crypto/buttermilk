@@ -73,10 +73,15 @@ public class JSONFormatter {
 		macs = new ArrayList<MapData>();
 	}
 
-	public JSONFormatter(String version, String registrationHandle, String email,
-			List<CryptoKey> keys, List<CryptoContact> contacts,
-			List<CryptoSignature> signatures, List<MapData> mapData, 
-			List<ListData> listData, List<MapData> macs) {
+	public JSONFormatter(String version, 
+			String registrationHandle, 
+			String email,
+			List<CryptoKey> keys, 
+			List<CryptoContact> contacts,
+			List<CryptoSignature> signatures, 
+			List<MapData> mapData, 
+			List<ListData> listData, 
+			List<MapData> macs) {
 		super();
 		this.version = version;
 		this.registrationHandle = registrationHandle;
