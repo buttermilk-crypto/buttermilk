@@ -55,6 +55,7 @@ public class SwingRegistrationWizardGUI {
      public static KM km;
      public static RequestSession session;
      
+     
      private static class IconLister {
      
 	    public IconLister() {}
@@ -103,7 +104,7 @@ public class SwingRegistrationWizardGUI {
     	
     	JMenuItem itemKey = new JMenuItem("Add Key");
     	manageMenu.add(itemKey);
-    	itemSession.addActionListener(new ActionListener() {
+    	itemKey.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFrame myframe = new JFrame();
@@ -111,7 +112,7 @@ public class SwingRegistrationWizardGUI {
 				new AddKeyDialog(myframe, "Add New Key", props);
 			}
     	});
-    	itemSession.setEnabled(false);
+    	//itemKey.setEnabled(false);
     	
     	JMenu utilityMenu = new JMenu("Utility");
     	menuBar.add(utilityMenu);
