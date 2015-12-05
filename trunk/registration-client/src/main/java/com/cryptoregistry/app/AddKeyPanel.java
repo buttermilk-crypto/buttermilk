@@ -10,12 +10,14 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.GroupLayout;
 import javax.swing.JScrollPane;
@@ -31,6 +33,8 @@ import net.iharder.Base64;
 
 import com.cryptoregistry.KeyMaterials;
 import com.cryptoregistry.MapData;
+import com.cryptoregistry.formats.JSONFormatter;
+import com.cryptoregistry.formats.JSONGenericReader;
 import com.cryptoregistry.formats.JSONReader;
 import com.cryptoregistry.rsa.CryptoFactory;
 import com.cryptoregistry.rsa.RSAEngineFactory;
@@ -45,7 +49,7 @@ public class AddKeyPanel extends JPanel {
 	private Properties props;
 	private JTextField textField;
 	private JTextPane textPane;
-    JButton btnCreateSession;
+    JButton btnSendKeys;
 	
 	JFileChooser fc;
 	
@@ -58,8 +62,8 @@ public class AddKeyPanel extends JPanel {
 		 Path currentRelativePath = Paths.get("");
 		 String cd = currentRelativePath.toAbsolutePath().toString();
 		 fc.setCurrentDirectory(new File(cd));
-		 fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		JLabel lblLoadKeyTo = new JLabel("Enter path to Signing Key, this is what you generated at registration");
+		 fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		JLabel lblLoadKeyTo = new JLabel("Enter path to file containing contacts, for-publication key data, signatures, etc.");
 		
 		textField = new JTextField();
 		textField.setColumns(10);
@@ -75,25 +79,27 @@ public class AddKeyPanel extends JPanel {
 		                File file = fc.getSelectedFile();
 		                try {
 							textField.setText(file.getCanonicalPath());
-							btnCreateSession.setEnabled(true);
+							btnSendKeys.setEnabled(true);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 		            }
-				
 			}
 			
 		});
 		
-		btnCreateSession = new JButton("Create Session");
-		btnCreateSession.setEnabled(false);
-		btnCreateSession.addActionListener(new ActionListener() {
-
+		btnSendKeys = new JButton("Send To Server");
+		btnSendKeys.setEnabled(false);
+		btnSendKeys.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				btnCreateSession.setEnabled(false);
-				createSession();
+				if(SwingRegistrationWizardGUI.km == null) {
+					JOptionPane.showMessageDialog(btnSendKeys, "Session key not set. Please create a session first.");
+					return;
+				}
+				btnSendKeys.setEnabled(false);
+				sendData();
 			}
 			
 		});
@@ -107,17 +113,17 @@ public class AddKeyPanel extends JPanel {
 			groupLayout.createParallelGroup(Alignment.TRAILING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addComponent(scroll, GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
-						.addGroup(groupLayout.createSequentialGroup()
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(scroll, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
+						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
 							.addComponent(textField, GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(btnNewButton))
-						.addComponent(lblLoadKeyTo)
-						.addGroup(groupLayout.createSequentialGroup()
+						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
 							.addComponent(lblStatusLabel, GroupLayout.PREFERRED_SIZE, 173, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED, 152, Short.MAX_VALUE)
-							.addComponent(btnCreateSession)))
+							.addComponent(btnSendKeys))
+						.addComponent(lblLoadKeyTo))
 					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
@@ -133,7 +139,7 @@ public class AddKeyPanel extends JPanel {
 					.addComponent(scroll, GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnCreateSession)
+						.addComponent(btnSendKeys)
 						.addComponent(lblStatusLabel))
 					.addContainerGap())
 		);
@@ -144,28 +150,43 @@ public class AddKeyPanel extends JPanel {
 	 * Run in a swing worker
 	 * 
 	 */
-	private void createSession() {
+	private void sendData() {
 		
 		textPane.setText("Working...");
 
 		SwingWorker<String,String> worker = new SwingWorker<String,String>() {
 			
 			private byte[]sessionTok;
+			
 			protected String doInBackground() throws Exception {
-				// send message with ephemeral RSA key, response has our encrypted token
-				SessionClient client = new SessionClient(props, textField.getText());
+				
+				if(SwingRegistrationWizardGUI.km != null) {
+					sessionTok = SwingRegistrationWizardGUI.km.getSessionToken();
+				}else{
+					throw new RuntimeException("Missing session token");
+				}
+				
+				// first get the contents and make an hmac
+				File keyFile = new File(textField.getText());
+				JSONGenericReader reader = new JSONGenericReader(keyFile);
+				reader.clearExistingMacs();
+				reader.embedHMac(sessionTok);
+				StringWriter writer = new StringWriter();
+				reader.reformat(writer);
+				
+				// send message with embedded mac created using the session token
+				AddKeyClient client = new AddKeyClient(props, writer.toString());
 				String res = client.request();
 				// error detection 
-				JSONReader reader = new JSONReader(new StringReader(res));
-				KeyMaterials km = reader.parse();
+				JSONReader result = new JSONReader(new StringReader(res));
+				KeyMaterials km = result.parse();
 				List<MapData> localData = km.mapData();
 				if(localData.size()>0 &&localData.get(0).data.containsKey("Error")){
 					// error data present
 					sessionTok = null;
 				}else{
-					// OK, process sessionToken Encryption
-					sessionTok = unencrypt(localData.get(0), client.getEphemeralKey());
-					System.err.println("Got session token, length = "+sessionTok.length+" bytes");
+					// OK, success response
+					System.err.println("All good on add request...");
 				}
 				return res;
 			}
@@ -178,45 +199,10 @@ public class AddKeyPanel extends JPanel {
 						SwingRegistrationWizardGUI.km.setSessionToken(sessionTok);
 						lblStatusLabel.setText("Got it");
 					}
-					btnCreateSession.setEnabled(true);
+					btnSendKeys.setEnabled(true);
 				} catch (InterruptedException | ExecutionException e) {
 					e.printStackTrace();
 				}
-			}
-			 
-			 /*  on the other side...
-			  * 
-			  * 	data.put("EncryptedSessionToken", tokenString);
-			  *	    data.put("Encoding", "Base64url");
-			  *		data.put("EncryptedWith", clientKey.getMetadata().getHandle());
-			  */
-			private byte [] unencrypt(MapData data, RSAKeyContents ephemeralKey){
-				String tokenString = data.data.get("EncryptedSessionToken");
-			//	String encoding = data.data.get("Encoding");
-				String encryptedWith = data.data.get("EncryptedWith");
-				if(!ephemeralKey.getMetadata().getHandle().equals(encryptedWith)){
-					// sanity checking, these should match
-					throw new RuntimeException("These should match: "
-							+encryptedWith
-							+", "
-							+ephemeralKey.getMetadata().getHandle()
-					);
-				}
-				RSAEngineFactory.Padding pad = RSAEngineFactory.Padding.OAEPWITHSHA256ANDMGF1PADDING;
-				byte[] bytes = null;
-				try {
-					bytes = CryptoFactory.INSTANCE.decrypt(
-							ephemeralKey, 
-							pad, 
-							Base64.decode(tokenString, Base64.URL_SAFE)
-					);
-					System.err.println("Completed decryption: "+bytes.length+" bytes");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				
-				return bytes;
-				
 			}
 			
 		};
