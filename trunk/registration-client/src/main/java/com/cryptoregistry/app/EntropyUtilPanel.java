@@ -36,9 +36,8 @@ public class EntropyUtilPanel extends JPanel {
 
 	public EntropyUtilPanel() {
 		super();
-		setBackground(new Color(208, 228, 254));
 		final String url = "http://arxiv.org/ftp/arxiv/papers/1305/1305.0954.pdf";
-		JLabel lblFindEntropyOf = new JLabel("<html>Compute the binary entropy of the text using <a href='"+url+"'>Croll's method</a></html>");
+		JLabel lblFindEntropyOf = new JLabel("<html>Compute the binary entropy of the input text using <a href='"+url+"'>Croll's method</a></html>");
 		lblFindEntropyOf.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		lblFindEntropyOf.addMouseListener(new MouseAdapter() {
 	            @Override
@@ -64,15 +63,18 @@ public class EntropyUtilPanel extends JPanel {
 		
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
-					.addContainerGap()
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(textArea, GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
-						.addComponent(lblFindEntropyOf, GroupLayout.PREFERRED_SIZE, 392, GroupLayout.PREFERRED_SIZE)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(40)
-							.addComponent(lblEntropy)))
+							.addContainerGap()
+							.addComponent(lblFindEntropyOf, GroupLayout.PREFERRED_SIZE, 392, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(53)
+							.addComponent(lblEntropy))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(textArea, GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)))
 					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
@@ -81,10 +83,10 @@ public class EntropyUtilPanel extends JPanel {
 					.addGap(21)
 					.addComponent(lblFindEntropyOf, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(textArea, GroupLayout.PREFERRED_SIZE, 164, GroupLayout.PREFERRED_SIZE)
+					.addComponent(textArea, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(lblEntropy)
-					.addContainerGap(58, Short.MAX_VALUE))
+					.addContainerGap())
 		);
 		setLayout(groupLayout);
 	}
