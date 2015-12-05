@@ -57,7 +57,7 @@ public class ChecklistPanel extends JPanel implements PropertyChangeListener {
 		this.km = km;
 		km.addPropertyChangeListener(this);
 		this.props = props;
-		setBackground(new Color(208, 228, 254));
+	//	setBackground(new Color(208, 228, 254));
 	}
 	
 
@@ -67,7 +67,7 @@ public class ChecklistPanel extends JPanel implements PropertyChangeListener {
 		this.setLayout(new GridLayout(2,0,0,0));
 		
 		JPanel panel = new JPanel();
-		panel.setBackground(new Color(208, 228, 254));
+	//	panel.setBackground(new Color(208, 228, 254));
 		panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
@@ -100,7 +100,7 @@ public class ChecklistPanel extends JPanel implements PropertyChangeListener {
 		
 		JPanel panel1 = new JPanel();
 		panel1.setLayout(new BoxLayout(panel1,BoxLayout.PAGE_AXIS));
-		panel1.setBackground(new Color(208, 228, 254));
+	//	panel1.setBackground(new Color(208, 228, 254));
 		panel1.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		btnRegister = new JButton("Send Registration Request");
 		btnRegister.setEnabled(false);
@@ -114,6 +114,7 @@ public class ChecklistPanel extends JPanel implements PropertyChangeListener {
 					System.out.println(resp);
 					ObjectMapper mapper = new ObjectMapper();
 					try {
+						@SuppressWarnings("unchecked")
 						Map<String,Object> status = (Map<String,Object>) mapper.readValue(resp, Map.class);
 						String err = (String) status.get("error");
 						String stat = (String) status.get("status");
