@@ -3,6 +3,7 @@ package com.cryptoregistry.formats;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,6 +18,8 @@ import x.org.bouncycastle.crypto.params.KeyParameter;
 import x.org.bouncycastle.util.Arrays;
 
 import com.cryptoregistry.MapData;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -126,6 +129,14 @@ public class JSONGenericReader {
 			list.add(md);
 		}
 		return list;
+	}
+	
+	public void clearExistingMacs() {
+		@SuppressWarnings("unchecked")
+		Map<String, Object> uuids = (Map<String, Object>) map.get("Macs");
+		if(uuids != null){
+			uuids.clear();
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -287,5 +298,24 @@ public class JSONGenericReader {
 		}
 			return resBuf;
 	}
-
+	
+	/**
+	 * Useful re-format
+	 * 
+	 * @param writer
+	 */
+	public void reformat(Writer writer){
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			mapper.writeValue(writer, this.map);
+		} catch (JsonGenerationException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	// TODO - add MapData addition interface
 }
