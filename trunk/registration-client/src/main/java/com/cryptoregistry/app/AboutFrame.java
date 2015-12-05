@@ -31,13 +31,13 @@ public class AboutFrame extends JFrame {
 	public AboutFrame(Properties props) {
 		super();
 		this.props = props;
-		this.setUndecorated(true);
+	//	this.setUndecorated(true);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		BufferedImage image = null;
 
 	    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); //this is your screen size
 	    try {
-			image = ImageIO.read(this.getClass().getResourceAsStream("/hand400-trans.png"));
+			image = ImageIO.read(this.getClass().getResourceAsStream("/hand64.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -49,7 +49,7 @@ public class AboutFrame extends JFrame {
 	    writer.append(props.get("app.version"));
 	    writer.append("</p><html>");
 	    JLabel picLabel = new JLabel(writer.toString(), new ImageIcon(image), JLabel.CENTER);
-	    picLabel.setFont(new Font("Verdana", Font.PLAIN, 32));
+	    picLabel.setFont(new Font("Verdana", Font.PLAIN, 16));
 	    picLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 	    picLabel.addMouseListener(new MouseAdapter() {
 	    	public void mouseClicked(MouseEvent e) {
