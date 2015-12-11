@@ -329,8 +329,8 @@ public class CreateKeyPanel extends JPanel {
 		
 		// 1.0 - create obfuscated password file if required
 		
-		boolean createObfuscatedPassword = chckbxCreateObfuscatedPassword.isSelected();
-		if(createObfuscatedPassword){
+	//	boolean createObfuscatedPassword = chckbxCreateObfuscatedPassword.isSelected();
+		if(true){
 			File passwordFile = new File(kmDir,"password.properties");
 			String passwordBase64 = Obfuscate.FACTORY.encrypt(password);
 			Properties props = Properties.Factory.getInstance();
