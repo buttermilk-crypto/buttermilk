@@ -30,7 +30,7 @@ public class KM {
 
 	private String kmPath;
 	private String regHandle;
-	private String privateEmail;
+	private String adminEmail;
 	private char [] password;
 	private KeyGenerationAlgorithm keyAlg;
 	private PBEAlg pbeAlg;
@@ -66,13 +66,13 @@ public class KM {
 		this.regHandle = regHandle;
 	}
 	
-	public String getPrivateEmail() {
-		return privateEmail;
+	public String getAdminEmail() {
+		return adminEmail;
 	}
 
-	public void setPrivateEmail(String privateEmail) {
-		pcs.firePropertyChange("privateEmail", this.privateEmail, privateEmail);
-		this.privateEmail = privateEmail;
+	public void setAdminEmail(String adminEmail) {
+		pcs.firePropertyChange("adminEmail", this.adminEmail, adminEmail);
+		this.adminEmail = adminEmail;
 	}
 
 	public void setKmPath(String path) {

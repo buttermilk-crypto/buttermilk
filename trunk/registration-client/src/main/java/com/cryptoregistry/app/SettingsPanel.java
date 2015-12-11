@@ -27,7 +27,7 @@ public class SettingsPanel extends JPanel {
 	private JTextField parentFolderTextField;
 	
 	JFileChooser fc;
-	private JTextField privateEmailTextField;
+	private JTextField adminEmailTextField;
 
 	public SettingsPanel(Properties props) {
 		
@@ -74,7 +74,7 @@ public class SettingsPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String path = parentFolderTextField.getText().trim();
-				SwingRegistrationWizardGUI.km.setPrivateEmail(privateEmailTextField.getText().trim());
+				SwingRegistrationWizardGUI.km.setAdminEmail(adminEmailTextField.getText().trim());
 				SwingRegistrationWizardGUI.km.setKmPath(path);
 				SwingRegistrationWizardGUI.session = new RequestSession(new File(path));
 				SwingRegistrationWizardGUI.tabbedPane.setSelectedIndex(2);
@@ -84,8 +84,8 @@ public class SettingsPanel extends JPanel {
 		
 		JLabel lblPrivateEmail = new JLabel("Admin Email");
 		
-		privateEmailTextField = new JTextField();
-		privateEmailTextField.setColumns(10);
+		adminEmailTextField = new JTextField();
+		adminEmailTextField.setColumns(10);
 		
 		JLabel lblThisEmailAddress = new JLabel("<html><i>This email address is used as a default contact for this registration</i></html>");
 		
@@ -103,7 +103,7 @@ public class SettingsPanel extends JPanel {
 								.addComponent(lblPrivateEmail))
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(privateEmailTextField, GroupLayout.PREFERRED_SIZE, 254, GroupLayout.PREFERRED_SIZE)
+								.addComponent(adminEmailTextField, GroupLayout.PREFERRED_SIZE, 254, GroupLayout.PREFERRED_SIZE)
 								.addGroup(groupLayout.createSequentialGroup()
 									.addComponent(parentFolderTextField, GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
 									.addGap(8)
@@ -121,7 +121,7 @@ public class SettingsPanel extends JPanel {
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblPrivateEmail)
-						.addComponent(privateEmailTextField, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE))
+						.addComponent(adminEmailTextField, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(lblThisEmailAddress, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED, 146, Short.MAX_VALUE)
