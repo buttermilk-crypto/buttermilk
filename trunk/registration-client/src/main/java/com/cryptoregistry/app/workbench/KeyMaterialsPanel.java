@@ -1,4 +1,4 @@
-package com.cryptoregistry.app.client;
+package com.cryptoregistry.app.workbench;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.JTextArea;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
@@ -29,7 +31,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * @author Dave
  *
  */
-public class KeyMaterialsPanel extends JPanel {
+public class KeyMaterialsPanel extends JPanel implements TreeSelectionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JTree tree;
@@ -65,6 +67,7 @@ public class KeyMaterialsPanel extends JPanel {
 		
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Files: "+rootPath);
 		tree = new JTree(root);
+		tree.addTreeSelectionListener(this);
 		scrollPane.setViewportView(tree);
 		createNodes(root);
 		setLayout(groupLayout);
@@ -101,4 +104,12 @@ public class KeyMaterialsPanel extends JPanel {
 	            }
 	        });
 	    }
+
+	@Override
+	public void valueChanged(TreeSelectionEvent evt) {
+		System.err.println(evt.getPath());
+		System.err.println(evt.getNewLeadSelectionPath());
+		System.err.println(evt.getOldLeadSelectionPath());
+		
+	}
 }
