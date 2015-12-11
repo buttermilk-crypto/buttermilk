@@ -58,28 +58,28 @@ public class FindKeyMaterials extends SimpleFileVisitor<Path> {
 		    		break;
 		    	}
 		    	case "Contacts": {
-		    		System.err.println("Contacts");
+		    		
 		    		currentCategoryNode = new DefaultMutableTreeNode("Contacts");
 		    		currentRegHandleNode.add(currentCategoryNode);
 		    		iterNode(field,currentCategoryNode);
 		    		break;
 		    	}
 		    	case "Data": {
-		    		System.err.println("Data");
+		    		
 		    		currentCategoryNode = new DefaultMutableTreeNode("Data");
 		    		currentRegHandleNode.add(currentCategoryNode);
 		    		iterDataNode(field,currentCategoryNode);
 		    		break;
 		    	}
 		    	case "Keys": {
-		    		System.err.println("Keys");
+		    		
 		    		currentCategoryNode = new DefaultMutableTreeNode("Keys");
 		    		currentRegHandleNode.add(currentCategoryNode);
 		    		iterNode(field,currentCategoryNode);
 		    		break;
 		    	}
 		    	case "Signatures": {
-		    		System.err.println("Signatures");
+		    	
 		    		currentCategoryNode = new DefaultMutableTreeNode("Signatures");
 		    		currentRegHandleNode.add(currentCategoryNode);
 		    		iterNode(field,currentCategoryNode);
@@ -97,9 +97,8 @@ public class FindKeyMaterials extends SimpleFileVisitor<Path> {
 		Iterator<Map.Entry<String,JsonNode>> iter = node.fields();
 		while(iter.hasNext()){
 			Map.Entry<String,JsonNode> entry = iter.next();
-			System.err.println(entry.getKey());
-			 DefaultMutableTreeNode localNode = new DefaultMutableTreeNode("Local");
-			    currentCategoryNode.add(localNode);
+			DefaultMutableTreeNode localNode = new DefaultMutableTreeNode("Local");
+			currentCategoryNode.add(localNode);
 			iterNode(entry,localNode);
 		}
 	}
@@ -110,7 +109,6 @@ public class FindKeyMaterials extends SimpleFileVisitor<Path> {
 		while (uuids.hasNext()) {
 		    Map.Entry<String,JsonNode> uuidMapEntry = uuids.next();
 		    String uuid = uuidMapEntry.getKey();
-		    System.err.println("\t"+uuid);
 		    DefaultMutableTreeNode uuidNode = new DefaultMutableTreeNode(uuid);
 		    categoryTreeNode.add(uuidNode);
 		    JsonNode mapdata = uuidMapEntry.getValue();
@@ -120,8 +118,11 @@ public class FindKeyMaterials extends SimpleFileVisitor<Path> {
     		    String dataKey = dataEntry.getKey();
     		    JsonNode dataValue = dataEntry.getValue();
     		    dataValue.asText();
-    		    System.err.println("\t\t"+dataKey+" "+dataValue);
-    		    DefaultMutableTreeNode keyNode = new DefaultMutableTreeNode(""+dataKey+" "+dataValue);
+    		    StringBuffer buf = new StringBuffer();
+    		    buf.append(dataKey);
+    		    buf.append("=");
+    		    buf.append(dataValue);
+    		    DefaultMutableTreeNode keyNode = new DefaultMutableTreeNode(buf.toString());
     		    uuidNode.add(keyNode);
     		}
 		}
@@ -132,7 +133,6 @@ public class FindKeyMaterials extends SimpleFileVisitor<Path> {
 			FindKeyMaterials f = new FindKeyMaterials();
 			Files.walkFileTree(new File("./km").toPath(), f);
 			for(String path : f.paths){
-				System.err.println("Looking at: "+path);
 				f.iterate(path,new DefaultMutableTreeNode("Files"));
 			}
 		} catch (IOException e) {
