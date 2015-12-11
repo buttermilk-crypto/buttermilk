@@ -1,4 +1,4 @@
-package com.cryptoregistry.app.client;
+package com.cryptoregistry.app.workbench;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,10 +18,10 @@ import static java.nio.file.FileVisitResult.*;
 
 public class FindKeyMaterials extends SimpleFileVisitor<Path> {
 	
-	List<String> paths;
-	DefaultMutableTreeNode currentPathNode;
-	DefaultMutableTreeNode currentRegHandleNode;
-	DefaultMutableTreeNode currentCategoryNode;
+	private List<String> paths;
+	private DefaultMutableTreeNode currentPathNode;
+	private DefaultMutableTreeNode currentRegHandleNode;
+	private DefaultMutableTreeNode currentCategoryNode;
 
 	public FindKeyMaterials() {
 		super();
