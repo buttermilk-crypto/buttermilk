@@ -22,10 +22,12 @@ public class FindKeyMaterials extends SimpleFileVisitor<Path> {
 	private DefaultMutableTreeNode currentPathNode;
 	private DefaultMutableTreeNode currentRegHandleNode;
 	private DefaultMutableTreeNode currentCategoryNode;
+	private Path rootPath;
 
-	public FindKeyMaterials() {
+	public FindKeyMaterials(Path rootPath) {
 		super();
 		paths = new ArrayList<String>();
+		this.rootPath = rootPath;
 	}
 
 	@Override
@@ -43,8 +45,10 @@ public class FindKeyMaterials extends SimpleFileVisitor<Path> {
 	public void iterate(String path, DefaultMutableTreeNode rootTreeNode) {
 		try {
 		ObjectMapper mapper = new ObjectMapper();
-		JsonNode rootNode = mapper.readTree(new File(path));  
-		currentPathNode = new DefaultMutableTreeNode(path);
+		File f = new File(path);
+		JsonNode rootNode = mapper.readTree(f);  
+		Path to = rootPath.relativize(f.toPath());
+		currentPathNode = new DefaultMutableTreeNode(to.toString());
 		Iterator<Map.Entry<String,JsonNode>> fields = rootNode.fields();
 		while (fields.hasNext()) {
 		    Map.Entry<String,JsonNode> field = fields.next();
@@ -130,8 +134,9 @@ public class FindKeyMaterials extends SimpleFileVisitor<Path> {
 
 	public static void main(String [] args){
 		try {
-			FindKeyMaterials f = new FindKeyMaterials();
-			Files.walkFileTree(new File("./km").toPath(), f);
+			Path rootPath = new File("./km").toPath();
+			FindKeyMaterials f = new FindKeyMaterials(rootPath);
+			Files.walkFileTree(rootPath, f);
 			for(String path : f.paths){
 				f.iterate(path,new DefaultMutableTreeNode("Files"));
 			}

@@ -26,8 +26,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -86,32 +84,32 @@ public class SwingRegistrationWizardGUI {
     	 JMenuBar menuBar = new JMenuBar();
 
     	//Build the first menu.
-    	JMenu fileMenu = new JMenu("File");
-    	menuBar.add(fileMenu);
+    	//JMenu fileMenu = new JMenu("File");
+    	//menuBar.add(fileMenu);
     	
-    	JMenu manageMenu = new JMenu("Management");
-    	menuBar.add(manageMenu);
-    	JMenuItem itemSession = new JMenuItem("Create Session");
-    	manageMenu.add(itemSession);
-    	itemSession.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFrame myframe = new JFrame();
-				myframe.setIconImages(new IconLister().getIconList());
-				new SessionDialog(myframe, "Create Session", props);
-			}
-    	});
+    	//JMenu manageMenu = new JMenu("Management");
+    	//menuBar.add(manageMenu);
+    	//JMenuItem itemSession = new JMenuItem("Create Session");
+    	//manageMenu.add(itemSession);
+    	//itemSession.addActionListener(new ActionListener() {
+		//	@Override
+		//	public void actionPerformed(ActionEvent e) {
+		//		JFrame myframe = new JFrame();
+		//		myframe.setIconImages(new IconLister().getIconList());
+		//		new SessionDialog(myframe, "Create Session", props);
+		//	}
+    	//});
     	
-    	JMenuItem itemKey = new JMenuItem("Add Key");
-    	manageMenu.add(itemKey);
-    	itemKey.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFrame myframe = new JFrame();
-				myframe.setIconImages(new IconLister().getIconList());
-				new AddKeyDialog(myframe, "Add New Key", props);
-			}
-    	});
+    	//JMenuItem itemKey = new JMenuItem("Add Key");
+    	//manageMenu.add(itemKey);
+    	//itemKey.addActionListener(new ActionListener() {
+		//	@Override
+		//	public void actionPerformed(ActionEvent e) {
+		//		JFrame myframe = new JFrame();
+		//		myframe.setIconImages(new IconLister().getIconList());
+		//		new AddKeyDialog(myframe, "Add New Key", props);
+		//	}
+    	//});
     	//itemKey.setEnabled(false);
     	
     	JMenu utilityMenu = new JMenu("Utility");
@@ -134,31 +132,31 @@ public class SwingRegistrationWizardGUI {
     	JMenu aboutMenu = new JMenu("About");
     	menuBar.add(aboutMenu);
     	
-    	JMenuItem itemAbout = new JMenuItem("About This Application");
+    	JMenuItem itemAbout = new JMenuItem("Registration Wizard 0.9");
     	aboutMenu.add(itemAbout);
-    	itemAbout.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-			            	new AboutFrame(myprops);
-			}
-    	});
+    //	itemAbout.addActionListener(new ActionListener() {
+	//		@Override
+	//		public void actionPerformed(ActionEvent e) {
+	//		            	new AboutFrame(myprops);
+	//		}
+    //	});
     	
     	return menuBar;
      }
      
 
-	 private static void createAndShowGUI(Properties props) {
+	 public static void createAndShowGUI(Properties props) {
 		 
 		 km = new KM();
 		
-		 try {
-			    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-			        if ("Nimbus".equals(info.getName())) {
-			            UIManager.setLookAndFeel(info.getClassName());
-			            break;
-			        }
-			    }
-			} catch (Exception e) {}
+		// try {
+		//	    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		//	        if ("Nimbus".equals(info.getName())) {
+		//	            UIManager.setLookAndFeel(info.getClassName());
+		//	            break;
+		//	        }
+		//	    }
+		//} catch (Exception e) {}
 		 
 		
 		 
