@@ -4,55 +4,52 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.JTextArea;
-import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 /**
- * Scan a root path for Buttermilk-formatted files and show a graphic display
- * 
- * Reg handle
- * 		keys
- * 			uuid - alg - locked
- * 
- * etc
- * 
- * Has concept of current or selected 
- * 
- * Monitor on file status for updates
+ * Panel has tree view of file system based on rootPath. 
+ *  - Incoming - if rootPath changes, must re-initialize. 
+ *  - Outgoing - if valueChanged() on treeSelectionListener, then propagate that change to WorkbookGUI. 
  * 
  * @author Dave
  *
  */
-public class KeyMaterialsPanel extends JPanel implements TreeSelectionListener {
+public class KeyMaterialsPanel extends JPanel  {
 
 	private static final long serialVersionUID = 1L;
 	private JTree tree;
-	JScrollPane scrollPane;
+	JScrollPane treeScrollPane;
+	JScrollPane textScrollPane;
 	private String rootPath;
+	private DefaultMutableTreeNode root;
 
 	public KeyMaterialsPanel(String rootPath) {
 		super();
 		this.rootPath = rootPath;
 		
-		scrollPane = new JScrollPane();
+		treeScrollPane = new JScrollPane();
+		textScrollPane = new JScrollPane();
 		
 		JTextArea textArea = new JTextArea();
+		
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 295, GroupLayout.PREFERRED_SIZE)
+					.addComponent(treeScrollPane, GroupLayout.PREFERRED_SIZE, 295, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
-					.addComponent(textArea, GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
+					.addComponent(textScrollPane, GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
 					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
@@ -60,22 +57,29 @@ public class KeyMaterialsPanel extends JPanel implements TreeSelectionListener {
 				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(textArea, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
-						.addComponent(scrollPane, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE))
+						.addComponent(textScrollPane, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
+						.addComponent(treeScrollPane, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Files: "+rootPath);
+		root = new DefaultMutableTreeNode("Files");
 		tree = new JTree(root);
-		tree.addTreeSelectionListener(this);
-		scrollPane.setViewportView(tree);
+		treeScrollPane.setViewportView(tree);
+		textScrollPane.setViewportView(textArea);
 		createNodes(root);
 		setLayout(groupLayout);
 	}
 	
+	
+	
 	private void createNodes(DefaultMutableTreeNode root){
 		try {
-			FindKeyMaterials f = new FindKeyMaterials();
+			
+			if(rootPath == null) {
+				
+				return;
+			}
+			FindKeyMaterials f = new FindKeyMaterials(new File(rootPath).toPath());
 			Files.walkFileTree(new File(rootPath).toPath(), f);
 			for(String path : f.getPaths()){
 				System.err.println("Looking at: "+path);
@@ -86,30 +90,45 @@ public class KeyMaterialsPanel extends JPanel implements TreeSelectionListener {
 		}
 	}
 	
-	  public static void main(String[] args) {
-	        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-	            public void run() {
-	            //	InputStream in = Thread.currentThread()
-	            //			.getContextClassLoader().getResourceAsStream("regwizard.properties");
-	            //	Properties props = Properties.Factory.getInstance(in);
-	                JFrame frame = new JFrame("cryptoregistry.com - Registration Key Materials Wizard");
-	    	        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    	        
-	    	        
-	    	        frame.getContentPane().add(new KeyMaterialsPanel("./km"));
-	    	        
-	    	        //Display the window.
-	    	        frame.pack();
-	    	        frame.setVisible(true);
-	            }
-	        });
-	    }
-
-	@Override
-	public void valueChanged(TreeSelectionEvent evt) {
-		System.err.println(evt.getPath());
-		System.err.println(evt.getNewLeadSelectionPath());
-		System.err.println(evt.getOldLeadSelectionPath());
-		
+	public void updateNodes(){
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getModel().getRoot();
+		node.removeAllChildren();
+		createNodes(node);
 	}
+
+	/**
+	 * NOTE: Should only be called from the event-dispatch thread
+	 * @param rootPath
+	 */
+	public void setRootPath(String rootPath) {
+		if(rootPath == null) return;
+		File test = new File(rootPath);
+		if(test.exists() && test.isDirectory()){
+			this.rootPath = rootPath;
+		}else{
+			 JOptionPane.showMessageDialog(null, "Path does not look valid", "Message", JOptionPane.WARNING_MESSAGE);
+		}
+		
+		updateNodes();
+		
+		// expand the root node
+		TreeNode[] items = new TreeNode[1];
+		items[0] = root;
+		TreePath tp = new TreePath(items);
+		tree.expandPath(tp);
+	}
+	
+	/**
+	 * simple accessor
+	 * 
+	 * @return
+	 */
+	public String getRootPath() {
+		return this.rootPath;
+	}
+
+	public void addTreeSelectionListener(TreeSelectionListener listener){
+		this.tree.addTreeSelectionListener(listener);
+	}
+	
 }
