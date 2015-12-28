@@ -1,6 +1,5 @@
 package com.cryptoregistry.util.entropy;
 
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 import net.iharder.Base64;
@@ -26,9 +25,7 @@ public class TresBiEntropyTest {
 		Assert.assertTrue(t.calc().biEntropy == 0);
 		
 		SecureRandom rand = null;
-		try {
-			rand = SecureRandom.getInstanceStrong();
-		} catch (NoSuchAlgorithmException e) {}
+		rand = new SecureRandom();
 		
 		byte [] randBytes = new byte [32];
 		rand.nextBytes(randBytes);

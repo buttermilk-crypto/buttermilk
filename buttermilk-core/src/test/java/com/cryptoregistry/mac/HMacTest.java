@@ -19,7 +19,7 @@ public class HMacTest {
 	@Test
 	public void test0() throws NoSuchAlgorithmException {
 		
-		SecureRandom rand = SecureRandom.getInstanceStrong();
+		SecureRandom rand = new SecureRandom();
 		byte [] key = new byte [128];
 		rand.nextBytes(key);
 		

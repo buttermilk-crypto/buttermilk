@@ -202,8 +202,7 @@ public class CryptoKeyWrapperImpl implements CryptoKeyWrapper {
 
 	@Override
 	public String toString() {
-		return "CryptoKeyWrapperImpl [distinguishedHandle="
-				+ distinguishedHandle + ", wrapped=" + wrapped + "]";
+		return distinguishedHandle;
 	}
 
 	@Override
