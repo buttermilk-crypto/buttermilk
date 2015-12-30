@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
     <version>1.0.0</version>
     
-    <name>Buttermilk is a library for new cryptographic key and digital signature formats</name>
+    <name>Buttermilk is a library for new cryptographic key and digital signature formats and dependencies for a new PKI</name>
 
     <modules>
         <module>bientropy</module>
@@ -18,6 +18,8 @@
         <module>handshake</module>
         <module>io</module>
         <module>registration-client</module>
+        <module>keyvault</module>
+        <module>workbench</module>
     </modules>
 
     <build>
@@ -36,7 +38,8 @@
     </build>
 
     <dependencies>
-         <dependency>
+    
+      <dependency>
 	      <groupId>junit</groupId>
 	      <artifactId>junit</artifactId>
 	      <version>${junit.version}</version>
