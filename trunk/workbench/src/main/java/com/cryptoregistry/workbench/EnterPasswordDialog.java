@@ -10,7 +10,7 @@ public class EnterPasswordDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	
-	EnterPasswordPanel panel;
+	private EnterPasswordPanel panel;
 
 	public EnterPasswordDialog(JFrame parent, String title) {
 		super(parent,title);
@@ -40,6 +40,7 @@ public class EnterPasswordDialog extends JDialog {
 							System.err.println(new String(pass));
 						}
 	            	});
+	            	pd.open();
 	            }
 	        });
 		

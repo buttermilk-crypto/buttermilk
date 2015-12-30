@@ -82,7 +82,7 @@ public class EnterPasswordPanel extends JPanel {
 		btnCancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				parent.setEnabled(false);
+				parent.setVisible(false);
 				parent.dispose();
 			}
 		});
