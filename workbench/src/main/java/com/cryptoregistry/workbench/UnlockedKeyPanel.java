@@ -130,6 +130,15 @@ public class UnlockedKeyPanel extends JPanel implements CreateKeyListener, Unloc
 	public void keyUnlocked(EventObject evt) {
 		UnlockKeyEvent uevt = (UnlockKeyEvent)evt;
 		CryptoKey key = uevt.getKey();
+		String handle = key.getMetadata().getHandle();
+		int size = model.getSize();
+		for(int i = 0;i<size;i++){
+			KeyWrapper wrapper = model.getElementAt(i);
+			if(handle.equals(wrapper.key.getMetadata().getHandle())) {
+				return;
+			}
+		}
+		// ok, we don't have this key already
 		this.model.addElement(new KeyWrapper(key));
 		
 	}
