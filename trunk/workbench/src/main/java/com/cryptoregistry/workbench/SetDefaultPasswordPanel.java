@@ -45,10 +45,10 @@ public class SetDefaultPasswordPanel extends JPanel {
 		JLabel lblAgain = new JLabel("Again:");
 		
 		password0 = new JPasswordField();
-		password0.setColumns(10);
+		password0.setColumns(64); 
 		
 		password1 = new JPasswordField();
-		password1.setColumns(10);
+		password1.setColumns(64);
 		
 		btnOk = new JButton("OK");
 		btnOk.addActionListener(new ActionListener() {

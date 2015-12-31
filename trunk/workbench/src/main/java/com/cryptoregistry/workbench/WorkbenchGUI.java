@@ -342,7 +342,9 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener, RegHandle
 		
 		keysMenu.addSeparator();
 		
-		unlockKeysAction = new UnlockKeysAction(tabs,statusLabel);
+		unlockKeysAction = new UnlockKeysAction(frame, tabs, statusLabel);
+		unlockKeysAction.addUnlockKeyListener(unlockedKeyDialog.getPanel());
+		enterPasswordDialog.addPasswordChangedListener(unlockKeysAction);
 		keysMenu.add(unlockKeysAction);
 		
 		keysMenu.addSeparator();
