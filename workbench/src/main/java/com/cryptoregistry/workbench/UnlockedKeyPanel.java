@@ -2,6 +2,7 @@ package com.cryptoregistry.workbench;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.EventObject;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
@@ -21,7 +22,7 @@ import com.cryptoregistry.rsa.RSAKeyForPublication;
 import javax.swing.JButton;
 
 
-public class UnlockedKeyPanel extends JPanel implements CreateKeyListener {
+public class UnlockedKeyPanel extends JPanel implements CreateKeyListener, UnlockKeyListener {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -123,6 +124,14 @@ public class UnlockedKeyPanel extends JPanel implements CreateKeyListener {
 			buf.append("\n");
 		}
 		return buf.toString();
+	}
+
+	@Override
+	public void keyUnlocked(EventObject evt) {
+		UnlockKeyEvent uevt = (UnlockKeyEvent)evt;
+		CryptoKey key = uevt.getKey();
+		this.model.addElement(new KeyWrapper(key));
+		
 	}
 	
 }
