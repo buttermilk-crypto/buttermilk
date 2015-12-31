@@ -5,8 +5,6 @@
  */
 package com.cryptoregistry.pbe;
 
-import java.util.Arrays;
-
 import com.cryptoregistry.passwords.SensitiveBytes;
 
 import x.org.bouncycastle.crypto.PBEParametersGenerator;
@@ -117,14 +115,14 @@ public class PBE {
 						params.getParallelization_p(), 
 						params.getDesiredKeyLengthInBytes());
 				
-				System.err.println("scrypt password="+Arrays.toString(params.getPassword().toBytes()));
-				System.err.println("scrypt salt="+Arrays.toString(params.getSalt().getData()));
-				System.err.println("N="+params.getCpuMemoryCost_N());
-				System.err.println("r="+params.getBlockSize_r());
-				System.err.println("p="+params.getParallelization_p());
-				System.err.println("scrypt key="+Arrays.toString(key));
-				System.err.println("desiredlength="+params.getDesiredKeyLengthInBytes());
-				System.err.println("aes iv="+Arrays.toString(params.getIv().getData()));
+			//	System.err.println("scrypt password="+Arrays.toString(params.getPassword().toBytes()));
+			//	System.err.println("scrypt salt="+Arrays.toString(params.getSalt().getData()));
+			//	System.err.println("N="+params.getCpuMemoryCost_N());
+			//	System.err.println("r="+params.getBlockSize_r());
+			//	System.err.println("p="+params.getParallelization_p());
+			//	System.err.println("scrypt key="+Arrays.toString(key));
+			//	System.err.println("desiredlength="+params.getDesiredKeyLengthInBytes());
+			//	System.err.println("aes iv="+Arrays.toString(params.getIv().getData()));
 				
 				holder = new ParametersWithIV(
 						new KeyParameter(key, 0, key.length), 

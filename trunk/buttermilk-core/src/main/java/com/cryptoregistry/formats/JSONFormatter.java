@@ -24,8 +24,10 @@ import com.cryptoregistry.ntru.NTRUKeyForPublication;
 import com.cryptoregistry.rsa.RSAKeyForPublication;
 import com.cryptoregistry.signature.CryptoSignature;
 import com.cryptoregistry.symmetric.SymmetricKeyContents;
+import com.cryptoregistry.util.Lf2SpacesIndenter;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 
 /**
  * A builder which will generate the canonical data structure for a buttermilk format JSON wrapper 
@@ -159,7 +161,11 @@ public class JSONFormatter {
 		JsonGenerator g = null;
 		try {
 			g = f.createGenerator(writer);
-			if(prettyPrint)g.useDefaultPrettyPrinter();
+			if(prettyPrint) {
+				g.useDefaultPrettyPrinter();
+				DefaultPrettyPrinter pp = (DefaultPrettyPrinter) g.getPrettyPrinter();
+				pp.indentArraysWith(new Lf2SpacesIndenter());
+			}
 			
 			g.writeStartObject();
 			g.writeStringField("Version", Version.OVERALL_VERSION);
