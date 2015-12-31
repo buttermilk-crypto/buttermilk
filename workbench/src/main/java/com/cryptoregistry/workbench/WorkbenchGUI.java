@@ -76,6 +76,7 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener, RegHandle
 	
 	private Password password;
 	private String regHandle;
+	private String adminEmail;
 	
 	private ExternalPropsManager propsMgr;
 
@@ -159,8 +160,10 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener, RegHandle
 		if(!propsMgr.hasDefaultKeyDirectoryLocation()) {
 			InitialSetupDialog isd = new InitialSetupDialog(this.frame,"Initial Setup");
 			if(isd.isSucceeded()){
-				String path = isd.getTextField().getText();
+				String path = isd.getRootDirTextField().getText();
+				adminEmail = isd.getAdminEmailTextField().getText();
 				propsMgr.put("default.key.directory",path);
+				propsMgr.put("registration.email",adminEmail);
 				propsMgr.write();
 				File dir = new File(path);
 				fc.setCurrentDirectory(dir);
@@ -173,6 +176,9 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener, RegHandle
 		
 		if(propsMgr.hasRegistrationHandleSerialized()){
 			this.regHandle = propsMgr.get("registration.handle");
+		}
+		if(propsMgr.hasAdminEmailSerialized()){
+			this.adminEmail = propsMgr.get("registration.email");
 		}
 	}
 

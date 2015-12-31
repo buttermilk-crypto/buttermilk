@@ -40,6 +40,10 @@ public class ExternalPropsManager implements RegHandleListener {
 		return file.exists() && props.containsKey("registration.handle");
 	}
 	
+	public boolean hasAdminEmailSerialized() {
+		return file.exists() && props.containsKey("registration.email");
+	}
+	
 	/**
 	 * Return true if file created
 	 * 

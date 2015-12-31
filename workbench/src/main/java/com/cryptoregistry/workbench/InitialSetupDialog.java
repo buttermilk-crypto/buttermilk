@@ -1,6 +1,7 @@
 package com.cryptoregistry.workbench;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Frame;
 
 import javax.swing.JDialog;
@@ -9,6 +10,8 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 
@@ -23,9 +26,11 @@ import javax.swing.JFileChooser;
 public class InitialSetupDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	private JTextField textField;
+	private JTextField rootDirTextField;
 	private JFileChooser fc;
 	private boolean succeeded;
+	private JTextField adminEmailTextField;
+	private final EmailFormatValidator validator = new EmailFormatValidator();
 
 	public InitialSetupDialog(Frame owner, String title) {
 		super(owner, title, true);
@@ -34,12 +39,12 @@ public class InitialSetupDialog extends JDialog {
 		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		
 		JPanel panel = new JPanel();
-		getContentPane().add(panel, BorderLayout.CENTER);
+		getContentPane().add(panel, BorderLayout.WEST);
 		
 		JLabel lblPleaseChooseThe = new JLabel("Please choose the directory where by default your key materials will be stored:");
 		
-		textField = new JTextField();
-		textField.setColumns(10);
+		rootDirTextField = new JTextField();
+		rootDirTextField.setColumns(10);
 		
 		JButton btnSelect = new JButton("Select");
 		btnSelect.addActionListener(new ActionListener() {
@@ -51,7 +56,7 @@ public class InitialSetupDialog extends JDialog {
 		        if (returnVal == JFileChooser.APPROVE_OPTION) {
 		            File file = fc.getSelectedFile();
 		            try {
-						textField.setText(file.getCanonicalPath());
+						rootDirTextField.setText(file.getCanonicalPath());
 						succeeded = true;
 						return;
 					} catch (IOException e) {
@@ -64,7 +69,8 @@ public class InitialSetupDialog extends JDialog {
 		});
 		
 		final InitialSetupDialog isd = this;
-		JButton btnOk = new JButton("OK");
+		final JButton btnOk = new JButton("OK");
+		btnOk.setEnabled(false);
 		btnOk.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -73,7 +79,7 @@ public class InitialSetupDialog extends JDialog {
 			}
 		});
 		
-		JButton btnCancel = new JButton("Cancel");
+		final JButton btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -82,23 +88,44 @@ public class InitialSetupDialog extends JDialog {
 			}
 		});
 		
+		JLabel lblEnterAnAdministrative = new JLabel("Enter an administrative, default contact email address:");
+		
+		adminEmailTextField = new JTextField();
+		adminEmailTextField.setColumns(50);
+		adminEmailTextField.addKeyListener(new KeyAdapter(){
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String email = adminEmailTextField.getText();
+				if(email == null || email.length() <10) {
+					btnOk.setEnabled(false);
+					return;
+				}
+				if(validator.validate(email)){
+					btnOk.setEnabled(true);
+				}else{
+					btnOk.setEnabled(false);
+				}
+			}
+		});
+		
+		
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
-			gl_panel.createParallelGroup(Alignment.TRAILING)
+			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel.createSequentialGroup()
-							.addComponent(textField, GroupLayout.PREFERRED_SIZE, 292, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblPleaseChooseThe, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 442, Short.MAX_VALUE)
+						.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
+							.addComponent(rootDirTextField, GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(btnSelect))
-						.addComponent(lblPleaseChooseThe))
-					.addContainerGap(45, Short.MAX_VALUE))
-				.addGroup(gl_panel.createSequentialGroup()
-					.addContainerGap(306, Short.MAX_VALUE)
-					.addComponent(btnCancel)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnOk)
+						.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
+							.addComponent(btnCancel)
+							.addGap(5)
+							.addComponent(btnOk))
+						.addComponent(lblEnterAnAdministrative)
+						.addComponent(adminEmailTextField, GroupLayout.PREFERRED_SIZE, 295, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap())
 		);
 		gl_panel.setVerticalGroup(
@@ -108,26 +135,33 @@ public class InitialSetupDialog extends JDialog {
 					.addComponent(lblPleaseChooseThe)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnSelect))
-					.addPreferredGap(ComponentPlacement.RELATED, 174, Short.MAX_VALUE)
+						.addComponent(btnSelect)
+						.addComponent(rootDirTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(11)
+					.addComponent(lblEnterAnAdministrative)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(adminEmailTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
 					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnOk)
-						.addComponent(btnCancel))
+						.addComponent(btnCancel)
+						.addComponent(btnOk))
 					.addContainerGap())
 		);
 		panel.setLayout(gl_panel);
-		
+		panel.setPreferredSize(new Dimension(462,200));
 		pack();
 		setVisible(true);
 	}
 
-	public JTextField getTextField() {
-		return textField;
+	public JTextField getRootDirTextField() {
+		return rootDirTextField;
 	}
 
 	public boolean isSucceeded() {
 		return succeeded;
 	}
 
+	public JTextField getAdminEmailTextField() {
+		return adminEmailTextField;
+	}
 }
