@@ -45,11 +45,13 @@ public class OpenFileAction extends AbstractAction {
 		  fc.setFileFilter(filter);
 		  
 		int returnVal = fc.showOpenDialog(comp);
-		
+		   int currentIndex = 0;
 		  if (returnVal == JFileChooser.APPROVE_OPTION) {
 	            file = fc.getSelectedFile();
 	            String title = file.getName();
 	            UUIDTextPane pane = null;
+	         
+	            currentIndex = tabs.getSelectedIndex();
 	            
 	            if(newTab){
 	            	pane = new UUIDTextPane(file);
@@ -57,16 +59,16 @@ public class OpenFileAction extends AbstractAction {
 	            	JScrollPane scroll= new JScrollPane(pane);
 	            	tabs.add(title, scroll);
 	            }else{
-	            	int index = tabs.getSelectedIndex();
-	            	if(index== -1) return; // fail because no tabs found
-	            	pane = (UUIDTextPane) ((JScrollPane)tabs.getComponentAt(index)).getViewport().getView();
+	            	if(currentIndex == -1) return; // fail because no tabs found
+	            	pane = (UUIDTextPane) ((JScrollPane)tabs.getComponentAt(currentIndex)).getViewport().getView();
 	            	pane.setTargetFile(file);
-	            	tabs.setTitleAt(index, file.getName());
+	            	tabs.setTitleAt(currentIndex, file.getName());
 	            }
 				
 				try {
 					String s = new String(Files.readAllBytes(file.toPath()),StandardCharsets.UTF_8);
 					pane.setText(s);
+					tabs.setSelectedIndex(currentIndex+1);
 					pane.requestFocusInWindow();
 				} catch (Exception e) {
 					e.printStackTrace();
