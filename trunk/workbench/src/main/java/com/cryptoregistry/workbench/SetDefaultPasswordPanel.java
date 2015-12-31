@@ -1,6 +1,7 @@
 package com.cryptoregistry.workbench;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -24,10 +25,10 @@ import com.cryptoregistry.util.Check10K;
 import com.cryptoregistry.util.entropy.TresBiEntropy;
 import com.cryptoregistry.util.entropy.TresBiEntropy.Result;
 
-public class EnterPasswordPanel extends JPanel {
+public class SetDefaultPasswordPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private final EnterPasswordDialog parent;
+	private final SetDefaultPasswordDialog parent;
 	private JPasswordField password0;
 	private JPasswordField password1;
 	private JLabel lblEntropy;
@@ -37,7 +38,7 @@ public class EnterPasswordPanel extends JPanel {
 	private JButton btnOk;
 	private List<PasswordListener> listeners = new ArrayList<PasswordListener>();
 
-	public EnterPasswordPanel(EnterPasswordDialog par) {
+	public SetDefaultPasswordPanel(SetDefaultPasswordDialog par) {
 		this.parent = par;
 		tenK = new Check10K();
 		JLabel lblEnterPassword = new JLabel("Enter Password:");
@@ -138,7 +139,7 @@ public class EnterPasswordPanel extends JPanel {
 					.addContainerGap(202, Short.MAX_VALUE))
 		);
 		setLayout(groupLayout);
-		// TODO Auto-generated constructor stub
+		setPreferredSize(new Dimension(475,150));
 	}
 	
 	private void checkPassword() {

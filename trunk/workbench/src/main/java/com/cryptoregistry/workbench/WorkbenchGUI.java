@@ -40,6 +40,7 @@ import com.cryptoregistry.workbench.action.FormatJSONAction;
 import com.cryptoregistry.workbench.action.OpenFileAction;
 import com.cryptoregistry.workbench.action.PrintAction;
 import com.cryptoregistry.workbench.action.SaveFileAction;
+import com.cryptoregistry.workbench.action.UnlockKeysAction;
 import com.cryptoregistry.workbench.action.ValidateJSONAction;
 
 import asia.redact.bracket.properties.Properties;
@@ -68,6 +69,8 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener, RegHandle
 	
 	private ValidateJSONAction validateJSONAction;
 	private FormatJSONAction formatJSONAction;
+	
+	private UnlockKeysAction unlockKeysAction;
 	
 	private JLabel statusLabel;
 	
@@ -299,7 +302,7 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener, RegHandle
 		createKeyDialog.addCreateKeyListener(unlockedKeyDialog.getPanel());
 		createKeyDialog.addCreateKeyListener(this);
 		rhsd.addRegHandleListener(createKeyDialog.getPanel());
-		final EnterPasswordDialog enterPasswordDialog = new EnterPasswordDialog(frame, "Enter a Password");
+		final SetDefaultPasswordDialog enterPasswordDialog = new SetDefaultPasswordDialog(frame, "Enter a Password");
     	enterPasswordDialog.addPasswordChangedListener(instance);
     	enterPasswordDialog.addPasswordChangedListener(createKeyDialog.getPanel());
     	
@@ -336,6 +339,11 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener, RegHandle
 				createKeyDialog.open();
 			}
 		});
+		
+		keysMenu.addSeparator();
+		
+		unlockKeysAction = new UnlockKeysAction(tabs,statusLabel);
+		keysMenu.add(unlockKeysAction);
 		
 		keysMenu.addSeparator();
 		
@@ -450,6 +458,8 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener, RegHandle
 			this.validateJSONAction.setEnabled(false);
 			this.formatJSONAction.setEnabled(false);
 			
+			this.unlockKeysAction.setEnabled(false);
+			
 			this.statusLabel.setText("...");
 			return;
 		}else{
@@ -469,6 +479,8 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener, RegHandle
 				this.validateJSONAction.setEnabled(true);
 				this.formatJSONAction.setEnabled(true);
 				
+				this.unlockKeysAction.setEnabled(true);
+				
 				this.statusLabel.setText("...");
 				return;
 			}else{
@@ -482,6 +494,8 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener, RegHandle
 				
 				this.validateJSONAction.setEnabled(true);
 				this.formatJSONAction.setEnabled(true);
+				
+				this.unlockKeysAction.setEnabled(true);
 				
 				try {
 					this.statusLabel.setText(pane.getTargetFile().getCanonicalPath());

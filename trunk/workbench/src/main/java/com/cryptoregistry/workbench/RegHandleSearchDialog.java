@@ -37,7 +37,8 @@ public class RegHandleSearchDialog extends JDialog {
 	            	InputStream in = Thread.currentThread().getContextClassLoader()
 							.getResourceAsStream("regwizard.properties");
 					Properties props = Properties.Factory.getInstance(in);
-	            	new RegHandleSearchDialog(null,"TEST", props);
+					RegHandleSearchDialog dialog = new RegHandleSearchDialog(null,"TEST", props);
+					dialog.open();
 	            }
 	        });
 		

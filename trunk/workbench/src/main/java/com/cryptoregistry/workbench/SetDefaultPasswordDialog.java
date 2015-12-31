@@ -6,15 +6,16 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 
-public class EnterPasswordDialog extends JDialog {
+public class SetDefaultPasswordDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	
-	private EnterPasswordPanel panel;
+	private SetDefaultPasswordPanel panel;
 
-	public EnterPasswordDialog(JFrame parent, String title) {
+	public SetDefaultPasswordDialog(JFrame parent, String title) {
 		super(parent,title);
-		panel = new EnterPasswordPanel(this);
+		panel = new SetDefaultPasswordPanel(this);
+		System.err.println(panel.getPreferredSize());
 		getContentPane().add(panel);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		pack();
@@ -32,7 +33,7 @@ public class EnterPasswordDialog extends JDialog {
 	public static void main(String[] a) {
 		 javax.swing.SwingUtilities.invokeLater(new Runnable() {
 	            public void run() {
-	            	EnterPasswordDialog pd =new EnterPasswordDialog(new JFrame(), "Enter a Password");
+	            	SetDefaultPasswordDialog pd =new SetDefaultPasswordDialog(new JFrame(), "Enter a Password");
 	            	pd.addPasswordChangedListener(new PasswordListener(){
 						@Override
 						public void passwordChanged(EventObject evt) {
@@ -43,7 +44,6 @@ public class EnterPasswordDialog extends JDialog {
 	            	pd.open();
 	            }
 	        });
-		
 	}
 
 }
