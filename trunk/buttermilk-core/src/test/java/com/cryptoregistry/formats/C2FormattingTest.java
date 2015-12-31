@@ -773,6 +773,7 @@ public class C2FormattingTest {
 	}
 	
 	
+	/*
 	@Test
 	public void testListData() {
 		
@@ -836,6 +837,8 @@ public class C2FormattingTest {
 		
 		Assert.assertTrue(ok);
 	}
+	
+	*/
 	
 
 }
