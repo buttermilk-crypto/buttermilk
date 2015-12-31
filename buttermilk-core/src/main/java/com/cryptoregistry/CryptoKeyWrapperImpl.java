@@ -33,8 +33,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * General use:
  * 
  * isSecure() - tells us if the object is an instance of ArmoredPBEResult
- * getMetadata() - if not secure, we can get the key generation algorithm with this method
- * getKeyContents() - returns a CryptoKey
+ * getMetadata() - if not secure, we can get the key generation algorithm with this method; otherwise returns null
+ * unlock(Password) - unlocks a secure key. It will change from an -S to a -U distinguished name
+ * getKeyContents() - once unlocked, returns a CryptoKey
  * 
  * </pre>
  * @author Dave

@@ -19,9 +19,7 @@ public class RandomStringGenerator {
 	Random rand = new Random();
 	final static String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
-	public RandomStringGenerator() {
-
-	}
+	public RandomStringGenerator() {}
 
 	public String nextString(int length) {
 		StringBuffer buf = new StringBuffer();

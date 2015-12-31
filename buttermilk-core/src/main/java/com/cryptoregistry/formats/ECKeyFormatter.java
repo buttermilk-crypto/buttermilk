@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.List;
 
 import com.cryptoregistry.ec.ECKeyContents;
 import com.cryptoregistry.ec.ECKeyForPublication;
@@ -20,6 +21,7 @@ import com.cryptoregistry.pbe.ArmoredScryptResult;
 import com.cryptoregistry.pbe.PBE;
 import com.cryptoregistry.pbe.PBEParams;
 import com.cryptoregistry.util.MapIterator;
+import com.cryptoregistry.util.StringToList;
 import com.cryptoregistry.util.TimeUtil;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerationException;
@@ -80,7 +82,13 @@ public class ECKeyFormatter {
 		g.writeStringField("KeyData.Type", "EC");
 		g.writeStringField("KeyData.PBEAlgorithm", pbeParams.getAlg()
 				.toString());
-		g.writeStringField("KeyData.EncryptedData", result.base64Enc);
+	//	g.writeStringField("KeyData.EncryptedData", result.base64Enc);
+		g.writeArrayFieldStart("KeyData.EncryptedData");
+		List<String> list = new StringToList(result.base64Enc).toList();
+			for(String s: list){
+				g.writeString(s);
+			}
+		g.writeEndArray();
 		g.writeStringField("KeyData.PBESalt", result.base64Salt);
 
 		if (result instanceof ArmoredPBKDF2Result) {

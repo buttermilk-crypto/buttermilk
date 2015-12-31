@@ -70,11 +70,11 @@ import com.cryptoregistry.util.TimeUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * <p>Read the canonical format as output by JSONBuilder. This reader is for the scenario where
+ * <p>Read the canonical format as output by JSONFormatter. This reader is for the scenario where
  * little or nothing is known at runtime about the contents of the JSON being passed in.</p>
  * 
- * <p>This reader builds Buttermilk cryptographic objects. Use JSONGenericReader to get a 
- * simple, Map-based textual representation of the data instead. </p>
+ * <p>This reader builds Buttermilk cryptographic value objects. Use JSONGenericReader to get a 
+ * simple, Map-based textual representation of the data instead.</p>
  * 
  * @author Dave
  * @see JSONFormatter
@@ -124,8 +124,9 @@ public class JSONReader {
 	
 	public KeyMaterials parse() {
 		
-		// this inner class is defensively programmed - does not side effects on what is in the parsed map
-		// this means you cannot edit the map through the methods such as keys().add(CryptoKeyWrapper) -- does nothing to the backing map
+		// this inner class is defensively programmed - does not create side effects on what is in the parsed map
+		// this means you cannot edit the map through the methods such as keys().add(CryptoKeyWrapper) -- does 
+		// nothing to the backing map
 		KeyMaterials km = new KeyMaterials() {
 
 			@Override

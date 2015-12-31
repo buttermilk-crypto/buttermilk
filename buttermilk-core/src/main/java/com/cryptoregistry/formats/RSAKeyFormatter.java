@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.List;
 
 import com.cryptoregistry.formats.EncodingHint;
 import com.cryptoregistry.formats.FormatUtil;
@@ -19,6 +20,7 @@ import com.cryptoregistry.pbe.PBE;
 import com.cryptoregistry.pbe.PBEParams;
 import com.cryptoregistry.rsa.RSAKeyContents;
 import com.cryptoregistry.rsa.RSAKeyForPublication;
+import com.cryptoregistry.util.StringToList;
 import com.cryptoregistry.util.TimeUtil;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerationException;
@@ -78,9 +80,16 @@ class RSAKeyFormatter {
 		g.writeObjectFieldStart(rsaKeys.getMetadata().getDistinguishedHandle());
 		g.writeStringField("KeyData.Type", "RSA");
 		g.writeStringField("KeyData.Strength", String.valueOf(rsaKeys.metadata.strength));
-		g.writeStringField("KeyData.PBEAlgorithm", pbeParams.getAlg()
-				.toString());
-		g.writeStringField("KeyData.EncryptedData", result.base64Enc);
+		g.writeStringField("KeyData.PBEAlgorithm", pbeParams.getAlg().toString());
+		
+//		g.writeStringField("KeyData.EncryptedData", result.base64Enc);
+		g.writeArrayFieldStart("KeyData.EncryptedData");
+		List<String> list = new StringToList(result.base64Enc).toList();
+			for(String s: list){
+				g.writeString(s);
+			}
+		g.writeEndArray();
+		
 		g.writeStringField("KeyData.PBESalt", result.base64Salt);
 
 		if (result instanceof ArmoredPBKDF2Result) {
