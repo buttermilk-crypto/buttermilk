@@ -79,6 +79,7 @@ public class CreateKeyPanel extends JPanel implements PasswordListener, RegHandl
 	private CryptoKey keyForPublication;
 	private String keyText;
 	private String regHandle;
+	private String adminEmail = "";
 	
 	private Password defaultPassword;
 	
@@ -90,6 +91,9 @@ public class CreateKeyPanel extends JPanel implements PasswordListener, RegHandl
 		super();
 		if(props.containsKey("registration.handle")){
 			regHandle = props.get("registration.handle");
+		}
+		if(props.containsKey("registration.email")){
+			adminEmail = props.get("registration.email");
 		}
 		tenK = new Check10K();
 		
@@ -371,7 +375,7 @@ public class CreateKeyPanel extends JPanel implements PasswordListener, RegHandl
 
 	private void formatKey() {
 		StringWriter writer = new StringWriter();
-		JSONFormatter builder = new JSONFormatter(regHandle);
+		JSONFormatter builder = new JSONFormatter(regHandle, adminEmail);
 		builder.add(this.keyForPublication);
 		builder.add(this.secureKey);
 		builder.format(writer);
@@ -382,6 +386,10 @@ public class CreateKeyPanel extends JPanel implements PasswordListener, RegHandl
 		
 		if(regHandle == null || regHandle.trim().length() == 0) {
 			System.err.println("registration handle not defined, please do that first.");
+			JOptionPane.showMessageDialog(this,
+				    "Proposed registration handle not defined, please do that first.",
+				    "Notice",
+				    JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 		
