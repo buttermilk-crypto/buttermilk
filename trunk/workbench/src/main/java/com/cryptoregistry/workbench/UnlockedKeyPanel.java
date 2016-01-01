@@ -2,7 +2,9 @@ package com.cryptoregistry.workbench;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.EventObject;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
@@ -33,6 +35,8 @@ public class UnlockedKeyPanel extends JPanel implements CreateKeyListener, Unloc
 	
 	private CryptoKey currentKey;
 	private JButton btnDone;
+	
+	private List<CryptoKeySelectionListener> listeners = new ArrayList<CryptoKeySelectionListener>();
 
 	public UnlockedKeyPanel(final UnlockedKeyDialog dialog) {
 		super();
@@ -46,6 +50,7 @@ public class UnlockedKeyPanel extends JPanel implements CreateKeyListener, Unloc
 				KeyWrapper key = (KeyWrapper) comboBox.getSelectedItem();
 				textPane.setText(describe(key.key));
 				currentKey = key.key;
+				fireCryptoKeySelectionEvent(currentKey);
 			}
 		});
 		
@@ -140,7 +145,17 @@ public class UnlockedKeyPanel extends JPanel implements CreateKeyListener, Unloc
 		}
 		// ok, we don't have this key already
 		this.model.addElement(new KeyWrapper(key));
-		
 	}
 	
+	private void fireCryptoKeySelectionEvent(CryptoKey key) {
+		for(CryptoKeySelectionListener l: listeners){
+			CryptoKeySelectionEvent evt = new CryptoKeySelectionEvent(this);
+			evt.setKey(key);
+			l.currentKeyChanged(evt);
+		}
+	}
+	
+	public void addCryptoKeySelectionListener(CryptoKeySelectionListener listener){
+		listeners.add(listener);
+	}
 }
