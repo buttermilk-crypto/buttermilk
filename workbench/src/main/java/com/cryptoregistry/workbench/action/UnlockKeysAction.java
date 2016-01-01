@@ -10,7 +10,6 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -55,6 +54,7 @@ public class UnlockKeysAction extends AbstractAction implements PasswordListener
 		int index = tabs.getSelectedIndex();
 		UUIDTextPane pane = (UUIDTextPane) ((JScrollPane)tabs.getComponentAt(index)).getViewport().getView();
 		String text = pane.getText();
+		if(text.length()==0)return;
 		JSONReader reader = new JSONReader(new StringReader(text));
 		KeyMaterials km = reader.parse();
 		for(CryptoKeyWrapper wrapper : km.keys()) {

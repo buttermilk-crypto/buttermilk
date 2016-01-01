@@ -179,8 +179,15 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 			message = e.getMessage();
 			valid = false;
 		}
-
 		   return valid;
-		}
+	}
+	
+	/**
+	 * Return true if this pane contains text which looks like a secure key
+	 * @return
+	 */
+	public boolean paneContainsAtLeastOneSecureKey() {
+		return getText().contains("KeyData.EncryptedData");
+	}
 
 }

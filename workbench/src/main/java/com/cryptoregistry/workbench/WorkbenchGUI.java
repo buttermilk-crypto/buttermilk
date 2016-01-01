@@ -37,6 +37,7 @@ import com.cryptoregistry.CryptoKey;
 import com.cryptoregistry.passwords.Password;
 import com.cryptoregistry.workbench.action.CloseFileAction;
 import com.cryptoregistry.workbench.action.FormatJSONAction;
+import com.cryptoregistry.workbench.action.NewFileAction;
 import com.cryptoregistry.workbench.action.OpenFileAction;
 import com.cryptoregistry.workbench.action.PrintAction;
 import com.cryptoregistry.workbench.action.SaveFileAction;
@@ -47,7 +48,11 @@ import asia.redact.bracket.properties.Properties;
 import asia.redact.bracket.properties.mgmt.PropertiesReference;
 import asia.redact.bracket.properties.mgmt.ReferenceType;
 
-public class WorkbenchGUI implements ChangeListener, PasswordListener, RegHandleListener, CreateKeyListener {
+public class WorkbenchGUI 
+implements ChangeListener, 
+			PasswordListener, 
+			RegHandleListener, 
+			CreateKeyListener {
 
 	public static Font sourceCodeFont; //orig TTF
 	public static Font plainTextFont, plainTextFontLg; //derived
@@ -58,6 +63,7 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener, RegHandle
 	private final JFileChooser fc = new JFileChooser();
 	
 	// Actions
+	private NewFileAction newFileAction;
 	private OpenFileAction openAction;
 	private OpenFileAction openToFileAction;
 	private SaveFileAction saveAction;
@@ -70,6 +76,7 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener, RegHandle
 	private ValidateJSONAction validateJSONAction;
 	private FormatJSONAction formatJSONAction;
 	
+	private JMenuItem createKeyItem;
 	private UnlockKeysAction unlockKeysAction;
 	
 	private JLabel statusLabel;
@@ -198,6 +205,8 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener, RegHandle
 		// Build the first menu.
 		JMenu fileMenu = new JMenu("File");
 		menuBar.add(fileMenu);
+		newFileAction = new NewFileAction(tabs,fc);
+		fileMenu.add(newFileAction);
 		openAction = new OpenFileAction(false,tabs,fc);
 		openToFileAction = new OpenFileAction(true,tabs,fc);
 		fileMenu.add(openToFileAction);
@@ -337,7 +346,7 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener, RegHandle
 		
 		keysMenu.addSeparator();
 		
-		JMenuItem createKeyItem = new JMenuItem("Create Key...");
+		createKeyItem = new JMenuItem("Create Key...");
 		keysMenu.add(createKeyItem);
 		createKeyItem.addActionListener(new ActionListener() {
 			@Override
@@ -352,6 +361,7 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener, RegHandle
 		unlockKeysAction.addUnlockKeyListener(unlockedKeyDialog.getPanel());
 		enterPasswordDialog.addPasswordChangedListener(unlockKeysAction);
 		keysMenu.add(unlockKeysAction);
+		unlockKeysAction.setEnabled(false);
 		
 		keysMenu.addSeparator();
 		
@@ -381,7 +391,7 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener, RegHandle
 				}
 			}
 		});
-		JMenuItem delWindowItem = new JMenuItem("Delete Window");
+		JMenuItem delWindowItem = new JMenuItem("Close Window");
 		windowMenu.add(delWindowItem);
 		delWindowItem.addActionListener(new ActionListener() {
 			@Override
@@ -452,6 +462,7 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener, RegHandle
 
 	@Override
 	public void stateChanged(ChangeEvent evt) {
+		
 		JTabbedPane sourceTabbedPane = (JTabbedPane) evt.getSource();
 		int index = sourceTabbedPane.getSelectedIndex();
 		if(index == -1) {
@@ -475,6 +486,14 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener, RegHandle
 			// has at least one tab
 			UUIDTextPane pane = currentTextPane();
 			
+			// if the tab text relates to secure keys...
+			if(pane.paneContainsAtLeastOneSecureKey()){
+				this.unlockKeysAction.setEnabled(true);
+			}else{
+				this.unlockKeysAction.setEnabled(false);
+			}
+			
+			
 			// tab is a newly created one with no file backing
 			if(pane.getTargetFile()==null){
 				this.openToFileAction.setEnabled(true);
@@ -486,8 +505,6 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener, RegHandle
 				
 				this.validateJSONAction.setEnabled(true);
 				this.formatJSONAction.setEnabled(true);
-				
-				this.unlockKeysAction.setEnabled(true);
 				
 				this.statusLabel.setText("...");
 				return;
@@ -511,6 +528,13 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener, RegHandle
 					e.printStackTrace();
 				}
 			}
+		}
+		
+		// if the adminEmail and regHandle and password are not set, don't enable
+		if(password == null || adminEmail == null || regHandle == null){
+			createKeyItem.setEnabled(false);
+		}else{
+			createKeyItem.setEnabled(true);
 		}
 	}
 	
