@@ -37,6 +37,7 @@ public class EnterPasswordPanel extends JPanel {
 				OK = true;
 			}
 		});
+		dialog.getRootPane().setDefaultButton(btnOk);
 		
 		JButton btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {

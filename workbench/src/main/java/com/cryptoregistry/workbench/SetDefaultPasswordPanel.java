@@ -61,6 +61,7 @@ public class SetDefaultPasswordPanel extends JPanel {
 			}
 		});
 		btnOk.setEnabled(false);
+		parent.getRootPane().setDefaultButton(btnOk);
 		
 		password0.addKeyListener(new KeyAdapter() {
 			@Override

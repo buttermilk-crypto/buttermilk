@@ -166,6 +166,8 @@ public class CreateKeyPanel extends JPanel implements PasswordListener, RegHandl
 			}
 		});
 		
+		dialog.getRootPane().setDefaultButton(btnCreate);
+		
 		KeyGenerationAlgorithm [] e = KeyGenerationAlgorithm.usableForSignature();
 		keyalgComboBox = new JComboBox<KeyGenerationAlgorithm>();
 		DefaultComboBoxModel<KeyGenerationAlgorithm> model = new DefaultComboBoxModel<KeyGenerationAlgorithm>(e);

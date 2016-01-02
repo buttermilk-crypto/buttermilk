@@ -29,10 +29,10 @@ public class OpenFileAction extends AbstractAction {
 		this.tabs = tabs;
 		this.fc = fc;
 		this.newTab = newTab;
-		if(!newTab) {
+		if(newTab) {
 			this.putValue(Action.NAME, "Open File...");
 		}else{
-			this.putValue(Action.NAME, "Open File In Tab...");
+			this.putValue(Action.NAME, "Open File In Current Tab...");
 		}
 	}
 
@@ -68,7 +68,7 @@ public class OpenFileAction extends AbstractAction {
 				try {
 					String s = new String(Files.readAllBytes(file.toPath()),StandardCharsets.UTF_8);
 					pane.setText(s);
-					tabs.setSelectedIndex(currentIndex+1);
+					//tabs.setSelectedIndex(currentIndex+1);
 					pane.requestFocusInWindow();
 				} catch (Exception e) {
 					e.printStackTrace();
