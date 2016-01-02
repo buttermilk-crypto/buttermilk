@@ -82,6 +82,10 @@ public class CryptoContact {
 		return handle;
 	}
 	
+	public String put(String key, String value) {
+		return map.put(key, value);
+	}
+
 	/**
 	 * Formats this contact record including the handle
 	 * 
