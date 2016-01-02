@@ -21,6 +21,7 @@ public class ValidationDialog extends JDialog {
 		// Create a button
 		JPanel buttonPane = new JPanel();
 		JButton button = new JButton("Close");
+		this.getRootPane().setDefaultButton(button);
 		buttonPane.add(button);
 		// set action listener on the button
 		button.addActionListener(new ActionListener() {

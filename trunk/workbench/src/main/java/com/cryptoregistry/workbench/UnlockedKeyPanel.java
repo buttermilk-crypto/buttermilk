@@ -67,6 +67,7 @@ public class UnlockedKeyPanel extends JPanel implements CreateKeyListener, Unloc
 				dialog.dispose();
 			}
 		});
+		dialog.getRootPane().setDefaultButton(btnDone);
 		
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(

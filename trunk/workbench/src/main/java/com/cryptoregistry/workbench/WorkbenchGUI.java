@@ -32,6 +32,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 
 import com.cryptoregistry.CryptoKey;
 import com.cryptoregistry.passwords.Password;
@@ -324,6 +326,22 @@ implements ChangeListener,
 		
 		JMenu keysMenu = new JMenu("Key Materials");
 		menuBar.add(keysMenu);
+		keysMenu.addMenuListener(new MenuListener() {
+
+			@Override
+			public void menuSelected(MenuEvent e) {
+				// if the adminEmail and regHandle and password are not set, don't enable
+				if(password == null || regHandle == null || adminEmail == null){
+					createKeyItem.setEnabled(false);
+				}else{
+					createKeyItem.setEnabled(true);
+				}
+			}
+			@Override
+			public void menuDeselected(MenuEvent e) {}
+			@Override
+			public void menuCanceled(MenuEvent e) {}
+		});
 		
 		JMenuItem regHandleItem = new JMenuItem("Set Registration Handle");
 		keysMenu.add(regHandleItem);
@@ -396,6 +414,7 @@ implements ChangeListener,
 		delWindowItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
+				if(tabs.getComponentCount() == 0) return;
 				int count = tabs.getSelectedIndex();
 				tabs.remove(count);
 				
@@ -403,7 +422,7 @@ implements ChangeListener,
 		});
 		windowMenu.addSeparator();
 
-		JMenuItem keysDialogItem = new JMenuItem("Unlocked Keys");
+		JMenuItem keysDialogItem = new JMenuItem("Unlocked Keys Dialog");
 		windowMenu.add(keysDialogItem);
 		keysDialogItem.addActionListener(new ActionListener() {
 			@Override
@@ -460,6 +479,10 @@ implements ChangeListener,
 		}
 	}
 
+	/**
+	 * Listen to changes to the number of tabs and their contents
+	 * 
+	 */
 	@Override
 	public void stateChanged(ChangeEvent evt) {
 		
@@ -528,13 +551,6 @@ implements ChangeListener,
 					e.printStackTrace();
 				}
 			}
-		}
-		
-		// if the adminEmail and regHandle and password are not set, don't enable
-		if(password == null || adminEmail == null || regHandle == null){
-			createKeyItem.setEnabled(false);
-		}else{
-			createKeyItem.setEnabled(true);
 		}
 	}
 	

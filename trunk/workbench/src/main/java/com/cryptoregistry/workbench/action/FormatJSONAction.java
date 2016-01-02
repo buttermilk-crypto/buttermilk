@@ -10,12 +10,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
+import com.cryptoregistry.util.Lf2SpacesIndenter;
 import com.cryptoregistry.workbench.UUIDTextPane;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter.Indenter;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class FormatJSONAction extends AbstractAction {
@@ -76,11 +80,15 @@ public class FormatJSONAction extends AbstractAction {
 	public String format(final String input) {
 	
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.enable(SerializationFeature.INDENT_OUTPUT);
+		DefaultPrettyPrinter printer = new DefaultPrettyPrinter();
+		Indenter indenter = new Lf2SpacesIndenter();
+		printer.indentObjectsWith(indenter);
+		printer.indentArraysWith(indenter);
+		
 		Object json;
 		try {
 			json = mapper.readValue(input, Object.class);
-			return mapper.writeValueAsString(json);
+			return mapper.writer(printer).writeValueAsString(json);
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {

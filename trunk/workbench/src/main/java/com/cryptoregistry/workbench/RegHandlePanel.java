@@ -131,6 +131,7 @@ public class RegHandlePanel extends JPanel {
 				parent.dispose();
 			} 
 		});
+		parent.getRootPane().setDefaultButton(btnCreate);
 		
 		JButton btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
