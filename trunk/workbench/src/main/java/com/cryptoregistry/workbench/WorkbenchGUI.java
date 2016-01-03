@@ -37,6 +37,7 @@ import javax.swing.event.MenuListener;
 
 import com.cryptoregistry.CryptoKey;
 import com.cryptoregistry.passwords.Password;
+import com.cryptoregistry.workbench.action.AddSkeletonAction;
 import com.cryptoregistry.workbench.action.CloseFileAction;
 import com.cryptoregistry.workbench.action.FormatJSONAction;
 import com.cryptoregistry.workbench.action.NewFileAction;
@@ -77,6 +78,7 @@ implements ChangeListener,
 	
 	private ValidateJSONAction validateJSONAction;
 	private FormatJSONAction formatJSONAction;
+	private AddSkeletonAction addSkeletonAction;
 	
 	private JMenuItem createKeyItem;
 	private UnlockKeysAction unlockKeysAction;
@@ -309,6 +311,10 @@ implements ChangeListener,
 		formatJSONAction.setEnabled(false);
 		sourceMenu.add(formatJSONAction);
 		sourceMenu.addSeparator();
+		addSkeletonAction = new AddSkeletonAction(tabs,regHandle,adminEmail);
+		addSkeletonAction.setEnabled(false);
+		sourceMenu.add(addSkeletonAction);
+		sourceMenu.addSeparator();
 		
 		// Dialogs instantiated here so they can have listeners added
 		final RegHandleSearchDialog rhsd = new RegHandleSearchDialog(frame, "Set Registration Handle", propsMgr.getProps());
@@ -363,15 +369,19 @@ implements ChangeListener,
 		});
 		
 		keysMenu.addSeparator();
+		JMenu keysSubmenu = new JMenu("Keys");
+	
+		keysMenu.add(keysSubmenu);
 		
-		createKeyItem = new JMenuItem("Create Key...");
-		keysMenu.add(createKeyItem);
+		createKeyItem = new JMenuItem("Simple Key Creation Dialog...");
+		keysSubmenu.add(createKeyItem);
 		createKeyItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				createKeyDialog.open();
 			}
 		});
+		
 		
 		keysMenu.addSeparator();
 		
@@ -387,7 +397,7 @@ implements ChangeListener,
 		// Build the Window menu.
 		JMenu windowMenu = new JMenu("Window");
 		menuBar.add(windowMenu);
-		JMenuItem newWindowItem = new JMenuItem("New Window");
+		JMenuItem newWindowItem = new JMenuItem("New Tab");
 		windowMenu.add(newWindowItem);
 		newWindowItem.addActionListener(new ActionListener() {
 			@Override
@@ -409,7 +419,7 @@ implements ChangeListener,
 				}
 			}
 		});
-		JMenuItem delWindowItem = new JMenuItem("Close Window");
+		JMenuItem delWindowItem = new JMenuItem("Close Tab");
 		windowMenu.add(delWindowItem);
 		delWindowItem.addActionListener(new ActionListener() {
 			@Override
@@ -499,6 +509,7 @@ implements ChangeListener,
 			
 			this.validateJSONAction.setEnabled(false);
 			this.formatJSONAction.setEnabled(false);
+			this.addSkeletonAction.setEnabled(false);
 			
 			this.unlockKeysAction.setEnabled(false);
 			
@@ -528,6 +539,7 @@ implements ChangeListener,
 				
 				this.validateJSONAction.setEnabled(true);
 				this.formatJSONAction.setEnabled(true);
+				this.addSkeletonAction.setEnabled(true);
 				
 				this.statusLabel.setText("...");
 				return;
@@ -542,6 +554,7 @@ implements ChangeListener,
 				
 				this.validateJSONAction.setEnabled(true);
 				this.formatJSONAction.setEnabled(true);
+				this.addSkeletonAction.setEnabled(true);
 				
 				this.unlockKeysAction.setEnabled(true);
 				

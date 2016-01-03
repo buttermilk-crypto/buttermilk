@@ -1,6 +1,7 @@
 package com.cryptoregistry.workbench;
 
 import java.awt.Component;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -32,8 +33,8 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 	public File targetFile;
 	public UndoManager manager = new UndoManager();
 	JPopupMenu popup;
-	
 	String message;
+	private Point currentClickPoint;
 
 	public UUIDTextPane() {
 		super();
@@ -52,7 +53,6 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 	public UUIDTextPane(File file) {
 		this();
 		this.targetFile = file;
-		
 	}
 
 	public UUIDTextPane(StyledDocument arg0) {
@@ -64,11 +64,17 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 	
 	private void createPopup() {
 		 popup = new JPopupMenu();
+		 
+		 JMenuItem attribItem = new JMenuItem("Attribute Editor...");
+		 attribItem.addActionListener(this);
+		 attribItem.setActionCommand("edit-attributes");
+		 popup.add(attribItem);
+		 
 		 JMenuItem menuItem = new JMenuItem("Validate JSON");
 		 menuItem.setActionCommand("validate");
 		 menuItem.addActionListener(this);
 		 popup.add(menuItem);
-		 
+		
 		// Build the edit menu.
 			JMenu editMenu = new JMenu("Edit");
 			popup.add(editMenu);
@@ -109,8 +115,9 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 			editMenu.add(UndoManagerHelper.getUndoAction(manager));
 			editMenu.add(UndoManagerHelper.getRedoAction(manager));
 			editMenu.addSeparator();
+			
 		   
-		 MouseListener popupListener = new PopupListener();
+		 MouseListener popupListener = new PopupListener(this);
 		 this.addMouseListener(popupListener);
 		  
 	}
@@ -128,6 +135,12 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 	}
 	
 	class PopupListener extends MouseAdapter {
+		
+		UUIDTextPane pane;
+		
+		public PopupListener(UUIDTextPane pane){
+			this.pane = pane;
+		}
 	    public void mousePressed(MouseEvent e) {
 	        maybeShowPopup(e);
 	    }
@@ -138,8 +151,8 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 
 	    private void maybeShowPopup(MouseEvent e) {
 	        if (e.isPopupTrigger()) {
-	            popup.show(e.getComponent(),
-	                       e.getX(), e.getY());
+	        	pane.currentClickPoint = e.getPoint();
+	            popup.show(e.getComponent(), e.getX(), e.getY());
 	        }
 	    }
 	}
@@ -161,6 +174,10 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 					new ValidationDialog(frame, "Validation Error", message);
 				}
 				break;
+			}
+			case "edit-attributes": {
+				System.err.println(currentClickPoint);
+				System.err.println(this.viewToModel(currentClickPoint));
 			}
 		}
 	}
@@ -189,5 +206,5 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 	public boolean paneContainsAtLeastOneSecureKey() {
 		return getText().contains("KeyData.EncryptedData");
 	}
-
+	
 }
