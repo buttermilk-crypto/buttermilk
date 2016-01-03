@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.EventObject;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -13,9 +14,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
+import com.cryptoregistry.workbench.RegHandleEvent;
+import com.cryptoregistry.workbench.RegHandleListener;
 import com.cryptoregistry.workbench.UUIDTextPane;
 
-public class AddSkeletonAction extends AbstractAction {
+public class AddSkeletonAction extends AbstractAction implements RegHandleListener {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -42,6 +45,7 @@ public class AddSkeletonAction extends AbstractAction {
 		            out.append(buffer, 0, rsz);
 		        }
 		        skeletonText = out.toString();
+		    
 		    } catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -58,7 +62,21 @@ public class AddSkeletonAction extends AbstractAction {
 			return;
 		}
 		UUIDTextPane pane = (UUIDTextPane) ((JScrollPane)tabs.getComponentAt(currentIndex)).getViewport().getView();
-		pane.setText(skeletonText);
+		
+		if(regHandle == null) regHandle = "";
+		if(adminEmail == null) adminEmail = "";
+		
+		String s0 = skeletonText.replace("$regHandle$", regHandle);
+		String s1 = s0.replace("$adminEmail$", adminEmail);
+		 
+		pane.setText(s1);
+		
+	}
+
+	@Override
+	public void registrationHandleChanged(EventObject evt) {
+		RegHandleEvent event = (RegHandleEvent)evt;
+		regHandle = event.getRegHandle();
 		
 	}
 

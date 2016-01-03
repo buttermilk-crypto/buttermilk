@@ -139,6 +139,33 @@ implements ChangeListener,
 	}
 
 	public void createGUI() {
+		
+		if(!propsMgr.hasDefaultKeyDirectoryLocation()) {
+			InitialSetupDialog isd = new InitialSetupDialog(this.frame,"Initial Setup");
+			if(isd.isSucceeded()){
+				String path = isd.getRootDirTextField().getText();
+				adminEmail = isd.getAdminEmailTextField().getText();
+				propsMgr.put("default.key.directory",path);
+				propsMgr.put("registration.email",adminEmail);
+				propsMgr.write();
+				File dir = new File(path);
+				fc.setCurrentDirectory(dir);
+			}
+		}else{
+			String path = propsMgr.get("default.key.directory");
+			File dir = new File(path);
+			fc.setCurrentDirectory(dir);
+		}
+		
+		if(propsMgr.hasRegistrationHandleSerialized()){
+			this.regHandle = propsMgr.get("registration.handle");
+		}
+		if(propsMgr.hasAdminEmailSerialized()){
+			this.adminEmail = propsMgr.get("registration.email");
+		}
+		
+		
+		
 		frame = new JFrame("cryptoregistry.com - Key Materials Workbench");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
@@ -167,30 +194,6 @@ implements ChangeListener,
 		// Display the window.
 		frame.pack();
 		frame.setVisible(true);
-		
-		if(!propsMgr.hasDefaultKeyDirectoryLocation()) {
-			InitialSetupDialog isd = new InitialSetupDialog(this.frame,"Initial Setup");
-			if(isd.isSucceeded()){
-				String path = isd.getRootDirTextField().getText();
-				adminEmail = isd.getAdminEmailTextField().getText();
-				propsMgr.put("default.key.directory",path);
-				propsMgr.put("registration.email",adminEmail);
-				propsMgr.write();
-				File dir = new File(path);
-				fc.setCurrentDirectory(dir);
-			}
-		}else{
-			String path = propsMgr.get("default.key.directory");
-			File dir = new File(path);
-			fc.setCurrentDirectory(dir);
-		}
-		
-		if(propsMgr.hasRegistrationHandleSerialized()){
-			this.regHandle = propsMgr.get("registration.handle");
-		}
-		if(propsMgr.hasAdminEmailSerialized()){
-			this.adminEmail = propsMgr.get("registration.email");
-		}
 	}
 
 	private String createTabTitle() {
@@ -328,6 +331,7 @@ implements ChangeListener,
 		final SetDefaultPasswordDialog enterPasswordDialog = new SetDefaultPasswordDialog(frame, "Enter a Password");
     	enterPasswordDialog.addPasswordChangedListener(instance);
     	enterPasswordDialog.addPasswordChangedListener(createKeyDialog.getPanel());
+    	rhsd.addRegHandleListener(addSkeletonAction);
     	
 		
 		JMenu keysMenu = new JMenu("Key Materials");
