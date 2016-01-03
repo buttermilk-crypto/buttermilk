@@ -9,7 +9,7 @@ public class CreateKeyDialog extends JDialog {
 	private CreateKeyPanel panel;
 
 	public CreateKeyDialog(WorkbenchGUI gui) {
-		super(gui.getFrame(), "Create Key Dialog");
+		super(gui.getFrame(), "Simple Key Creation Dialog");
 		panel = new CreateKeyPanel(this, gui.getProps());
 		getContentPane().add(panel);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);

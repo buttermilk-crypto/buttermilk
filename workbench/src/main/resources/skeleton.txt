@@ -1,0 +1,22 @@
+{
+  "Version" : "Buttermilk Key Materials 1.0",
+  "RegHandle" : "$regHandle$",
+  "Email" : "$adminEmail$",
+  "Contacts" : {
+   
+  },
+  "Data" : {
+    "Local" : {
+   
+    }
+  },
+  "Keys" : {
+   
+  },
+  "Macs" : {
+  
+  },
+  "Signatures" : {
+   
+  }
+}
