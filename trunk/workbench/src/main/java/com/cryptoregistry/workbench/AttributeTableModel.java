@@ -5,7 +5,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 import javax.swing.table.AbstractTableModel;
+
+import asia.redact.bracket.properties.Properties;
 
 import com.cryptoregistry.CryptoContact;
 import com.cryptoregistry.MapData;
@@ -116,6 +119,23 @@ public class AttributeTableModel extends AbstractTableModel {
     public void deleteRow(int rowIndex){
     	list.remove(rowIndex);
     	this.fireTableRowsDeleted(rowIndex, rowIndex);
+    }
+    
+    public void clear() {
+    	list.clear();
+    	this.fireTableDataChanged();
+    }
+    
+    public void update(Properties props) {
+    	list.clear();
+    	Map<String,String> map = props.getFlattenedMap();
+    	Iterator<String> iter = map.keySet().iterator();
+    	while(iter.hasNext()){
+    		String key =iter.next();
+    		String value = map.get(key);
+    		list.add(new Pair(key,value));
+    	}
+    	this.fireTableDataChanged();
     }
     
     public void addRow(int index, String key, String value){
