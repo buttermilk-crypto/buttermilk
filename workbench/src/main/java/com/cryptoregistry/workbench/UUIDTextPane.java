@@ -1,6 +1,10 @@
 package com.cryptoregistry.workbench;
 
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,7 +13,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -21,6 +30,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.text.StyledDocument;
 import javax.swing.undo.UndoManager;
 
+import com.cryptoregistry.MapData;
+import com.cryptoregistry.formats.JSONGenericReader;
+import com.cryptoregistry.formats.JSONReader;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,6 +40,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class UUIDTextPane extends JTextPane implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
+	private static final Pattern DoubleQuotesPat = Pattern.compile("\"([^\"]*)\"");
+	private static final String [] topLevelTokens =  {"Contacts", "Data", "Local", "Keys", "Macs", "Signatures"};
 	
 	public final String identifier;
 	public File targetFile;
@@ -141,7 +155,13 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 		public PopupListener(UUIDTextPane pane){
 			this.pane = pane;
 		}
+		
+		public void mouseClicked(MouseEvent e) {
+		    pane.currentClickPoint = e.getPoint();
+		}
+		
 	    public void mousePressed(MouseEvent e) {
+	    //	pane.currentClickPoint = e.getPoint();
 	        maybeShowPopup(e);
 	    }
 
@@ -151,7 +171,6 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 
 	    private void maybeShowPopup(MouseEvent e) {
 	        if (e.isPopupTrigger()) {
-	        	pane.currentClickPoint = e.getPoint();
 	            popup.show(e.getComponent(), e.getX(), e.getY());
 	        }
 	    }
@@ -176,8 +195,16 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 				break;
 			}
 			case "edit-attributes": {
-				System.err.println(currentClickPoint);
-				System.err.println(this.viewToModel(currentClickPoint));
+				
+				int pos = this.viewToModel(this.currentClickPoint);
+				String text = this.getText().substring(0, pos+20); // HACK - but should contain what we want
+				// make a list of all the quoted items
+				ArrayList<Match> list = new ArrayList<Match>();
+				Matcher matcher = DoubleQuotesPat.matcher(text);
+				while(matcher.find()){
+					list.add(new Match(matcher.start(1), matcher.end(1), matcher.group(1)));
+				}
+				check(1,list);
 			}
 		}
 	}
@@ -207,4 +234,76 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 		return getText().contains("KeyData.EncryptedData");
 	}
 	
+	private static class Match {
+		public final int start, end;
+		public final String text;
+		public Match(int start, int end, String text) {
+			super();
+			this.start = start;
+			this.end = end;
+			this.text = text;
+		}
+		
+		public String toString() {
+			return text;
+		}
+	}
+	
+	private void check(int count, List<Match> list){
+		if(list.size()-count < 0) return;
+		Match last = list.get(list.size()-count);
+		boolean topLevel = false;
+		for(String s: topLevelTokens){
+			if(last.text.equals(s)){
+				topLevel = true;
+				break;
+			}
+		}
+		if(topLevel){
+			System.err.println("open editor for top level: "+last.text);
+			return;
+		}else if(last.text.length() == 36 || last.text.length() == 38){
+				System.err.println("open editor for: "+find(last.text));
+				return;
+		}else {
+			check(count+1, list);
+		}
+	}
+	
+	private MapData find(String uuid){
+		JSONReader reader = new JSONReader(new StringReader(this.getText()));
+		JSONGenericReader gen = reader.genericReader();
+		List<MapData> contacts = gen.contacts();
+		for(MapData data: contacts){
+			if(uuid.contains(data.uuid)) {
+				return data;
+			}
+		}
+		List<MapData> local = gen.local();
+		for(MapData data: local){
+			if(uuid.contains(data.uuid)) {
+				return data;
+			}
+		}
+		List<MapData> keys = gen.keys();
+		for(MapData data: keys){
+			if(uuid.contains(data.uuid)) {
+				return data;
+			}
+		}
+		List<MapData> macs = gen.macs();
+		for(MapData data: macs){
+			if(uuid.contains(data.uuid)) {
+				return data;
+			}
+		}
+		List<MapData> sigs = gen.signatures();
+		for(MapData data: sigs){
+			if(uuid.contains(data.uuid)) {
+				return data;
+			}
+		}
+		
+		return null;
+	}
 }
