@@ -14,6 +14,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.InputStream;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,8 +28,17 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import asia.redact.bracket.properties.Properties;
+import asia.redact.bracket.properties.PropertiesImpl;
 
 import com.cryptoregistry.MapData;
+import com.cryptoregistry.formats.MapDataFormatter;
+import com.cryptoregistry.util.Lf2SpacesIndenter;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import javax.swing.JComboBox;
 
@@ -35,12 +46,15 @@ public class EditAttributePanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private final JTable table;
+	JComboBox<Template> comboBox;
 	JLabel uuidText;
 	int rowIndex;
 	List<Template> templates; 
 	
+	EditAttributeDialog owner;
+	
 	public EditAttributePanel() {
-		this(new JFrame(), "", new HashMap<String,String>());
+		this(new JFrame(), "...", new HashMap<String,String>());
 	}
 	
 	public EditAttributePanel(final JFrame frame, String id, Map<String,String> map){
@@ -63,8 +77,8 @@ public class EditAttributePanel extends JPanel {
 		btnOk.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				
+				owner.setVisible(false);
+				owner.dispose();
 			}
 		});
 		
@@ -72,8 +86,8 @@ public class EditAttributePanel extends JPanel {
 		btnCancel.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				frame.setVisible(false);
-				frame.dispose();
+				owner.setVisible(false);
+				owner.dispose();
 			}
 		});
 		
@@ -98,54 +112,64 @@ public class EditAttributePanel extends JPanel {
 		});
 		
 		JButton btnRevert = new JButton("Revert");
+		btnRevert.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				AttributeTableModel model = (AttributeTableModel)table.getModel();
+				model.revert();
+			}
+		});
 		
-		JComboBox<Template> comboBox = new JComboBox<Template>();
+		comboBox = new JComboBox<Template>();
 		DefaultComboBoxModel<Template> model = (DefaultComboBoxModel<Template>) comboBox.getModel();
 		for(Template t: templates) {
 			model.addElement(t);
 		}
-		comboBox.addActionListener(new ActionListener() {
-
+		
+		JLabel lblTemplates = new JLabel("Templates:");
+		
+		JButton btnUse = new JButton("Use");
+		btnUse.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				  JComboBox<Template> cb = (JComboBox<Template>)e.getSource();
-			      Template t = (Template)cb.getSelectedItem();
+			      Template t = (Template)comboBox.getSelectedItem();
 			      AttributeTableModel atModel = (AttributeTableModel)table.getModel();
 			      atModel.update(t.props);
 			}
-			
 		});
 		
-		JLabel lblTemplates = new JLabel("Templates:");
+		
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(panel, GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(lblUuid)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(uuidText))
-						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+							.addContainerGap()
 							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+								.addComponent(panel, GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
 								.addGroup(groupLayout.createSequentialGroup()
 									.addComponent(btnRevert)
-									.addPreferredGap(ComponentPlacement.RELATED, 145, Short.MAX_VALUE))
-								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(lblTemplates)
-									.addGap(18)))
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-								.addComponent(comboBox, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+									.addPreferredGap(ComponentPlacement.RELATED, 145, Short.MAX_VALUE)
 									.addComponent(btnDeleteRow)
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(btnAddRow)
 									.addGap(18)
 									.addComponent(btnCancel)
 									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(btnOk)))))
+									.addComponent(btnOk))))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(68)
+							.addComponent(lblTemplates)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(comboBox, 0, 258, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(btnUse))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(lblUuid)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(uuidText)))
 					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
@@ -155,13 +179,14 @@ public class EditAttributePanel extends JPanel {
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblUuid)
 						.addComponent(uuidText))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGap(11)
 					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnUse)
 						.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblTemplates))
-					.addPreferredGap(ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnOk)
 						.addComponent(btnCancel)
@@ -189,15 +214,27 @@ public class EditAttributePanel extends JPanel {
 		frame.getRootPane().setDefaultButton(btnOk);
 	}
 	
+	public void init(){
+		AttributeTableModel model = (AttributeTableModel) table.getModel();
+		model.clear();
+		this.comboBox.setSelectedIndex(0);
+	}
+	
+	@SuppressWarnings("rawtypes")
 	private void loadTemplates() {
+		templates.add(new Template("Available Templates...", new PropertiesImpl()));
 		List list = ClassSearchUtils.searchClassPath("template", ".properties");
 		for(Object obj:list){
 			String s = String.valueOf(obj);
 			InputStream in = this.getClass().getResourceAsStream(String.valueOf(obj));
 			Properties props = Properties.Factory.getInstance(in);
-			
-			templates.add(new Template(s.substring(1, s.length()),props));
+			templates.add(new Template(s,props));
 		}
+	}
+	
+	public MapData toMapData() {
+		AttributeTableModel model = (AttributeTableModel) table.getModel();
+		return model.toMapData();
 	}
 	
 	private static class Template {
@@ -211,11 +248,23 @@ public class EditAttributePanel extends JPanel {
 		}
 		
 		public String toString() {
-			return name;
+			if(name.endsWith(".properties")){
+				return name.substring(1, name.length()-11);
+			}else{
+				return name;
+			}
 		}
 		
 	}
 	
+	public EditAttributeDialog getOwner() {
+		return owner;
+	}
+
+	public void setOwner(EditAttributeDialog owner) {
+		this.owner = owner;
+	}
+
 	public static final void main(String [] str){
 		 javax.swing.SwingUtilities.invokeLater(new Runnable() {
 	            public void run() {

@@ -1,10 +1,6 @@
 package com.cryptoregistry.workbench;
 
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +10,7 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -27,12 +24,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
 import javax.swing.undo.UndoManager;
 
 import com.cryptoregistry.MapData;
 import com.cryptoregistry.formats.JSONGenericReader;
 import com.cryptoregistry.formats.JSONReader;
+import com.cryptoregistry.formats.MapDataFormatter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -261,6 +260,11 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 		}
 		if(topLevel){
 			System.err.println("open editor for top level: "+last.text);
+			JFrame frame = (JFrame) SwingUtilities.getRoot(this);
+			EditAttributeDialog dialog = new EditAttributeDialog(frame);
+			dialog.open();
+			MapData data = dialog.toMapData();
+			insert(data);
 			return;
 		}else if(last.text.length() == 36 || last.text.length() == 38){
 				System.err.println("open editor for: "+find(last.text));
@@ -305,5 +309,17 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 		}
 		
 		return null;
+	}
+	
+	private void insert(MapData data){
+		MapDataFormatter formatter = new MapDataFormatter();
+		formatter.add(data);
+		String s = formatter.formatAsFragment();
+		try {
+			this.getDocument().insertString(this.getCaretPosition(), s, null);
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
