@@ -18,6 +18,7 @@ public class AttributeTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 1L;
 	private List<Pair> list;
+	private List<Pair> listBackup;
     private String[] columnNames;
     private String id;
 
@@ -27,6 +28,7 @@ public class AttributeTableModel extends AbstractTableModel {
     public AttributeTableModel() {
         super();
         list = new ArrayList<Pair>();
+        listBackup = new ArrayList<Pair>();
         this.columnNames = new String[2];
         this.columnNames[0] = "Attribute";
         this.columnNames[1] = "Value";
@@ -46,14 +48,14 @@ public class AttributeTableModel extends AbstractTableModel {
      */
     public AttributeTableModel(String uuid, Map<String,String> map, String keyName, String valueName) {
         this();
-        mapToList(map);
+        load(id, map);
         setColumnNames(keyName,valueName);
-        id = uuid;
     }
     
     public void load(String id, Map<String,String> map){
     	this.id = id;
     	list = mapToList(map);
+    	listBackup = mapToList(map);
     }
 
     /**
@@ -99,6 +101,8 @@ public class AttributeTableModel extends AbstractTableModel {
     
     public void setValueAt(Object value, int row, int col) {
     	
+    	this.doBackup();
+    	
     	if(col == 0){
     		Pair p = list.get(row);
     		p.key = String.valueOf(value);
@@ -117,16 +121,19 @@ public class AttributeTableModel extends AbstractTableModel {
     }
     
     public void deleteRow(int rowIndex){
+    	this.doBackup();
     	list.remove(rowIndex);
     	this.fireTableRowsDeleted(rowIndex, rowIndex);
     }
     
     public void clear() {
+    	this.doBackup();
     	list.clear();
     	this.fireTableDataChanged();
     }
     
     public void update(Properties props) {
+    	this.doBackup();
     	list.clear();
     	Map<String,String> map = props.getFlattenedMap();
     	Iterator<String> iter = map.keySet().iterator();
@@ -138,9 +145,18 @@ public class AttributeTableModel extends AbstractTableModel {
     	this.fireTableDataChanged();
     }
     
+    public void revert() {
+    	list.clear();
+    	for(Pair p: listBackup){
+    		list.add(p.clone());
+    	}
+    	this.fireTableDataChanged();
+    }
+    
     public void addRow(int index, String key, String value){
-    	list.add(index, new Pair(key,value));
-    	this.fireTableRowsInserted(index, index);
+    	this.doBackup();
+    	list.add(index+1, new Pair(key,value));
+    	this.fireTableRowsInserted(index+1, index+1);
     }
     
     public MapData toMapData() {
@@ -173,6 +189,17 @@ public class AttributeTableModel extends AbstractTableModel {
 			this.key = key;
 			this.value = value;
 		}
+		
+		public Pair clone() {
+			return new Pair(key, value);
+		}
+    }
+    
+    private void doBackup(){
+    	listBackup.clear();
+    	for(Pair p: list){
+    		listBackup.add(p.clone());
+    	}
     }
     
     private List<Pair> mapToList(Map<String, String> map){
