@@ -21,6 +21,7 @@ import com.cryptoregistry.MapData;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
  * In some cases we need just to get the JSON data into Maps, we do not need to load it into value objects.
@@ -300,22 +301,13 @@ public class JSONGenericReader {
 	}
 	
 	/**
-	 * Useful re-format
+	 * TODO
 	 * 
 	 * @param writer
 	 */
 	public void reformat(Writer writer){
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			mapper.writeValue(writer, this.map);
-		} catch (JsonGenerationException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		
 	}
 	
-	// TODO - add MapData addition interface
+
 }
