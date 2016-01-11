@@ -39,8 +39,7 @@ public class AttributeTableModel extends AbstractTableModel {
      * Creates a new instance of MapTableModel; non-destructive on the map
      */
     public AttributeTableModel(String uuid, Map<String,String> map) {
-        this(uuid, map,"Attribute","Value");
-        
+        this(uuid, map,"Attribute","Value"); 
     }
 
     /**
