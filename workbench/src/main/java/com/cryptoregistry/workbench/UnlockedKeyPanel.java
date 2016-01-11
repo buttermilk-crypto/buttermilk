@@ -29,7 +29,7 @@ public class UnlockedKeyPanel extends JPanel implements CreateKeyListener, Unloc
 	private static final long serialVersionUID = 1L;
 	
 	private JComboBox<KeyWrapper> comboBox;
-	private DefaultComboBoxModel<KeyWrapper> model;
+	private DefaultComboBoxModel<KeyWrapper> comboBoxModel;
 	private JTextPane textPane;
 	private JScrollPane scroll;
 	
@@ -43,7 +43,7 @@ public class UnlockedKeyPanel extends JPanel implements CreateKeyListener, Unloc
 		JLabel lblSelectAnUnlocked = new JLabel("Select an unlocked key to make it the Current Key:");
 	
 		comboBox = new JComboBox<KeyWrapper>();
-		model = (DefaultComboBoxModel<KeyWrapper>) comboBox.getModel();
+		comboBoxModel = (DefaultComboBoxModel<KeyWrapper>) comboBox.getModel();
 		comboBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -107,7 +107,7 @@ public class UnlockedKeyPanel extends JPanel implements CreateKeyListener, Unloc
 	@Override
 	public void keyCreated(CreateKeyEvent evt) {
 		KeyWrapper wrapper = new KeyWrapper(evt.getKey());
-		this.model.addElement(wrapper);
+		this.comboBoxModel.addElement(wrapper);
 	}
 	
 	public String describe(CryptoKey key){
@@ -137,15 +137,15 @@ public class UnlockedKeyPanel extends JPanel implements CreateKeyListener, Unloc
 		UnlockKeyEvent uevt = (UnlockKeyEvent)evt;
 		CryptoKey key = uevt.getKey();
 		String handle = key.getMetadata().getHandle();
-		int size = model.getSize();
+		int size = comboBoxModel.getSize();
 		for(int i = 0;i<size;i++){
-			KeyWrapper wrapper = model.getElementAt(i);
+			KeyWrapper wrapper = comboBoxModel.getElementAt(i);
 			if(handle.equals(wrapper.key.getMetadata().getHandle())) {
 				return;
 			}
 		}
 		// ok, we don't have this key already
-		this.model.addElement(new KeyWrapper(key));
+		this.comboBoxModel.addElement(new KeyWrapper(key));
 	}
 	
 	private void fireCryptoKeySelectionEvent(CryptoKey key) {
