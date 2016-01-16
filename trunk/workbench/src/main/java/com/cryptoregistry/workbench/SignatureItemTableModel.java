@@ -67,9 +67,10 @@ public class SignatureItemTableModel extends AbstractTableModel {
     /**
      * Returns the value at row,column
      */
-    public String getValueAt(int row, int column) {
-    	if(column == 0) return list.get(row).key;
-    	else if(column == 1) return list.get(row).value;
+    public Object getValueAt(int row, int column) {
+    	if(column == 0) return list.get(row).selected;
+    	else if(column == 1) return list.get(row).key;
+    	else if(column == 2) return list.get(row).value;
     	else throw new RuntimeException("Column out of bounds: "+column);
     }
 
@@ -78,6 +79,10 @@ public class SignatureItemTableModel extends AbstractTableModel {
      */
     public String getColumnName(int column) {
         return columnNames[column];
+    }
+    
+    public Class<?> getColumnClass(int column){
+    	 return (getValueAt(0, column).getClass());
     }
 
     /**
@@ -97,12 +102,19 @@ public class SignatureItemTableModel extends AbstractTableModel {
     	
     	if(col == 0){
     		SigElement p = list.get(row);
-    		p.key = String.valueOf(value);
+    		p.selected = Boolean.valueOf(String.valueOf(value));
     		this.fireTableCellUpdated(row, col);
     		return;
     	}
     	
     	if(col == 1){
+    		SigElement p = list.get(row);
+    		p.key = String.valueOf(value);
+    		this.fireTableCellUpdated(row, col);
+    		return;
+    	}
+    	
+    	if(col == 2){
     		SigElement p = list.get(row);
     		p.value = String.valueOf(value);
     		this.fireTableCellUpdated(row, col);
@@ -112,7 +124,11 @@ public class SignatureItemTableModel extends AbstractTableModel {
     	throw new RuntimeException("Unexpected column: "+col);
     }
     
-    private static class SigElement {
+    public void add(SigElement el){
+    	list.add(el);
+    }
+    
+    public static class SigElement {
     	
     	public Boolean selected;
     	public String key;
