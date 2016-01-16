@@ -18,10 +18,7 @@ import x.org.bouncycastle.crypto.params.KeyParameter;
 import x.org.bouncycastle.util.Arrays;
 
 import com.cryptoregistry.MapData;
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
  * In some cases we need just to get the JSON data into Maps, we do not need to load it into value objects.
@@ -68,6 +65,14 @@ public class JSONGenericReader {
 	
 	public String email() {
 		return String.valueOf(map.get("Email"));
+	}
+	
+	public List<MapData> allData() {
+		List<MapData> list = new ArrayList<MapData>();
+		list.addAll(contacts());
+		list.addAll(local());
+		list.addAll(keys());
+		return list;
 	}
 	
 	@SuppressWarnings("unchecked")
