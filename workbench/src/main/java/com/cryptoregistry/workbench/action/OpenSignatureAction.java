@@ -6,11 +6,14 @@ import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 
 import com.cryptoregistry.util.Lf2SpacesIndenter;
+import com.cryptoregistry.workbench.SignatureItemSelectionDialog;
 import com.cryptoregistry.workbench.UUIDTextPane;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,14 +23,14 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class FormatJSONAction extends AbstractAction {
+public class OpenSignatureAction extends AbstractAction {
 
 	private static final long serialVersionUID = 1L;
 	private JTabbedPane tabs;
 
-	public FormatJSONAction(JTabbedPane tabs) {
+	public OpenSignatureAction(JTabbedPane tabs) {
 		this.tabs = tabs;
-		this.putValue(Action.NAME, "Format JSON");
+		this.putValue(Action.NAME, "Signature Dialog...");
 	}
 
 	@Override
@@ -44,18 +47,11 @@ public class FormatJSONAction extends AbstractAction {
 					"Not valid, try validation first", 
 					"Formatting Results",
 					JOptionPane.ERROR_MESSAGE);
+			return;
 		} else {
-
-			String output = format(text);
-			if(output != null){
-				pane.setText(output);
-				pane.requestFocusInWindow();
-			}else{
-				JOptionPane.showMessageDialog(comp,
-						"Sorry, formatting error of some kind...", 
-						"Formatting Results",
-						JOptionPane.ERROR_MESSAGE);
-			}
+			JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(comp);
+			SignatureItemSelectionDialog dialog = new SignatureItemSelectionDialog(topFrame,text);
+			System.err.println(dialog.isOK());
 		}
 	}
 
