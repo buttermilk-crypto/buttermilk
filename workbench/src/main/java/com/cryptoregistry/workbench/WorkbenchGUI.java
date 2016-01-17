@@ -42,6 +42,7 @@ import com.cryptoregistry.workbench.action.CloseFileAction;
 import com.cryptoregistry.workbench.action.FormatJSONAction;
 import com.cryptoregistry.workbench.action.NewFileAction;
 import com.cryptoregistry.workbench.action.OpenFileAction;
+import com.cryptoregistry.workbench.action.OpenSignatureAction;
 import com.cryptoregistry.workbench.action.PrintAction;
 import com.cryptoregistry.workbench.action.SaveFileAction;
 import com.cryptoregistry.workbench.action.UnlockKeysAction;
@@ -79,6 +80,7 @@ implements ChangeListener,
 	private ValidateJSONAction validateJSONAction;
 	private FormatJSONAction formatJSONAction;
 	private AddSkeletonAction addSkeletonAction;
+	private OpenSignatureAction openSignatureAction;
 	
 	private JMenuItem createKeyItem;
 	private UnlockKeysAction unlockKeysAction;
@@ -318,6 +320,9 @@ implements ChangeListener,
 		addSkeletonAction.setEnabled(false);
 		sourceMenu.add(addSkeletonAction);
 		sourceMenu.addSeparator();
+		openSignatureAction = new OpenSignatureAction(tabs);
+		sourceMenu.add(openSignatureAction);
+		sourceMenu.addSeparator();
 		
 		// Dialogs instantiated here so they can have listeners added
 		final RegHandleSearchDialog rhsd = new RegHandleSearchDialog(frame, "Set Registration Handle", propsMgr.getProps());
@@ -332,6 +337,9 @@ implements ChangeListener,
     	enterPasswordDialog.addPasswordChangedListener(instance);
     	enterPasswordDialog.addPasswordChangedListener(createKeyDialog.getPanel());
     	rhsd.addRegHandleListener(addSkeletonAction);
+    	createKeyDialog.addCreateKeyListener(openSignatureAction);
+    	
+    	
     	
 		
 		JMenu keysMenu = new JMenu("Key Materials");
@@ -391,6 +399,7 @@ implements ChangeListener,
 		
 		unlockKeysAction = new UnlockKeysAction(frame, tabs, statusLabel);
 		unlockKeysAction.addUnlockKeyListener(unlockedKeyDialog.getPanel());
+		unlockKeysAction.addUnlockKeyListener(openSignatureAction);
 		enterPasswordDialog.addPasswordChangedListener(unlockKeysAction);
 		keysMenu.add(unlockKeysAction);
 		unlockKeysAction.setEnabled(false);
