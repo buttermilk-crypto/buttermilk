@@ -1,5 +1,7 @@
 package com.cryptoregistry.workbench;
 
+import java.util.Set;
+
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
@@ -9,10 +11,11 @@ public class SignatureItemSelectionDialog extends JDialog {
 	
 	private SignatureItemSelectionPanel panel;
 
-	public SignatureItemSelectionDialog(JFrame frame, String tabText) {
+	public SignatureItemSelectionDialog(JFrame frame, String tabText, Set<KeyWrapper> keys) {
 		// modal and use once only
 		super(frame, "Signature Item Selection Dialog", true);
 		panel = new SignatureItemSelectionPanel(this, tabText);
+		panel.setKeys(keys);
 		getContentPane().add(panel);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		pack();
