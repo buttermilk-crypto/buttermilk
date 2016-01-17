@@ -12,6 +12,8 @@ package com.cryptoregistry;
  * but we still use the marker interface on that key class.
  * 
  * @author Dave
+ * 
+ * @see KeyGenerationAlgorithm.isUsableForSignature()
  *
  */
 public interface Signer {

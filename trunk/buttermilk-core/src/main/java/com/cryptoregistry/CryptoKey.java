@@ -16,5 +16,10 @@ public interface CryptoKey {
 	public CryptoKeyMetadata getMetadata();
 	public String formatJSON();
 	public CryptoKey keyForPublication();
+	
+	// helpful for use with Sets, etc.
+	public int hashCode();
+	public boolean equals(Object obj);
+	
 
 }
