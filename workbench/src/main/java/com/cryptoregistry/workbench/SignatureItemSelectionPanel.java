@@ -11,9 +11,10 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.StringReader;
-import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDialog;
@@ -22,13 +23,23 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
+import javax.swing.SwingWorker;
 
-import com.cryptoregistry.CryptoKey;
+import com.cryptoregistry.KeyGenerationAlgorithm;
 import com.cryptoregistry.MapData;
+import com.cryptoregistry.ec.ECKeyContents;
 import com.cryptoregistry.formats.JSONGenericReader;
+import com.cryptoregistry.formats.SignatureFormatter;
+import com.cryptoregistry.rsa.RSAKeyContents;
+import com.cryptoregistry.signature.C2CryptoSignature;
+import com.cryptoregistry.signature.CryptoSignature;
+import com.cryptoregistry.signature.builder.C2SignatureBuilder;
+import com.cryptoregistry.signature.builder.ECDSASignatureBuilder;
+import com.cryptoregistry.signature.builder.RSASignatureBuilder;
 import com.cryptoregistry.workbench.SignatureItemTableModel.SigElement;
+import com.cryptoregistry.c2.key.Curve25519KeyContents;
 
-public class SignatureItemSelectionPanel extends JPanel implements CreateKeyListener, UnlockKeyListener {
+public class SignatureItemSelectionPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JTable table;
@@ -39,6 +50,9 @@ public class SignatureItemSelectionPanel extends JPanel implements CreateKeyList
 	
 	JDialog dialog;
 	boolean OK = false;
+	CryptoSignature sig;
+	
+	String regHandle;
 	
 	/**
 	 * Input text should be valid Key Materials formatted
@@ -48,6 +62,7 @@ public class SignatureItemSelectionPanel extends JPanel implements CreateKeyList
 		this();
 		this.dialog = dialog;
 		JSONGenericReader reader = new JSONGenericReader(new StringReader(text));
+		regHandle = reader.regHandle();
 		List<MapData> list = reader.allData();
 		for(MapData md: list){
 			String uuid = md.uuid;
@@ -72,16 +87,85 @@ public class SignatureItemSelectionPanel extends JPanel implements CreateKeyList
 		
 		JLabel lblSigner = new JLabel("Signer:");
 		
-		JButton btnSign = new JButton("Sign");
+		final JButton btnSign = new JButton("Sign");
 		btnSign.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				dialog.setVisible(false);
-				dialog.dispose();
-				OK = true;
+				
+				btnSign.setText("Signing...");
+				btnSign.setEnabled(false);
+				
+				SwingWorker<Boolean,String> worker = new SwingWorker<Boolean,String>() {
+					
+					@Override
+					protected Boolean doInBackground() throws Exception {
+						KeyWrapper key = (KeyWrapper)comboBox.getSelectedItem();
+						switch(key.key.getMetadata().getKeyAlgorithm()) {
+							case Curve25519:
+								C2SignatureBuilder builder = new C2SignatureBuilder(regHandle,(Curve25519KeyContents)key.key);
+								for(SigElement item: dataModel.getList()){
+									if(item.selected) {
+										builder.update(item.key, item.value);
+									}
+								}
+								sig = builder.build();
+								break;
+							case DSA:
+								System.err.println("DSA Not Implemented Yet");
+								return Boolean.FALSE;
+							case EC:
+								ECDSASignatureBuilder ecbuilder = new ECDSASignatureBuilder(regHandle,(ECKeyContents)key.key);
+								for(SigElement item: dataModel.getList()){
+									if(item.selected) {
+										ecbuilder.update(item.key, item.value);
+									}
+								}
+								sig = ecbuilder.build();
+								break;
+							case NTRU:
+								System.err.println("Not a key which can be used for digital signature.");
+								return Boolean.FALSE;
+							case RSA:	
+								RSASignatureBuilder rsabuilder = new RSASignatureBuilder(regHandle,(RSAKeyContents)key.key);
+								for(SigElement item: dataModel.getList()){
+									if(item.selected) {
+										rsabuilder.update(item.key, item.value);
+									}
+								}
+								sig = rsabuilder.build();
+								break;
+							case Symmetric:
+								System.err.println("Not a key which can be used for digital signature.");
+								return Boolean.FALSE;
+							default:
+								System.err.println("Unknown key type: "+key.key);
+								return Boolean.FALSE;
+						}
+						return Boolean.TRUE;
+					}
+					
+					 @Override
+					public void done() {
+						 try {
+							 btnSign.setEnabled(true);
+							 btnSign.setText("Sign");
+							if(get()) {
+								dialog.setVisible(false);
+								dialog.dispose();
+								OK = true;	
+							}else{
+								dialog.setVisible(false);
+								dialog.dispose();
+								OK = false;	
+							}
+						} catch (InterruptedException | ExecutionException e) {
+							e.printStackTrace();
+						}
+					}
+				};
+				worker.execute();
 			}
-			
 		});
 		JButton btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener(){
@@ -96,6 +180,14 @@ public class SignatureItemSelectionPanel extends JPanel implements CreateKeyList
 		});
 		
 		JButton btnAddElements = new JButton("Add Elements...");
+		btnAddElements.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.err.println("TODO - not done yet");
+			}
+			
+		});
 		
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
@@ -155,33 +247,22 @@ public class SignatureItemSelectionPanel extends JPanel implements CreateKeyList
 		scrollPane.setViewportView(table);
 		setLayout(groupLayout);
 		this.setPreferredSize(new Dimension(700,330));
+	//	this.getRootPane().setDefaultButton(btnSign);
 		
 	}
 
 	public boolean isOK() {
 		return OK;
 	}
-
-	@Override
-	public void keyUnlocked(EventObject evt) {
-		UnlockKeyEvent uevt = (UnlockKeyEvent)evt;
-		CryptoKey key = uevt.getKey();
-		String handle = key.getMetadata().getHandle();
-		int size = comboBoxModel.getSize();
-		for(int i = 0;i<size;i++){
-			KeyWrapper wrapper = comboBoxModel.getElementAt(i);
-			if(handle.equals(wrapper.key.getMetadata().getHandle())) {
-				return;
+	
+	public void setKeys(Set<KeyWrapper> keys){
+		if(keys == null) return;
+		DefaultComboBoxModel<KeyWrapper> model = (DefaultComboBoxModel<KeyWrapper>) this.comboBox.getModel();
+		for(KeyWrapper key : keys){
+			if(KeyGenerationAlgorithm.isUsableForSignature(key.key.getMetadata().getKeyAlgorithm())){
+				model.addElement(key);
 			}
 		}
-		// ok, we don't have this key already
-		this.comboBoxModel.addElement(new KeyWrapper(key));
-	}
-
-	@Override
-	public void keyCreated(CreateKeyEvent evt) {
-		KeyWrapper wrapper = new KeyWrapper(evt.getKey());
-		this.comboBoxModel.addElement(wrapper);
 	}
 
 	public static final void main(String [] str){

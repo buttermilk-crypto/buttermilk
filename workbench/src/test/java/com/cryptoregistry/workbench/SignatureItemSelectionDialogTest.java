@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
 
 import javax.swing.JFrame;
 
@@ -18,7 +19,7 @@ public class SignatureItemSelectionDialogTest {
 					JFrame frame = new JFrame();
 					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 					InputStream in = frame.getClass().getResourceAsStream("/believed-good-c2.json");
-	            	SignatureItemSelectionDialog dialog = new SignatureItemSelectionDialog(frame,read(in));
+	            	SignatureItemSelectionDialog dialog = new SignatureItemSelectionDialog(frame,read(in), new HashSet<KeyWrapper>());
 	            	System.err.println(dialog.isOK());
 	            }
 	        });

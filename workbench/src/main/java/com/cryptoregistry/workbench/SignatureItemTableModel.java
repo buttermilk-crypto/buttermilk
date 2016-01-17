@@ -158,4 +158,8 @@ public class SignatureItemTableModel extends AbstractTableModel {
     	return list;
     }
 
+	public List<SigElement> getList() {
+		return list;
+	}
+
 } 

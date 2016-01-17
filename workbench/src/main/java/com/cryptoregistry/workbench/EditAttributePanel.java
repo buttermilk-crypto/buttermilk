@@ -10,12 +10,11 @@ import javax.swing.JScrollPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.InputStream;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,14 +30,6 @@ import asia.redact.bracket.properties.Properties;
 import asia.redact.bracket.properties.PropertiesImpl;
 
 import com.cryptoregistry.MapData;
-import com.cryptoregistry.formats.MapDataFormatter;
-import com.cryptoregistry.util.Lf2SpacesIndenter;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 import javax.swing.JComboBox;
 
@@ -52,6 +43,7 @@ public class EditAttributePanel extends JPanel {
 	List<Template> templates; 
 	
 	EditAttributeDialog owner;
+	boolean OK = false;
 	
 	public EditAttributePanel() {
 		this(new JFrame(), "...", new HashMap<String,String>());
@@ -79,6 +71,7 @@ public class EditAttributePanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				owner.setVisible(false);
 				owner.dispose();
+				OK = true;
 			}
 		});
 		
@@ -88,6 +81,7 @@ public class EditAttributePanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				owner.setVisible(false);
 				owner.dispose();
+				OK = false;
 			}
 		});
 		
@@ -96,8 +90,12 @@ public class EditAttributePanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				AttributeTableModel model = (AttributeTableModel)table.getModel();
-				if(rowIndex != -1) model.addRow(rowIndex, "", "");
+				if(rowIndex != -1) {
+					model.addRow(rowIndex, "", "");
+					table.getSelectionModel().setSelectionInterval(rowIndex, rowIndex); // doesn't seem to work
+				}
 				rowIndex = -1;
+				
 			}
 		});
 		
@@ -106,7 +104,10 @@ public class EditAttributePanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				AttributeTableModel model = (AttributeTableModel)table.getModel();
-				if(rowIndex != -1) model.deleteRow(rowIndex);
+				if(rowIndex != -1) {
+					model.deleteRow(rowIndex);
+					table.getSelectionModel().setSelectionInterval(rowIndex, rowIndex);// doesn't seem to work
+				}
 				rowIndex = -1;
 			}
 		});
@@ -196,7 +197,10 @@ public class EditAttributePanel extends JPanel {
 					.addContainerGap())
 		);
 		
+		//table = new JTable();
+		
 		table = new JTable();
+		
 		table.setCellSelectionEnabled(true);
 		final AttributeTableModel atModel = new AttributeTableModel();
 		table.setModel(atModel);
@@ -211,6 +215,9 @@ public class EditAttributePanel extends JPanel {
 		panel.setLayout(new GridLayout(1, 0, 0, 0));
 		panel.add(scroll);
 		setLayout(groupLayout);
+		table.getColumnModel().getColumn(0).setPreferredWidth(100);
+		table.getColumnModel().getColumn(1).setPreferredWidth(400);
+		this.setPreferredSize(new Dimension(600,330));
 		frame.getRootPane().setDefaultButton(btnOk);
 	}
 	

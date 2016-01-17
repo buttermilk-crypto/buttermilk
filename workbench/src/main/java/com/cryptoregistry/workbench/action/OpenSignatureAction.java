@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.EventObject;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
@@ -39,15 +40,16 @@ public class OpenSignatureAction extends AbstractAction implements CreateKeyList
 
 	public OpenSignatureAction(JTabbedPane tabs) {
 		this.tabs = tabs;
-		this.putValue(Action.NAME, "Signature Dialog...");
+		this.putValue(Action.NAME, "Open Signature Dialog...");
+		this.keys = new HashSet<KeyWrapper>();
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent evt) {
 		Component comp = (Component) evt.getSource();
 		int index = tabs.getSelectedIndex();
-		if (index == -1)
-			return; // fail because no tabs found
+		if (index == -1) return; // fail because no tabs found
+		
 		UUIDTextPane pane = (UUIDTextPane) ((JScrollPane) tabs
 				.getComponentAt(index)).getViewport().getView();
 		String text = pane.getText();
@@ -59,7 +61,7 @@ public class OpenSignatureAction extends AbstractAction implements CreateKeyList
 			return;
 		} else {
 			JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(comp);
-			SignatureItemSelectionDialog dialog = new SignatureItemSelectionDialog(topFrame,text);
+			SignatureItemSelectionDialog dialog = new SignatureItemSelectionDialog(topFrame,text,keys);
 			System.err.println(dialog.isOK());
 		}
 	}

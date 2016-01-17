@@ -85,6 +85,8 @@ implements ChangeListener,
 	private JMenuItem createKeyItem;
 	private UnlockKeysAction unlockKeysAction;
 	
+	private JMenuItem delWindowItem;
+	
 	private JLabel statusLabel;
 	
 	private Password password;
@@ -321,6 +323,7 @@ implements ChangeListener,
 		sourceMenu.add(addSkeletonAction);
 		sourceMenu.addSeparator();
 		openSignatureAction = new OpenSignatureAction(tabs);
+		openSignatureAction.setEnabled(false);
 		sourceMenu.add(openSignatureAction);
 		sourceMenu.addSeparator();
 		
@@ -432,7 +435,8 @@ implements ChangeListener,
 				}
 			}
 		});
-		JMenuItem delWindowItem = new JMenuItem("Close Tab");
+		delWindowItem = new JMenuItem("Close Tab");
+		delWindowItem.setEnabled(false);
 		windowMenu.add(delWindowItem);
 		delWindowItem.addActionListener(new ActionListener() {
 			@Override
@@ -525,6 +529,9 @@ implements ChangeListener,
 			this.addSkeletonAction.setEnabled(false);
 			
 			this.unlockKeysAction.setEnabled(false);
+			this.openSignatureAction.setEnabled(false);
+			
+			delWindowItem.setEnabled(false);
 			
 			this.statusLabel.setText("...");
 			return;
@@ -553,6 +560,9 @@ implements ChangeListener,
 				this.validateJSONAction.setEnabled(true);
 				this.formatJSONAction.setEnabled(true);
 				this.addSkeletonAction.setEnabled(true);
+				this.openSignatureAction.setEnabled(true);
+				
+				delWindowItem.setEnabled(true);
 				
 				this.statusLabel.setText("...");
 				return;
@@ -570,6 +580,9 @@ implements ChangeListener,
 				this.addSkeletonAction.setEnabled(true);
 				
 				this.unlockKeysAction.setEnabled(true);
+				this.openSignatureAction.setEnabled(true);
+				
+				delWindowItem.setEnabled(true);
 				
 				try {
 					this.statusLabel.setText(pane.getTargetFile().getCanonicalPath());
