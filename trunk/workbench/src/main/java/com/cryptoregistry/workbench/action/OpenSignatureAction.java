@@ -3,6 +3,8 @@ package com.cryptoregistry.workbench.action;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.util.EventObject;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -12,9 +14,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
+import com.cryptoregistry.CryptoKey;
 import com.cryptoregistry.util.Lf2SpacesIndenter;
+import com.cryptoregistry.workbench.CreateKeyEvent;
+import com.cryptoregistry.workbench.CreateKeyListener;
+import com.cryptoregistry.workbench.KeyWrapper;
 import com.cryptoregistry.workbench.SignatureItemSelectionDialog;
 import com.cryptoregistry.workbench.UUIDTextPane;
+import com.cryptoregistry.workbench.UnlockKeyEvent;
+import com.cryptoregistry.workbench.UnlockKeyListener;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
@@ -23,10 +31,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class OpenSignatureAction extends AbstractAction {
+public class OpenSignatureAction extends AbstractAction implements CreateKeyListener, UnlockKeyListener {
 
 	private static final long serialVersionUID = 1L;
 	private JTabbedPane tabs;
+	private Set<KeyWrapper> keys;
 
 	public OpenSignatureAction(JTabbedPane tabs) {
 		this.tabs = tabs;
@@ -91,6 +100,20 @@ public class OpenSignatureAction extends AbstractAction {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	@Override
+	public void keyUnlocked(EventObject evt) {
+		UnlockKeyEvent uevt = (UnlockKeyEvent)evt;
+		CryptoKey key = uevt.getKey();
+		KeyWrapper wrapper = new KeyWrapper(key);
+		keys.add(wrapper);
+	}
+
+	@Override
+	public void keyCreated(CreateKeyEvent evt) {
+		KeyWrapper wrapper = new KeyWrapper(evt.getKey());
+		keys.add(wrapper);
 	}
 
 }

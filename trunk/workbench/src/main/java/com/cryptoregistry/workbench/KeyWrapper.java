@@ -10,7 +10,7 @@ public class KeyWrapper {
 	public final CryptoKey key;
 	
 	public KeyWrapper(CryptoKey key){
-		this.key = key;
+		this.key = (CryptoKey) key;
 		if(key == null) throw new RuntimeException("Key cannot be set to null");
 	}
 	
@@ -30,4 +30,30 @@ public class KeyWrapper {
 		}
 		return buf.toString();
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((key == null) ? 0 : key.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		KeyWrapper other = (KeyWrapper) obj;
+		if (key == null) {
+			if (other.key != null)
+				return false;
+		} else if (!key.equals(other.key))
+			return false;
+		return true;
+	}
+	
 }
