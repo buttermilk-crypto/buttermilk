@@ -1,6 +1,5 @@
 package com.cryptoregistry.workbench.action;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

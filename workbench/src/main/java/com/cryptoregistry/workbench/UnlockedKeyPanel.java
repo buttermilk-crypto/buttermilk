@@ -1,5 +1,9 @@
 package com.cryptoregistry.workbench;
 
+import java.awt.Component;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -7,6 +11,7 @@ import java.util.EventObject;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -35,6 +40,7 @@ public class UnlockedKeyPanel extends JPanel implements CreateKeyListener, Unloc
 	
 	private CryptoKey currentKey;
 	private JButton btnDone;
+	private JButton btnCopyToClipboard;
 	
 	private List<CryptoKeySelectionListener> listeners = new ArrayList<CryptoKeySelectionListener>();
 
@@ -69,6 +75,27 @@ public class UnlockedKeyPanel extends JPanel implements CreateKeyListener, Unloc
 		});
 		dialog.getRootPane().setDefaultButton(btnDone);
 		
+		btnCopyToClipboard = new JButton("Copy To Clipboard");
+		btnCopyToClipboard.setEnabled(false);
+		btnCopyToClipboard.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent evt) {
+				Component comp = (Component) evt.getSource();
+				if(currentKey == null){
+					JOptionPane.showMessageDialog(comp,
+						    "No key available",
+						    "Problem, no key available",
+						    JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				StringSelection stringSelection = new StringSelection(currentKey.formatJSON());
+				Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
+				clpbrd.setContents(stringSelection, null);
+				
+			}
+		});
+		
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.TRAILING)
@@ -78,7 +105,10 @@ public class UnlockedKeyPanel extends JPanel implements CreateKeyListener, Unloc
 						.addComponent(comboBox, 0, 430, Short.MAX_VALUE)
 						.addComponent(lblSelectAnUnlocked)
 						.addComponent(lblCurrentKeyInfo)
-						.addComponent(btnDone, Alignment.TRAILING)
+						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+							.addComponent(btnCopyToClipboard)
+							.addPreferredGap(ComponentPlacement.RELATED, 284, Short.MAX_VALUE)
+							.addComponent(btnDone))
 						.addComponent(scroll, GroupLayout.PREFERRED_SIZE, 337, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap())
 		);
@@ -94,7 +124,9 @@ public class UnlockedKeyPanel extends JPanel implements CreateKeyListener, Unloc
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(scroll, GroupLayout.PREFERRED_SIZE, 168, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(btnDone)
+					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnDone)
+						.addComponent(btnCopyToClipboard))
 					.addContainerGap(26, Short.MAX_VALUE))
 		);
 		setLayout(groupLayout);
@@ -108,6 +140,7 @@ public class UnlockedKeyPanel extends JPanel implements CreateKeyListener, Unloc
 	public void keyCreated(CreateKeyEvent evt) {
 		KeyWrapper wrapper = new KeyWrapper(evt.getKey());
 		this.comboBoxModel.addElement(wrapper);
+		btnCopyToClipboard.setEnabled(true);
 	}
 	
 	public String describe(CryptoKey key){
@@ -146,6 +179,7 @@ public class UnlockedKeyPanel extends JPanel implements CreateKeyListener, Unloc
 		}
 		// ok, we don't have this key already
 		this.comboBoxModel.addElement(new KeyWrapper(key));
+		btnCopyToClipboard.setEnabled(true);
 	}
 	
 	private void fireCryptoKeySelectionEvent(CryptoKey key) {

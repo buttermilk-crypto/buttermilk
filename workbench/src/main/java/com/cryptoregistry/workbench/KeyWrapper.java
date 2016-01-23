@@ -14,6 +14,10 @@ public class KeyWrapper {
 		if(key == null) throw new RuntimeException("Key cannot be set to null");
 	}
 	
+	public String toJSON() {
+		return key.formatJSON();
+	}
+	
 	public String toString() {
 		StringBuffer buf = new StringBuffer();
 		buf.append(key.getMetadata().getDistinguishedHandle());
