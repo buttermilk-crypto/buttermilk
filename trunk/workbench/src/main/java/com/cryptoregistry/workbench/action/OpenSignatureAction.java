@@ -3,6 +3,7 @@ package com.cryptoregistry.workbench.action;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.EventObject;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,6 +17,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
 import com.cryptoregistry.CryptoKey;
+import com.cryptoregistry.formats.JSONReader;
+import com.cryptoregistry.formats.SignatureFormatter;
+import com.cryptoregistry.signature.CryptoSignature;
 import com.cryptoregistry.util.Lf2SpacesIndenter;
 import com.cryptoregistry.workbench.CreateKeyEvent;
 import com.cryptoregistry.workbench.CreateKeyListener;
@@ -62,7 +66,10 @@ public class OpenSignatureAction extends AbstractAction implements CreateKeyList
 		} else {
 			JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(comp);
 			SignatureItemSelectionDialog dialog = new SignatureItemSelectionDialog(topFrame,text,keys);
-			System.err.println(dialog.isOK());
+			if(dialog.isOK()){
+				CryptoSignature sig = dialog.getSig();
+				pane.insert(sig);
+			}
 		}
 	}
 

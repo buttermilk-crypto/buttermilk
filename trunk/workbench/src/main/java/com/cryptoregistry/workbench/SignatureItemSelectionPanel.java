@@ -29,9 +29,7 @@ import com.cryptoregistry.KeyGenerationAlgorithm;
 import com.cryptoregistry.MapData;
 import com.cryptoregistry.ec.ECKeyContents;
 import com.cryptoregistry.formats.JSONGenericReader;
-import com.cryptoregistry.formats.SignatureFormatter;
 import com.cryptoregistry.rsa.RSAKeyContents;
-import com.cryptoregistry.signature.C2CryptoSignature;
 import com.cryptoregistry.signature.CryptoSignature;
 import com.cryptoregistry.signature.builder.C2SignatureBuilder;
 import com.cryptoregistry.signature.builder.ECDSASignatureBuilder;
@@ -255,6 +253,10 @@ public class SignatureItemSelectionPanel extends JPanel {
 		return OK;
 	}
 	
+	public CryptoSignature getSig() {
+		return sig;
+	}
+
 	public void setKeys(Set<KeyWrapper> keys){
 		if(keys == null) return;
 		DefaultComboBoxModel<KeyWrapper> model = (DefaultComboBoxModel<KeyWrapper>) this.comboBox.getModel();

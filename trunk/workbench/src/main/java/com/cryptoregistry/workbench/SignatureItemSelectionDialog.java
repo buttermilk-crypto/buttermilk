@@ -5,6 +5,8 @@ import java.util.Set;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
+import com.cryptoregistry.signature.CryptoSignature;
+
 public class SignatureItemSelectionDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
@@ -24,6 +26,10 @@ public class SignatureItemSelectionDialog extends JDialog {
 
 	public boolean isOK() {
 		return panel.isOK();
+	}
+
+	public CryptoSignature getSig() {
+		return panel.getSig();
 	}
 	
 	

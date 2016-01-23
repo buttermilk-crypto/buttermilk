@@ -31,6 +31,8 @@ import com.cryptoregistry.MapData;
 import com.cryptoregistry.formats.JSONGenericReader;
 import com.cryptoregistry.formats.JSONReader;
 import com.cryptoregistry.formats.MapDataFormatter;
+import com.cryptoregistry.formats.SignatureFormatter;
+import com.cryptoregistry.signature.CryptoSignature;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -233,12 +235,12 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 	}
 	
 	private static class Match {
-		public final int start, end;
+		//public final int start, end;
 		public final String text;
 		public Match(int start, int end, String text) {
 			super();
-			this.start = start;
-			this.end = end;
+		//	this.start = start;
+		//	this.end = end;
 			this.text = text;
 		}
 		
@@ -310,14 +312,23 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 		return null;
 	}
 	
-	private void insert(MapData data){
+	public void insert(MapData data){
 		MapDataFormatter formatter = new MapDataFormatter();
 		formatter.add(data);
 		String s = formatter.formatAsFragment();
 		try {
 			this.getDocument().insertString(this.getCaretPosition(), s, null);
 		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void insert(CryptoSignature sig){
+		SignatureFormatter f = new SignatureFormatter(sig);
+		String result = f.format();
+		try {
+			this.getDocument().insertString(this.getCaretPosition(), result, null);
+		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
 	}
