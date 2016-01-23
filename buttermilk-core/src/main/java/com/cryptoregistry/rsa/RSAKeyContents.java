@@ -5,11 +5,17 @@
  */
 package com.cryptoregistry.rsa;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.math.BigInteger;
 
 import com.cryptoregistry.Signer;
+import com.cryptoregistry.formats.FormatUtil;
 import com.cryptoregistry.passwords.Password;
 import com.cryptoregistry.pbe.PBEParams;
+import com.cryptoregistry.util.TimeUtil;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
 
 import x.org.bouncycastle.crypto.params.RSAKeyParameters;
 import x.org.bouncycastle.crypto.params.RSAPrivateCrtKeyParameters;
@@ -171,5 +177,39 @@ public class RSAKeyContents extends RSAKeyForPublication implements Signer {
 		}	
 	}
 	
-	
+	@Override
+	public String formatJSON() {
+		StringWriter writer = new StringWriter();
+		JsonFactory f = new JsonFactory();
+		JsonGenerator g = null;
+		try {
+			g = f.createGenerator(writer);
+			g.useDefaultPrettyPrinter();
+			g.writeStartObject();
+			g.writeObjectFieldStart(metadata.getHandle()+"-U");
+			g.writeStringField("KeyAlgorithm", "RSA");
+			g.writeStringField("CreatedOn", TimeUtil.format(metadata.createdOn));
+			g.writeStringField("Encoding", metadata.format.encodingHint.toString());
+			g.writeStringField("Strength", String.valueOf(metadata.strength));
+			g.writeStringField("Modulus", FormatUtil.wrap(metadata.format.encodingHint, modulus));
+			g.writeStringField("PublicExponent", FormatUtil.wrap(metadata.format.encodingHint, publicExponent));
+			g.writeStringField("PrivateExponent", FormatUtil.wrap(metadata.format.encodingHint, privateExponent));
+			g.writeStringField("P", FormatUtil.wrap(metadata.format.encodingHint, p));
+			g.writeStringField("Q", FormatUtil.wrap(metadata.format.encodingHint, q));
+			g.writeStringField("dP", FormatUtil.wrap(metadata.format.encodingHint, dP));
+			g.writeStringField("dQ", FormatUtil.wrap(metadata.format.encodingHint, dQ));
+			g.writeStringField("qInv", FormatUtil.wrap(metadata.format.encodingHint, qInv));
+			g.writeEndObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				g.close();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		return writer.toString();
+	}
 }

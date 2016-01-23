@@ -5,13 +5,19 @@
  */
 package com.cryptoregistry.c2.key;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Arrays;
 
 import com.cryptoregistry.CryptoKey;
 import com.cryptoregistry.Signer;
+import com.cryptoregistry.formats.EncodingHint;
 import com.cryptoregistry.passwords.Password;
 import com.cryptoregistry.pbe.PBEAlg;
 import com.cryptoregistry.pbe.PBEParams;
+import com.cryptoregistry.util.TimeUtil;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
 
 
 /**
@@ -148,6 +154,33 @@ public class Curve25519KeyContents extends Curve25519KeyForPublication implement
 		return true;
 	}
 
-	
+	@Override
+	public String formatJSON() {
+			StringWriter privateDataWriter = new StringWriter();
+			JsonFactory f = new JsonFactory();
+			JsonGenerator g = null;
+			try {
+				g = f.createGenerator(privateDataWriter);
+				//g.useDefaultPrettyPrinter();
+				g.writeStartObject();
+				g.writeObjectFieldStart(metadata.getHandle()+"-P");
+				g.writeStringField("KeyAlgorithm", "Curve25519");
+				g.writeStringField("CreatedOn", TimeUtil.format(metadata.createdOn));
+				g.writeStringField("Encoding", EncodingHint.Base64url.toString());
+				g.writeStringField("P", publicKey.getBase64UrlEncoding());
+				g.writeStringField("s", this.signingPrivateKey.getBase64UrlEncoding());
+				g.writeStringField("k", this.agreementPrivateKey.getBase64UrlEncoding());
+				g.writeEndObject();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					g.close();
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+			return privateDataWriter.toString();
+		}
 
 }
