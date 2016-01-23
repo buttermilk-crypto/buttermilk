@@ -38,6 +38,7 @@ import javax.swing.event.MenuListener;
 import com.cryptoregistry.CryptoKey;
 import com.cryptoregistry.passwords.Password;
 import com.cryptoregistry.workbench.action.AddSkeletonAction;
+import com.cryptoregistry.workbench.action.Base64EncodeAction;
 import com.cryptoregistry.workbench.action.CloseFileAction;
 import com.cryptoregistry.workbench.action.FormatJSONAction;
 import com.cryptoregistry.workbench.action.NewFileAction;
@@ -79,6 +80,8 @@ implements ChangeListener,
 	
 	private ValidateJSONAction validateJSONAction;
 	private FormatJSONAction formatJSONAction;
+	private Base64EncodeAction base64EncodeAction;
+	private Base64EncodeAction base64DecodeAction;
 	private AddSkeletonAction addSkeletonAction;
 	private OpenSignatureAction openSignatureAction;
 	
@@ -322,6 +325,16 @@ implements ChangeListener,
 		addSkeletonAction.setEnabled(false);
 		sourceMenu.add(addSkeletonAction);
 		sourceMenu.addSeparator();
+		
+		base64EncodeAction = new Base64EncodeAction(tabs, true, "Base64 Encode");
+		base64EncodeAction.setEnabled(false);
+		sourceMenu.add(base64EncodeAction);
+		
+		base64DecodeAction = new Base64EncodeAction(tabs, false, "Base64 Decode");
+		base64DecodeAction.setEnabled(false);
+		sourceMenu.add(base64DecodeAction);
+		sourceMenu.addSeparator();
+		
 		openSignatureAction = new OpenSignatureAction(tabs);
 		openSignatureAction.setEnabled(false);
 		sourceMenu.add(openSignatureAction);
@@ -526,6 +539,8 @@ implements ChangeListener,
 			
 			this.validateJSONAction.setEnabled(false);
 			this.formatJSONAction.setEnabled(false);
+			this.base64EncodeAction.setEnabled(false);
+			this.base64DecodeAction.setEnabled(false);
 			this.addSkeletonAction.setEnabled(false);
 			
 			this.unlockKeysAction.setEnabled(false);
@@ -560,6 +575,8 @@ implements ChangeListener,
 				this.validateJSONAction.setEnabled(true);
 				this.formatJSONAction.setEnabled(true);
 				this.addSkeletonAction.setEnabled(true);
+				this.base64EncodeAction.setEnabled(false);
+				this.base64DecodeAction.setEnabled(false);
 				this.openSignatureAction.setEnabled(true);
 				
 				delWindowItem.setEnabled(true);
@@ -578,6 +595,8 @@ implements ChangeListener,
 				this.validateJSONAction.setEnabled(true);
 				this.formatJSONAction.setEnabled(true);
 				this.addSkeletonAction.setEnabled(true);
+				this.base64EncodeAction.setEnabled(true);
+				this.base64DecodeAction.setEnabled(true);
 				
 				this.unlockKeysAction.setEnabled(true);
 				this.openSignatureAction.setEnabled(true);
