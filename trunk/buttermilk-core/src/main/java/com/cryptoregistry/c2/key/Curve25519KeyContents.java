@@ -163,7 +163,7 @@ public class Curve25519KeyContents extends Curve25519KeyForPublication implement
 				g = f.createGenerator(privateDataWriter);
 				//g.useDefaultPrettyPrinter();
 				g.writeStartObject();
-				g.writeObjectFieldStart(metadata.getHandle()+"-P");
+				g.writeObjectFieldStart(metadata.getHandle()+"-U");
 				g.writeStringField("KeyAlgorithm", "Curve25519");
 				g.writeStringField("CreatedOn", TimeUtil.format(metadata.createdOn));
 				g.writeStringField("Encoding", EncodingHint.Base64url.toString());
