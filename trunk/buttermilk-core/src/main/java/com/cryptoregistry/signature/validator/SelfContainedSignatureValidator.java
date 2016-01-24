@@ -131,6 +131,8 @@ public class SelfContainedSignatureValidator {
 	private boolean debugMode;
 	ByteArrayOutputStream collector;
 	
+	String specificSignatureUUID;
+	
 	public SelfContainedSignatureValidator(KeyMaterials km) {
 		this.km = km;
 		this.debugMode = false;
@@ -145,6 +147,11 @@ public class SelfContainedSignatureValidator {
 	public SelfContainedSignatureValidator(KeyMaterials km, boolean debug) {
 		this.km = km;
 		this.debugMode = debug;
+	}
+	
+	public boolean validate(String signatureUUID){
+		specificSignatureUUID = signatureUUID;
+		return validate();
 	}
 	
 	/**
@@ -180,6 +187,11 @@ public class SelfContainedSignatureValidator {
 		
 		// step 1.2: for each signature, validate
 		for(CryptoSignature sig: sigs){
+			
+			// if we've been asked to handle a specific UUID in the file, skip any others
+			if(specificSignatureUUID != null) {
+				if(!sig.getHandle().equals(specificSignatureUUID)) continue;
+			}
 			
 			// step 1.2.0: collect the data the signature was made against.
 			// Fail if a token is not found or some other error occurs

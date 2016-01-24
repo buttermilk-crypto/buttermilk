@@ -125,8 +125,15 @@ public class SelfContainedJSONResolver implements SignatureReferenceResolver {
 		for (String ref : refs) {
 			String normalized = preprocess(ref.trim());
 			String out = cache.get(normalized);
-			if (out == null)
-				throw new RefNotFoundException("Could not find " + normalized);
+			if (out == null){
+				RefNotFoundException refEx = new RefNotFoundException("Could not find " + normalized);
+				String [] spl = normalized.split("\\:");
+				if(spl.length == 2){
+					refEx.uuid = spl[0];
+					refEx.token = spl[1];
+				}
+				throw refEx;
+			}
 			try {
 				byte[] b = out.getBytes(Charset.forName("UTF-8"));
 				collector.write(b);
