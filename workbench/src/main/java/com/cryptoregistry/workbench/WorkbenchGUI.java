@@ -46,6 +46,7 @@ import com.cryptoregistry.workbench.action.NewFileAction;
 import com.cryptoregistry.workbench.action.OpenFileAction;
 import com.cryptoregistry.workbench.action.OpenSignatureAction;
 import com.cryptoregistry.workbench.action.PrintAction;
+import com.cryptoregistry.workbench.action.RetrieveRegDataAction;
 import com.cryptoregistry.workbench.action.SaveFileAction;
 import com.cryptoregistry.workbench.action.UnlockKeysAction;
 import com.cryptoregistry.workbench.action.ValidateJSONAction;
@@ -87,6 +88,7 @@ implements ChangeListener,
 	private OpenSignatureAction openSignatureAction;
 	
 	private CheckRegHandleAction checkRegHandleAction;
+	private RetrieveRegDataAction retrieveRegDataAction;
 	
 	private JMenuItem createKeyItem;
 	private UnlockKeysAction unlockKeysAction;
@@ -358,9 +360,6 @@ implements ChangeListener,
     	rhsd.addRegHandleListener(addSkeletonAction);
     	createKeyDialog.addCreateKeyListener(openSignatureAction);
     	
-    	
-    	
-		
 		JMenu keysMenu = new JMenu("Key Materials");
 		menuBar.add(keysMenu);
 		keysMenu.addMenuListener(new MenuListener() {
@@ -393,6 +392,10 @@ implements ChangeListener,
 		checkRegHandleAction = new CheckRegHandleAction(tabs,propsMgr.getProps(),statusLabel);
 		keysMenu.add(checkRegHandleAction);
 		checkRegHandleAction.setEnabled(false);
+		
+		retrieveRegDataAction = new RetrieveRegDataAction(tabs,propsMgr.getProps(),statusLabel);
+		keysMenu.add(retrieveRegDataAction);
+		retrieveRegDataAction.setEnabled(false);
 		
 		JMenuItem currentPasswordItem = new JMenuItem("Set Default Password");
 		keysMenu.add(currentPasswordItem);
@@ -551,6 +554,7 @@ implements ChangeListener,
 			this.addSkeletonAction.setEnabled(false);
 			
 			this.checkRegHandleAction.setEnabled(false);
+			this.retrieveRegDataAction.setEnabled(false);
 			
 			this.unlockKeysAction.setEnabled(false);
 			this.openSignatureAction.setEnabled(false);
@@ -589,6 +593,7 @@ implements ChangeListener,
 				this.openSignatureAction.setEnabled(true);
 				
 				this.checkRegHandleAction.setEnabled(true);
+				this.retrieveRegDataAction.setEnabled(true);
 				
 				delWindowItem.setEnabled(true);
 				
@@ -610,6 +615,7 @@ implements ChangeListener,
 				this.base64DecodeAction.setEnabled(true);
 				
 				this.checkRegHandleAction.setEnabled(true);
+				this.retrieveRegDataAction.setEnabled(true);
 				
 				this.unlockKeysAction.setEnabled(true);
 				this.openSignatureAction.setEnabled(true);
