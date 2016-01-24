@@ -39,6 +39,7 @@ import com.cryptoregistry.CryptoKey;
 import com.cryptoregistry.passwords.Password;
 import com.cryptoregistry.workbench.action.AddSkeletonAction;
 import com.cryptoregistry.workbench.action.Base64EncodeAction;
+import com.cryptoregistry.workbench.action.CheckRegHandleAction;
 import com.cryptoregistry.workbench.action.CloseFileAction;
 import com.cryptoregistry.workbench.action.FormatJSONAction;
 import com.cryptoregistry.workbench.action.NewFileAction;
@@ -84,6 +85,8 @@ implements ChangeListener,
 	private Base64EncodeAction base64DecodeAction;
 	private AddSkeletonAction addSkeletonAction;
 	private OpenSignatureAction openSignatureAction;
+	
+	private CheckRegHandleAction checkRegHandleAction;
 	
 	private JMenuItem createKeyItem;
 	private UnlockKeysAction unlockKeysAction;
@@ -387,6 +390,10 @@ implements ChangeListener,
 			}
 		});
 		
+		checkRegHandleAction = new CheckRegHandleAction(tabs,propsMgr.getProps(),statusLabel);
+		keysMenu.add(checkRegHandleAction);
+		checkRegHandleAction.setEnabled(false);
+		
 		JMenuItem currentPasswordItem = new JMenuItem("Set Default Password");
 		keysMenu.add(currentPasswordItem);
 		currentPasswordItem.addActionListener(new ActionListener() {
@@ -543,6 +550,8 @@ implements ChangeListener,
 			this.base64DecodeAction.setEnabled(false);
 			this.addSkeletonAction.setEnabled(false);
 			
+			this.checkRegHandleAction.setEnabled(false);
+			
 			this.unlockKeysAction.setEnabled(false);
 			this.openSignatureAction.setEnabled(false);
 			
@@ -579,6 +588,8 @@ implements ChangeListener,
 				this.base64DecodeAction.setEnabled(true);
 				this.openSignatureAction.setEnabled(true);
 				
+				this.checkRegHandleAction.setEnabled(true);
+				
 				delWindowItem.setEnabled(true);
 				
 				this.statusLabel.setText("...");
@@ -597,6 +608,8 @@ implements ChangeListener,
 				this.addSkeletonAction.setEnabled(true);
 				this.base64EncodeAction.setEnabled(true);
 				this.base64DecodeAction.setEnabled(true);
+				
+				this.checkRegHandleAction.setEnabled(true);
 				
 				this.unlockKeysAction.setEnabled(true);
 				this.openSignatureAction.setEnabled(true);
