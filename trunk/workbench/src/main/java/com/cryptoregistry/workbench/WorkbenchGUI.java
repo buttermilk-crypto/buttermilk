@@ -389,14 +389,6 @@ implements ChangeListener,
 			}
 		});
 		
-		checkRegHandleAction = new CheckRegHandleAction(tabs,propsMgr.getProps(),statusLabel);
-		keysMenu.add(checkRegHandleAction);
-		checkRegHandleAction.setEnabled(false);
-		
-		retrieveRegDataAction = new RetrieveRegDataAction(tabs,propsMgr.getProps(),statusLabel);
-		keysMenu.add(retrieveRegDataAction);
-		retrieveRegDataAction.setEnabled(false);
-		
 		JMenuItem currentPasswordItem = new JMenuItem("Set Default Password");
 		keysMenu.add(currentPasswordItem);
 		currentPasswordItem.addActionListener(new ActionListener() {
@@ -408,7 +400,6 @@ implements ChangeListener,
 		
 		keysMenu.addSeparator();
 		JMenu keysSubmenu = new JMenu("Keys");
-	
 		keysMenu.add(keysSubmenu);
 		
 		createKeyItem = new JMenuItem("Simple Key Creation Dialog...");
@@ -420,7 +411,6 @@ implements ChangeListener,
 			}
 		});
 		
-		
 		keysMenu.addSeparator();
 		
 		unlockKeysAction = new UnlockKeysAction(frame, tabs, statusLabel);
@@ -431,6 +421,23 @@ implements ChangeListener,
 		unlockKeysAction.setEnabled(false);
 		
 		keysMenu.addSeparator();
+		
+		JMenu sigSubmenu = new JMenu("Signatures");
+		keysMenu.add(sigSubmenu);
+		
+		
+		
+		JMenu remoteMenu = new JMenu("Remote/Registry");
+		menuBar.add(remoteMenu);
+		checkRegHandleAction = new CheckRegHandleAction(tabs,propsMgr.getProps(),statusLabel);
+		remoteMenu.add(checkRegHandleAction);
+		checkRegHandleAction.setEnabled(false);
+		
+		retrieveRegDataAction = new RetrieveRegDataAction(tabs,propsMgr.getProps(),statusLabel);
+		remoteMenu.add(retrieveRegDataAction);
+		retrieveRegDataAction.setEnabled(false);
+		
+		remoteMenu.addSeparator();
 		
 
 		// Build the Window menu.
