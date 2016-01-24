@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 
 import com.cryptoregistry.workbench.UUIDTextPane;
@@ -36,11 +37,31 @@ public class ValidateJSONAction extends AbstractAction {
 		int index = tabs.getSelectedIndex();
 		if (index == -1) return; // fail because no tabs found
 		UUIDTextPane pane = (UUIDTextPane) ((JScrollPane) tabs.getComponentAt(index)).getViewport().getView();
-		if(isValidJSON(pane.getText())){
-			JOptionPane.showMessageDialog(comp,
-				    "Valid JSON",
+		
+		String input = null;
+		boolean selection = false;
+		if(selectionFound(pane)){
+			input = pane.getSelectedText(); // do only selection
+			selection = true;
+		}else{
+			input = pane.getText();
+			selection = false;
+		}
+		
+		if(input == null) return;
+		
+		if(isValidJSON(input)){
+			if(selection){
+			   JOptionPane.showMessageDialog(comp,
+				    "The selection contents is valid JSON",
 				    "Validation Results",
 				    JOptionPane.INFORMATION_MESSAGE);
+			}else{
+				JOptionPane.showMessageDialog(comp,
+					    "The full text is valid JSON",
+					    "Validation Results",
+					    JOptionPane.INFORMATION_MESSAGE);
+			}
 		}else{
 			 JFrame frame = (JFrame) SwingUtilities.getRoot(comp);
 			new ValidationDialog(frame, "Validation Error", message);
@@ -64,5 +85,17 @@ public class ValidateJSONAction extends AbstractAction {
 
 		   return valid;
 		}
+	
+	/**
+	 * Return true if select start and end are not equal
+	 * 
+	 * @param pane
+	 * @return
+	 */
+	private boolean selectionFound(JTextPane pane) {
+		final int selectionStart = pane.getSelectionStart();
+		final int selectionEnd = pane.getSelectionEnd();
+		return selectionStart != selectionEnd;
+	}
 
 }
