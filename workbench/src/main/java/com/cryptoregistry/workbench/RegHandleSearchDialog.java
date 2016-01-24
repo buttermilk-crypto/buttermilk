@@ -1,5 +1,7 @@
 package com.cryptoregistry.workbench;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.io.InputStream;
 
 import javax.swing.JDialog;
@@ -19,6 +21,13 @@ public class RegHandleSearchDialog extends JDialog {
 		panel = new RegHandlePanel(this, props);
 		getContentPane().add(panel);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		
+		// size the window
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		double width = screenSize.getWidth() / 2;
+		double height = 300;
+		setPreferredSize(new Dimension((int) width, (int) height));
+		
 		pack();
 		//setVisible(true);
 	}
