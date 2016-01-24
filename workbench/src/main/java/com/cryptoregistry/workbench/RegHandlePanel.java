@@ -246,14 +246,4 @@ public class RegHandlePanel extends JPanel {
 		}
 	}
 	
-	private static class ExceptionHolder{
-		
-		public Exception ex;
-
-		public ExceptionHolder() {}
-		
-		public boolean hasException() {
-			return ex != null;
-		}
-	}
 }

@@ -2,6 +2,7 @@ package com.cryptoregistry.workbench.action;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.io.StringReader;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -13,8 +14,11 @@ import javax.swing.JTextPane;
 
 import asia.redact.bracket.properties.Properties;
 
+import com.cryptoregistry.KeyMaterials;
+import com.cryptoregistry.formats.JSONReader;
+import com.cryptoregistry.signature.RefNotFoundException;
+import com.cryptoregistry.signature.validator.SelfContainedSignatureValidator;
 import com.cryptoregistry.workbench.ExceptionHolder;
-
 import com.cryptoregistry.workbench.UUIDTextPane;
 
 /**
@@ -59,9 +63,50 @@ public class SignatureValidationAction extends AbstractAction {
 			return;
 		}
 		
-		final String handle = quoteRemover(input.trim());
+		// this is the signature handle we want to validate - there might be several in the file
+		final String signatureUUID = quoteRemover(input.trim());
 		
+		JSONReader reader = new JSONReader(new StringReader(pane.getText()));
+		KeyMaterials km = reader.parse();
 		
+		SelfContainedSignatureValidator validator = new SelfContainedSignatureValidator(km);
+		boolean valid = false;
+		String uuid = null, token = null;
+		try {
+			valid = validator.validate(signatureUUID);
+		}catch(RuntimeException r){
+			Exception x = (Exception) r.getCause();
+			if(x instanceof RefNotFoundException){
+				RefNotFoundException refEx = (RefNotFoundException) x;
+				uuid = refEx.uuid;
+				token = refEx.token;
+			}
+		}
+			if (!valid){
+				
+				if(uuid != null) {
+					JOptionPane.showMessageDialog(comp,
+						    "Failed to validate, missing: "+uuid+", "+token,
+						    "Signature Validation Results",
+						    JOptionPane.ERROR_MESSAGE);
+					return;
+				}else{
+					
+					JOptionPane.showMessageDialog(comp,
+						    "Failed to validate, more details may be in the log.",
+						    "Signature Validation Results",
+						    JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+			}else{
+				JOptionPane.showMessageDialog(comp,
+					    "Success!",
+					    "Signature Validation Results",
+					    JOptionPane.INFORMATION_MESSAGE);
+				
+				return;
+			}
 	}
 	
 	/**

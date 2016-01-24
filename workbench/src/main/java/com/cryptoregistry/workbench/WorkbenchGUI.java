@@ -48,6 +48,7 @@ import com.cryptoregistry.workbench.action.OpenSignatureAction;
 import com.cryptoregistry.workbench.action.PrintAction;
 import com.cryptoregistry.workbench.action.RetrieveRegDataAction;
 import com.cryptoregistry.workbench.action.SaveFileAction;
+import com.cryptoregistry.workbench.action.SignatureValidationAction;
 import com.cryptoregistry.workbench.action.UnlockKeysAction;
 import com.cryptoregistry.workbench.action.ValidateJSONAction;
 
@@ -89,6 +90,7 @@ implements ChangeListener,
 	
 	private CheckRegHandleAction checkRegHandleAction;
 	private RetrieveRegDataAction retrieveRegDataAction;
+	private SignatureValidationAction signatureValidationAction;
 	
 	private JMenuItem createKeyItem;
 	private UnlockKeysAction unlockKeysAction;
@@ -425,7 +427,8 @@ implements ChangeListener,
 		JMenu sigSubmenu = new JMenu("Signatures");
 		keysMenu.add(sigSubmenu);
 		
-		
+		signatureValidationAction = new SignatureValidationAction(tabs, propsMgr.getProps(),statusLabel);
+		sigSubmenu.add(signatureValidationAction);
 		
 		JMenu remoteMenu = new JMenu("Remote/Registry");
 		menuBar.add(remoteMenu);
