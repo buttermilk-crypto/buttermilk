@@ -14,6 +14,9 @@ package com.cryptoregistry.signature;
 public class RefNotFoundException extends Exception {
 
 	private static final long serialVersionUID = 1L;
+	
+	public String uuid;
+	public String token;
 
 	public RefNotFoundException() {}
 
