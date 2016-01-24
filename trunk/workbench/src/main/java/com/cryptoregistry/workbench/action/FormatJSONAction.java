@@ -9,6 +9,7 @@ import javax.swing.Action;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextPane;
 
 import com.cryptoregistry.util.Lf2SpacesIndenter;
 import com.cryptoregistry.workbench.UUIDTextPane;
@@ -39,16 +40,35 @@ public class FormatJSONAction extends AbstractAction {
 		UUIDTextPane pane = (UUIDTextPane) ((JScrollPane) tabs
 				.getComponentAt(index)).getViewport().getView();
 		String text = pane.getText();
-		if (!isValidJSON(text)) {
+		
+		String input = null;
+		boolean selection = false;
+		if(selectionFound(pane)){
+			input = pane.getSelectedText(); // do only selection
+			selection = true;
+		}else{
+			input = pane.getText();
+			selection = false;
+		}
+		
+		if(input == null) return;
+		
+		if (!isValidJSON(input)) {
 			JOptionPane.showMessageDialog(comp,
-					"Not valid, try validation first", 
+					"Not valid JSON input, try validation first", 
 					"Formatting Results",
 					JOptionPane.ERROR_MESSAGE);
+			return;
+			
 		} else {
-
-			String output = format(text);
+			
+			String output = format(input);
 			if(output != null){
-				pane.setText(output);
+				if(selection) {
+					pane.replaceSelection(output);
+				}else{
+					pane.setText(output);
+				}
 				pane.requestFocusInWindow();
 			}else{
 				JOptionPane.showMessageDialog(comp,
@@ -96,5 +116,18 @@ public class FormatJSONAction extends AbstractAction {
 		}
 		return null;
 	}
+	
+	/**
+	 * Return true if select start and end are not equal
+	 * 
+	 * @param pane
+	 * @return
+	 */
+	private boolean selectionFound(JTextPane pane) {
+		final int selectionStart = pane.getSelectionStart();
+		final int selectionEnd = pane.getSelectionEnd();
+		return selectionStart != selectionEnd;
+	}
+
 
 }

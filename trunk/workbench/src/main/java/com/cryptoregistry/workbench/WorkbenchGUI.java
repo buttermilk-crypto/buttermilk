@@ -575,8 +575,8 @@ implements ChangeListener,
 				this.validateJSONAction.setEnabled(true);
 				this.formatJSONAction.setEnabled(true);
 				this.addSkeletonAction.setEnabled(true);
-				this.base64EncodeAction.setEnabled(false);
-				this.base64DecodeAction.setEnabled(false);
+				this.base64EncodeAction.setEnabled(true);
+				this.base64DecodeAction.setEnabled(true);
 				this.openSignatureAction.setEnabled(true);
 				
 				delWindowItem.setEnabled(true);
