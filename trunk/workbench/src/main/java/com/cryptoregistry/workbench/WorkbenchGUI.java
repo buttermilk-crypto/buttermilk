@@ -46,6 +46,7 @@ import com.cryptoregistry.workbench.action.NewFileAction;
 import com.cryptoregistry.workbench.action.OpenFileAction;
 import com.cryptoregistry.workbench.action.OpenSignatureAction;
 import com.cryptoregistry.workbench.action.PrintAction;
+import com.cryptoregistry.workbench.action.RegisterAction;
 import com.cryptoregistry.workbench.action.RetrieveRegDataAction;
 import com.cryptoregistry.workbench.action.SaveFileAction;
 import com.cryptoregistry.workbench.action.SignatureValidationAction;
@@ -91,6 +92,7 @@ implements ChangeListener,
 	private CheckRegHandleAction checkRegHandleAction;
 	private RetrieveRegDataAction retrieveRegDataAction;
 	private SignatureValidationAction signatureValidationAction;
+	private RegisterAction registerAction;
 	
 	private JMenuItem createKeyItem;
 	private UnlockKeysAction unlockKeysAction;
@@ -442,6 +444,10 @@ implements ChangeListener,
 		
 		remoteMenu.addSeparator();
 		
+		registerAction = new RegisterAction(tabs,propsMgr.getProps(),statusLabel);
+		remoteMenu.add(registerAction);
+		registerAction.setEnabled(false);
+		
 
 		// Build the Window menu.
 		JMenu windowMenu = new JMenu("Window");
@@ -568,6 +574,7 @@ implements ChangeListener,
 			
 			this.unlockKeysAction.setEnabled(false);
 			this.openSignatureAction.setEnabled(false);
+			this.registerAction.setEnabled(false);
 			
 			delWindowItem.setEnabled(false);
 			
@@ -604,6 +611,7 @@ implements ChangeListener,
 				
 				this.checkRegHandleAction.setEnabled(true);
 				this.retrieveRegDataAction.setEnabled(true);
+				this.registerAction.setEnabled(true);
 				
 				delWindowItem.setEnabled(true);
 				
@@ -629,6 +637,7 @@ implements ChangeListener,
 				
 				this.unlockKeysAction.setEnabled(true);
 				this.openSignatureAction.setEnabled(true);
+				this.registerAction.setEnabled(true);
 				
 				delWindowItem.setEnabled(true);
 				
