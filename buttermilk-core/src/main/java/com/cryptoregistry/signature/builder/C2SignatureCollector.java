@@ -25,17 +25,11 @@ import com.cryptoregistry.signature.SignatureMetadata;
 
 /**<pre>
  * 
- * construct a signature using ECKCDSA. Basic process:
+ * Collector is like C2SignatureBuilder but instead of updating to a digest it collects 
+ * all the text as bytes into a buffer. This is used in the case where the bytes are
+ * required.
  * 
- * builder(registration handle, signer key contents, digest)
- * builder.collect("handle:token0", bytes0)
- * builder.collect("handle:token1", bytes1)
- * builder.collect("handle:token2", bytes2)
- * RSACryptoSignature sigHolder = builder.build()
  * 
- * You can make use of the various content iterators to make signing much easier. See test cases
- * 
- * Tracing can be turned on with setDebugMode(true);
  * 
  * </pre>
  * @author Dave
@@ -102,6 +96,7 @@ public class C2SignatureCollector extends SignatureBuilder {
 		byte [] bytes = input.getBytes(Charset.forName("UTF-8"));
 		try {
 			collector.write(bytes);
+			log(label,bytes);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -115,6 +110,7 @@ public class C2SignatureCollector extends SignatureBuilder {
 		references.add(label);
 		try {
 			collector.write(bytes);
+			log(label,bytes);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -128,17 +124,18 @@ public class C2SignatureCollector extends SignatureBuilder {
 		byte [] collected = collector.toByteArray();
 		if(this.apropos!=null) meta.setApropos(this.apropos);
 		this.log(meta, collected.length);
-		
 		SHA1Digest td = new SHA1Digest();
 		td.update(collected, 0, collected.length);
 		byte [] result = new byte[td.getDigestSize()];
 		td.doFinal(result, 0);
-		try {
-			System.err.println("Bytes: "+Base64.encodeBytes(collected, Base64.URL_SAFE));
-			System.err.println("Check: "+Base64.encodeBytes(result, Base64.URL_SAFE));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if(this.debugMode){
+			try {
+				System.err.println("Bytes: "+Base64.encodeBytes(collected, Base64.URL_SAFE));
+				System.err.println("SHA1 Digest: "+Base64.encodeBytes(result, Base64.URL_SAFE));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		C2CryptoSignature sig = CryptoFactory.INSTANCE.sign(meta, sKey, collected, new SHA256Digest());
@@ -155,6 +152,4 @@ public class C2SignatureCollector extends SignatureBuilder {
 		return collector;
 	}
 	
-	
-
 }

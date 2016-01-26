@@ -38,7 +38,6 @@ import com.cryptoregistry.formats.JSONFormatter;
 import com.cryptoregistry.formats.JSONReader;
 import com.cryptoregistry.formats.KeyFormat;
 import com.cryptoregistry.formats.Mode;
-import com.cryptoregistry.pbe.PBEAlg;
 import com.cryptoregistry.signature.C2CryptoSignature;
 import com.cryptoregistry.signature.CryptoSignature;
 import com.cryptoregistry.signature.RefNotFoundException;

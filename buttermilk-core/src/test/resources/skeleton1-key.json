@@ -1,0 +1,28 @@
+{
+  "Version" : "Buttermilk Key Materials 1.0",
+  "RegHandle" : "Chinese Shoes",
+  "Email" : "davesmith.gbs@gmail.com",
+  "Keys" : {
+    "9c2dbfc3-37d8-4b33-a7ba-4491e3a9b43b-P" : {
+      "KeyAlgorithm" : "Curve25519",
+      "CreatedOn" : "2016-01-10T05:03:23+0000",
+      "Encoding" : "Base64url",
+      "P" : "LzStG7Ph01bk-IoTFGSb12q6u5I7ldcvqoO0h_GfuHE="
+    },
+    "9c2dbfc3-37d8-4b33-a7ba-4491e3a9b43b-S" : {
+      "KeyData.Type" : "Curve25519",
+      "KeyData.PBEAlgorithm" : "PBKDF2",
+      "KeyData.EncryptedData" : [
+        "RitTOgt_9fVWl34_5q2KKMnTKB1buH_jTPB1War_aDh7N3lGLd4t5IMKUPZ5jfM1IqvGGWG1",
+        "yGIgYiRdB8Qf0Qu0OaIWbnhxYqZcOr7oGNOeyw464M8MSVsW6Bm7v_A_rOJIt5aR1cL0nSE3",
+        "lPcekpGQAfjUN4eJHFky-AIbQe20E_7E9zXAlDXqafR8aF1TDQvXAwf0dLbqUQpKRl2XUIft",
+        "5SjcHODIItAnxQsZYeb71KFjag2LSF9veVq2scQCZKSK6UiNB9pfFp4NkYGh4ltJyHCFNNI5",
+        "IqTJ7o9Os-KAE4yqrogeTZ02O0JsLEfPzQa4KaoWXRGUFqykEjT4MiKwvptMQwYb9LxYlm1w",
+        "iUD0_pph1c6K51G7l7l6B6wAnaIXkUK4PjiwKyZD60o78X3AAeaT3GjJMNwp99SbG9sfeQqS",
+        "c905UErJ9KlbYQd26yQfmoA1xEluKIXneF52nQ=="
+      ],
+      "KeyData.PBESalt" : "2BxKDlz2VAvoLyW480KzFpmwtU6tnYX6oxmazX7k0FE=",
+      "KeyData.Iterations" : "10000"
+    }
+  }
+}

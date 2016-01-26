@@ -17,7 +17,6 @@ import x.org.bouncycastle.crypto.digests.SHA1Digest;
 import x.org.bouncycastle.crypto.digests.SHA256Digest;
 import x.org.bouncycastle.crypto.digests.SHA512Digest;
 
-import com.cryptoregistry.MapData;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 

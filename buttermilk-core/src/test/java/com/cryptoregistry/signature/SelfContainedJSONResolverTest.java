@@ -1,11 +1,17 @@
 package com.cryptoregistry.signature;
 
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.cryptoregistry.KeyMaterials;
+import com.cryptoregistry.MapData;
+import com.cryptoregistry.formats.JSONReader;
+import com.cryptoregistry.signature.validator.SelfContainedSignatureValidator;
 
 public class SelfContainedJSONResolverTest {
 

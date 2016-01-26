@@ -280,7 +280,7 @@ public class SelfContainedSignatureValidator {
 			td.doFinal(result, 0);
 			try {
 				System.err.println("Bytes: "+Base64.encodeBytes(sourceBytes, Base64.URL_SAFE));
-				System.err.println("Check: "+Base64.encodeBytes(result, Base64.URL_SAFE));
+				System.err.println("SHA1 Digest: "+Base64.encodeBytes(result, Base64.URL_SAFE));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

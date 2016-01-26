@@ -235,7 +235,7 @@ public class CryptoFactory {
 	}
 	
 	/**
-	 *  Deterministic ECDSA. If the digest is larger than SHA1, then re-
+	 *  Deterministic ECDSA. If the digest is larger than SHA1, then re-hash the input
 	 * @param sig
 	 * @param pKey
 	 * @param msgHashBytes

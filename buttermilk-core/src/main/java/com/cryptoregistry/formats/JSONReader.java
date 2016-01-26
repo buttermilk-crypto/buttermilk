@@ -478,7 +478,15 @@ public class JSONReader {
 					String digestAlg = String.valueOf(sigData.get("DigestAlgorithm"));
 					SignatureMetadata meta = 
 							new SignatureMetadata(handle,createdOn,sigAlg,digestAlg,signedWith,signedBy);
-					List<String> dataRefs = CryptoSignature.parseDataReferenceString(String.valueOf(sigData.get("DataRefs")));
+					
+					Object sigDataRefs = sigData.get("DataRefs");
+					List<String> dataRefs = null;
+					if(sigDataRefs instanceof String){
+						dataRefs = CryptoSignature.parseDataReferenceString((String)sigDataRefs);
+					}else{
+						dataRefs = (List<String>)sigDataRefs;
+					}
+					//List<String> dataRefs = CryptoSignature.parseDataReferenceString(String.valueOf(sigData.get("DataRefs")));
 					
 					// specific to the encoding of each CryptoSignature subclass
 					switch(sigAlg){
@@ -620,7 +628,20 @@ public class JSONReader {
 					Iterator<String> inner = keyData.keySet().iterator();
 					while(inner.hasNext()){
 						String key = inner.next();
-						md.put(key, String.valueOf(keyData.get(key)));
+						Object obj = keyData.get(key);
+						if(obj instanceof String){
+							md.put(key, (String) obj);
+						}else{
+							if(obj instanceof List){
+								StringBuilder listBuilder = new StringBuilder();
+								for(Object i: (List<String>)obj){
+									listBuilder.append(String.valueOf(i));
+									listBuilder.append(", ");
+								}
+								listBuilder.delete(listBuilder.length()-2, listBuilder.length());
+								md.put(key, listBuilder.toString());
+							}
+						}
 					}
 					list.add(md);
 				}
