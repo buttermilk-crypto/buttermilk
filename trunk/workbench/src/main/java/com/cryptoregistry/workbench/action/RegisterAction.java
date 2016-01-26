@@ -23,7 +23,7 @@ public class RegisterAction extends AbstractAction {
 	private JTabbedPane tabs;
 	private Properties props;
 	private JLabel statusLabel;
-	
+
 	private RegistrationSender sender;
 	private ExceptionHolder exception;
 
@@ -39,57 +39,56 @@ public class RegisterAction extends AbstractAction {
 	public void actionPerformed(ActionEvent evt) {
 		final Component comp = (Component) evt.getSource();
 		int index = tabs.getSelectedIndex();
-		if (index == -1) return; // fail because no tabs found
-		final UUIDTextPane pane = (UUIDTextPane) ((JScrollPane) tabs.getComponentAt(index)).getViewport().getView();
+		if (index == -1)
+			return; // fail because no tabs found
+		final UUIDTextPane pane = (UUIDTextPane) ((JScrollPane) tabs
+				.getComponentAt(index)).getViewport().getView();
 		final String regJSON = pane.getText();
-		
-		statusLabel.setText("Using "+props.get("registration.services.hostname")+"...");
+
+		statusLabel.setText("Using "
+				+ props.get("registration.services.hostname") + "...");
 		sender = new RegistrationSender(props);
-		
-		SwingWorker<Boolean,String> worker = new SwingWorker<Boolean,String>() {
-			
-			String response;
-			
+
+		SwingWorker<Boolean, String> worker = new SwingWorker<Boolean, String>() {
+
 			@Override
 			protected Boolean doInBackground() throws Exception {
 				try {
-				  response = sender.request(regJSON);
-				  return response != null;
-				}catch(RuntimeException x){
+					sender.request(regJSON);
+					return sender.isSuccess();
+				} catch (RuntimeException x) {
 					exception.ex = x;
 					return false;
 				}
 			}
-			
-			 @Override
+
+			@Override
 			public void done() {
-				 try {
-					 statusLabel.setText("Sent.");
-				
-					 
-						if(get()) {
-							JOptionPane.showMessageDialog(comp,
-								    "Success!",
-								    "Registration Results",
-								    JOptionPane.INFORMATION_MESSAGE);
-							return;
-						}else{
-							if(exception.hasException()){
-								String msg = exception.ex.getMessage();
-								JOptionPane.showMessageDialog(comp,
-									  "Problem: "+msg,
-									  "Registration Results",
-									  JOptionPane.ERROR_MESSAGE);
-								
-							}else{
-								JOptionPane.showMessageDialog(comp,
-									  "Sorry, registration failed. The logs may contain more information.",
-									  "Registration Results",
-									  JOptionPane.ERROR_MESSAGE);
-							}
+				try {
+					statusLabel.setText("Sent.");
+
+					if (get()) {
+						JOptionPane.showMessageDialog(comp, "Success!",
+								"Registration Results",
+								JOptionPane.INFORMATION_MESSAGE);
+						return;
+					} else {
+						if (exception.hasException()) {
+							String msg = exception.ex.getMessage();
+							JOptionPane.showMessageDialog(comp, "Problem: "
+									+ msg, "Registration Results",
+									JOptionPane.ERROR_MESSAGE);
+
+						} else {
+							JOptionPane.showMessageDialog(
+									comp,
+									"Sorry, registration failed: "
+											+ sender.getResponseBody(),
+									"Registration Results",
+									JOptionPane.ERROR_MESSAGE);
 						}
-						
-						
+					}
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

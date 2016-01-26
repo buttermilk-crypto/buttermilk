@@ -326,6 +326,8 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 	public void insert(CryptoSignature sig){
 		SignatureFormatter f = new SignatureFormatter(sig);
 		String result = f.format();
+		result = result.substring(1, result.length()-1);
+		
 		try {
 			this.getDocument().insertString(this.getCaretPosition(), result, null);
 		} catch (BadLocationException e) {

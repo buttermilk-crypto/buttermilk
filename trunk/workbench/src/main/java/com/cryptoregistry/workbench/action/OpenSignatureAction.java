@@ -3,7 +3,6 @@ package com.cryptoregistry.workbench.action;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.EventObject;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,8 +16,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
 import com.cryptoregistry.CryptoKey;
-import com.cryptoregistry.formats.JSONReader;
-import com.cryptoregistry.formats.SignatureFormatter;
 import com.cryptoregistry.signature.CryptoSignature;
 import com.cryptoregistry.util.Lf2SpacesIndenter;
 import com.cryptoregistry.workbench.CreateKeyEvent;
