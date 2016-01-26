@@ -7,7 +7,8 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 
 /**
- * Used when formatting the data as this data is different for different types of signatures
+ * Used when formatting the signature data as this data is different (might have different keys or numbers of parts)
+ *  for different types of signatures
  * 
  * @author Dave
  *

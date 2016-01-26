@@ -13,7 +13,7 @@ import com.cryptoregistry.util.MapIterator;
 import com.cryptoregistry.util.TimeUtil;
 
 /**
- * Defines the order to sign the contents of an EC-based public key 
+ * Defines the order and nominal required or expected keys to sign the contents of an Curve25519-based public key 
  * 
  * @author Dave
  *

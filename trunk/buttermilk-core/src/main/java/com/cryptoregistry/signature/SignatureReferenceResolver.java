@@ -15,7 +15,23 @@ import java.util.List;
  */
 public interface SignatureReferenceResolver {
 	
+	/**
+	 * Given a ref value, which is a key into a cache of possible items to resolve, find the value for that ref
+	 * and write it as UTF-8 encoded bytes to the collector.
+	 * 
+	 * @param ref
+	 * @param collector
+	 * @throws RefNotFoundException
+	 */
 	public void resolve(String ref, ByteArrayOutputStream collector) throws RefNotFoundException ;
 	
+	/**
+	 * Given a list of ref values, which are keya into a cache of possible items to resolve, find the value for that ref
+	 * and write it as UTF-8 encoded bytes to the collector in list order.
+	 * 
+	 * @param ref
+	 * @param collector
+	 * @throws RefNotFoundException
+	 */
 	public void resolve(List<String> refs, ByteArrayOutputStream collector) throws RefNotFoundException ;
 }

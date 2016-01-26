@@ -5,10 +5,12 @@
  */
 package com.cryptoregistry.signature.builder;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.iharder.Base64;
 import x.org.bouncycastle.crypto.Digest;
 import x.org.bouncycastle.crypto.digests.SHA256Digest;
 
@@ -60,8 +62,9 @@ public class RSASignatureBuilder  extends SignatureBuilder {
 	}
 	
 	/**
-	 * By default this constructor updates SignedBy and SignedWith, so even with no other
-	 * calls to update you get a meaningful signature out of build()
+	 * Use SHA256 which is our default. By default this constructor updates SignedBy and SignedWith, 
+	 * so even with no other calls to update you get a meaningful signature out of build() which
+	 * contains the reg handle and the key handle.
 	 *  
 	 * @param signedBy
 	 * @param sKey
@@ -82,34 +85,26 @@ public class RSASignatureBuilder  extends SignatureBuilder {
 		update(".SignedWith",sKey.getMetadata().getHandle());
 	}
 	
+	/**
+	 * Assume string is in UTF-8 formatting
+	 * @param label
+	 * @param input
+	 * @return
+	 */
 	public RSASignatureBuilder update(String label, String input){
-		if(input == null) throw new RuntimeException("Input is null: "+label);
+		if(label == null || input == null) throw new RuntimeException("label or input is null: "+label+", "+input);
 		references.add(label);
 		byte [] bytes = input.getBytes(Charset.forName("UTF-8"));
-		/*
-		try {
-			System.err.println("sign="+label+", "+Base64.encodeBytes(bytes, Base64.URL_SAFE));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		*/
 		digest.update(bytes, 0, bytes.length);
+		log(label,bytes);
 		return this;
 	}
 	
 	public RSASignatureBuilder update(String label, byte[] bytes){
-		if(bytes == null) throw new RuntimeException("Input is null: "+label);
+		if(label == null || bytes == null) throw new RuntimeException("label or input is null: "+label+", "+bytes);
 		references.add(label);
 		digest.update(bytes, 0, bytes.length);
-		/*
-		try {
-			System.err.println("sign="+label+", "+Base64.encodeBytes(bytes, Base64.URL_SAFE));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		*/
+		log(label,bytes);
 		return this;
 	}
 	

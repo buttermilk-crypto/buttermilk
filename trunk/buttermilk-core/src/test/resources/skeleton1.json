@@ -1,0 +1,55 @@
+{
+  "Version" : "Buttermilk Key Materials 1.0",
+  "RegHandle" : "Chinese Shoes",
+  "Email" : "davesmith.gbs@gmail.com",
+  "Contacts" : {
+    "bda09f8a-15af-4367-b543-6749d07a0a80" : {
+      "contactType" : "Individual",
+      "GivenName.0" : "Dave",
+      "FamilyName.0" : "Smith"
+    }
+  },
+  "Data" : {
+    "Local" : {
+      "d95698df-c504-40f4-9739-bf16f9d7de0a" : {
+        "Copyright" : "Copyright 2015 by Dave Smith. All Rights Reserved",
+        "TermsOfServiceAgreement" : "I agree to cryptoregistry.com's Terms of Service",
+        "InfoAffirmation" : "I affirm the all the information I have entered is valid and correct."
+      }
+    }
+  },
+  "Keys" : {
+    "9c2dbfc3-37d8-4b33-a7ba-4491e3a9b43b-P" : {
+      "KeyAlgorithm" : "Curve25519",
+      "CreatedOn" : "2016-01-10T05:03:23+0000",
+      "Encoding" : "Base64url",
+      "P" : "LzStG7Ph01bk-IoTFGSb12q6u5I7ldcvqoO0h_GfuHE="
+    }
+  },
+  "Macs" : { },
+  "Signatures" : {
+    "b7dc097a-19d8-4055-823d-7bea27f80580" : {
+      "CreatedOn" : "2016-01-17T09:10:52+0000",
+      "SignedWith" : "9c2dbfc3-37d8-4b33-a7ba-4491e3a9b43b",
+      "SignedBy" : "Chinese Shoes",
+      "SignatureAlgorithm" : "ECKCDSA",
+      "DigestAlgorithm" : "SHA-256",
+      "v" : "FzZdFnhAkheuLvxpkwDWBvTizbRbCqQkSD2X3fju8Aw=",
+      "r" : "02yfaKesjcbPaFvqAU3M1XFf5NvIs8GW5tHvZjg7QJo=",
+      "DataRefs" : [
+        "b7dc097a-19d8-4055-823d-7bea27f80580:SignedBy",
+        ".SignedWith",
+        "bda09f8a-15af-4367-b543-6749d07a0a80:contactType",
+        "bda09f8a-15af-4367-b543-6749d07a0a80:GivenName.0",
+        "bda09f8a-15af-4367-b543-6749d07a0a80:FamilyName.0",
+        "d95698df-c504-40f4-9739-bf16f9d7de0a:Copyright",
+        "d95698df-c504-40f4-9739-bf16f9d7de0a:TermsOfServiceAgreement",
+        "d95698df-c504-40f4-9739-bf16f9d7de0a:InfoAffirmation",
+        "9c2dbfc3-37d8-4b33-a7ba-4491e3a9b43b-P:KeyAlgorithm",
+        "9c2dbfc3-37d8-4b33-a7ba-4491e3a9b43b-P:CreatedOn",
+        "9c2dbfc3-37d8-4b33-a7ba-4491e3a9b43b-P:Encoding",
+        "9c2dbfc3-37d8-4b33-a7ba-4491e3a9b43b-P:P"
+      ]
+    }
+  }
+}

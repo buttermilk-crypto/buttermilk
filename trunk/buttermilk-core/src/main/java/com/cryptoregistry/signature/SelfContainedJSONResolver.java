@@ -44,7 +44,7 @@ public class SelfContainedJSONResolver implements SignatureReferenceResolver {
 
 	@SuppressWarnings("unchecked")
 	public SelfContainedJSONResolver(String json) {
-		cache = new HashMap<String, String>();
+		cache = new HashMap<String, String>(); // all values are eventually resolved to Strings
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			objectGraph = mapper.readValue(json, Map.class);
@@ -61,7 +61,13 @@ public class SelfContainedJSONResolver implements SignatureReferenceResolver {
 	public void walk() {
 		collect(objectGraph);
 		if(debugMode) {
-			System.err.println("Loaded Cache:"+cache);
+			System.err.println("----Loaded Cache----");
+			Iterator<String> iter = cache.keySet().iterator();
+			while(iter.hasNext()){
+				String key = iter.next();
+				System.err.println("cache: "+key+", "+cache.get(key));
+			}
+			System.err.println("----End Cache----");
 		}
 	}
 
@@ -82,7 +88,7 @@ public class SelfContainedJSONResolver implements SignatureReferenceResolver {
 
 	@Override
 	/**
-	 * implement SignatureReferenceResolver 
+	 * implement SignatureReferenceResolver, assume UTF-8 bytes in the collector
 	 */
 	public void resolve(String ref, ByteArrayOutputStream collector)
 			throws RefNotFoundException {
@@ -98,7 +104,7 @@ public class SelfContainedJSONResolver implements SignatureReferenceResolver {
 	}
 
 	/**
-	 * For debugging
+	 * For debugging mainly
 	 * 
 	 * @param refs
 	 * @return
@@ -117,7 +123,11 @@ public class SelfContainedJSONResolver implements SignatureReferenceResolver {
 	}
 
 	/**
-	 * implement SignatureReferenceResolver
+	 * implement SignatureReferenceResolver. Find the ref in the cache and put the value designated by that ref into UTF-8 bytes, 
+	 * then write to the collector.
+	 * 
+	 * Throws a RefNotFoundException if the ref key (in normalized form) does not have a value in the cache
+	 * 
 	 */
 	@Override
 	public void resolve(List<String> refs, ByteArrayOutputStream collector)
@@ -134,13 +144,14 @@ public class SelfContainedJSONResolver implements SignatureReferenceResolver {
 				}
 				throw refEx;
 			}
+			
 			try {
 				byte[] b = out.getBytes(Charset.forName("UTF-8"));
+				
 				collector.write(b);
 				if (debugMode) {
 					try {
-						System.err.println("resolve=" + ref + ", "
-								+ Base64.encodeBytes(b, Base64.URL_SAFE));
+						System.err.println("resolve item= " + ref + ", value length="+b.length+", value = "+ Base64.encodeBytes(b, Base64.URL_SAFE));
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -152,8 +163,7 @@ public class SelfContainedJSONResolver implements SignatureReferenceResolver {
 		}
 
 		if (debugMode) {
-			System.err.println("collector has acquired " + collector.size()
-					+ " bytes");
+			System.err.println("collector has acquired " + collector.size()+ " bytes");
 		}
 
 	}
@@ -161,15 +171,14 @@ public class SelfContainedJSONResolver implements SignatureReferenceResolver {
 	private String uuid;
 
 	/**
-	 * Normalize the ref if required. The ref may have the following forms:
+	 * <p>Normalize the ref if required. The ref may have the following forms:</p>
 	 * 
-	 * uuid:tokenName uuid(-(U|S|P)):tokenName .tokenName
+	 * <p>uuid:tokenName uuid(-(U|S|P)):tokenName .tokenName</p>
 	 * 
-	 * Where the extended form indicates the mode and dot form is an
-	 * abbreviation of the first or second case
+	 * <p>Where the extended form indicates the mode and dot form is an
+	 * abbreviation of the first or second case</p>
 	 * 
-	 * preprocess normalizes the ref to be in all cases of the form
-	 * uuid:tokenName
+	 * <p>preprocess normalizes the ref to be in all cases of the form uuid:tokenName. It removes the -P, etc off the UUID</p>
 	 * 
 	 * @param ref
 	 * @return
@@ -282,14 +291,13 @@ public class SelfContainedJSONResolver implements SignatureReferenceResolver {
 				Object s = map.get(key);
 				if (s instanceof String) {
 					StringBuilder builder = new StringBuilder();
-					builder.append("__");
+					builder.append("__"); // top level such as admin email
 					builder.append(":");
 					builder.append(key);
 					cache.put(builder.toString(), String.valueOf(s));
 				} else {
 
-					Iterator<String> iterInner = ((Map<String, Object>) s)
-							.keySet().iterator();
+					Iterator<String> iterInner = ((Map<String, Object>) s).keySet().iterator();
 					String uuidTail = null;
 					while (iterInner.hasNext()) {
 						String tokenKey = iterInner.next();

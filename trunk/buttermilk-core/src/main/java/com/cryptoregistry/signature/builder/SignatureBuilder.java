@@ -57,7 +57,7 @@ public class SignatureBuilder {
 	protected void log(SignatureMetadata meta, byte [] bytes){
 		if(debugMode){
 			try {
-				System.err.println(meta.sigAlg.toString()+" "+meta.handle+" message digest="+Base64.encodeBytes(bytes, Base64.URL_SAFE));
+				System.err.println(meta.sigAlg.toString()+"handle="+meta.handle+", digest result="+Base64.encodeBytes(bytes, Base64.URL_SAFE));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
