@@ -32,6 +32,7 @@ import com.cryptoregistry.formats.JSONGenericReader;
 import com.cryptoregistry.rsa.RSAKeyContents;
 import com.cryptoregistry.signature.CryptoSignature;
 import com.cryptoregistry.signature.builder.C2SignatureBuilder;
+import com.cryptoregistry.signature.builder.C2SignatureCollector;
 import com.cryptoregistry.signature.builder.ECDSASignatureBuilder;
 import com.cryptoregistry.signature.builder.RSASignatureBuilder;
 import com.cryptoregistry.workbench.SignatureItemTableModel.SigElement;
@@ -101,10 +102,10 @@ public class SignatureItemSelectionPanel extends JPanel {
 						KeyWrapper key = (KeyWrapper)comboBox.getSelectedItem();
 						switch(key.key.getMetadata().getKeyAlgorithm()) {
 							case Curve25519:
-								C2SignatureBuilder builder = new C2SignatureBuilder(regHandle,(Curve25519KeyContents)key.key);
+								C2SignatureCollector builder = new C2SignatureCollector(regHandle,(Curve25519KeyContents)key.key);
 								for(SigElement item: dataModel.getList()){
 									if(item.selected) {
-										builder.update(item.key, item.value);
+										builder.collect(item.key, item.value);
 									}
 								}
 								sig = builder.build();

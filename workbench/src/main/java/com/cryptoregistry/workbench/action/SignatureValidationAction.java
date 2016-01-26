@@ -50,30 +50,16 @@ public class SignatureValidationAction extends AbstractAction {
 		if (index == -1) return; // fail because no tabs found
 		final UUIDTextPane pane = (UUIDTextPane) ((JScrollPane) tabs.getComponentAt(index)).getViewport().getView();
 		
-		String input = null;
-
-		if(selectionFound(pane)){
-			input = pane.getSelectedText(); // do only selection
-		}else{
-			JOptionPane.showMessageDialog(comp,
-				    "You must select a signature UUID for this to work",
-				    "Signature Validation Results",
-				    JOptionPane.INFORMATION_MESSAGE);
-			
-			return;
-		}
-		
-		// this is the signature handle we want to validate - there might be several in the file
-		final String signatureUUID = quoteRemover(input.trim());
+		String input = pane.getSelectedText(); // do only selection
 		
 		JSONReader reader = new JSONReader(new StringReader(pane.getText()));
 		KeyMaterials km = reader.parse();
 		
-		SelfContainedSignatureValidator validator = new SelfContainedSignatureValidator(km);
+		SelfContainedSignatureValidator validator = new SelfContainedSignatureValidator(km, true);
 		boolean valid = false;
 		String uuid = null, token = null;
 		try {
-			valid = validator.validate(signatureUUID);
+			valid = validator.validate();
 		}catch(RuntimeException r){
 			Exception x = (Exception) r.getCause();
 			if(x instanceof RefNotFoundException){
