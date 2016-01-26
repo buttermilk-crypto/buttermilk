@@ -17,7 +17,6 @@ import com.cryptoregistry.ec.ECKeyContents;
 import com.cryptoregistry.formats.JSONFormatter;
 import com.cryptoregistry.formats.JSONReader;
 import com.cryptoregistry.rsa.RSAKeyContents;
-import com.cryptoregistry.signature.builder.C2SignatureBuilder;
 import com.cryptoregistry.signature.builder.C2SignatureCollector;
 import com.cryptoregistry.signature.builder.ECDSASignatureBuilder;
 import com.cryptoregistry.signature.builder.MapDataContentsIterator;
@@ -118,7 +117,7 @@ public class SelfContainedSignatureValidatorTest {
 			digest.doFinal(m, 0);
 			// precheck
 			boolean ok = com.cryptoregistry.ec.CryptoFactory.INSTANCE.verify(sig, ecKeys, m);
-	//		Assert.assertTrue(ok);
+			Assert.assertTrue(ok);
 			
 			JSONReader reader = new JSONReader(new StringReader(serialized));
 			KeyMaterials km = reader.parse();
@@ -137,6 +136,8 @@ public class SelfContainedSignatureValidatorTest {
 		String message = "My message text...";
 		
 		Curve25519KeyContents cKeys = com.cryptoregistry.c2.CryptoFactory.INSTANCE.generateKeys();
+		
+	// wrong one, must use collector with C2 because it does it's own digest as part of the implementation
 	//	C2SignatureBuilder builder = new C2SignatureBuilder(signedBy,cKeys);
 		C2SignatureCollector builder = new C2SignatureCollector(signedBy,cKeys);
 		builder.setDebugMode(true);
