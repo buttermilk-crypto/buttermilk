@@ -11,6 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.cryptoregistry.workbench.ButtonTabComponent;
 import com.cryptoregistry.workbench.UUIDTextPane;
 import com.cryptoregistry.workbench.WorkbenchGUI;
 
@@ -46,7 +47,8 @@ public class NewFileAction extends AbstractAction {
 			pane.setFont(WorkbenchGUI.plainTextFont);
 			pane.setTargetFile(file);
 			JScrollPane scroll = new JScrollPane(pane);
-			tabs.add(title, scroll);
+			tabs.add(title,scroll);
+        	tabs.setTabComponentAt(tabs.indexOfComponent(scroll), new ButtonTabComponent(tabs));
 			pane.requestFocusInWindow();
 		}
 	}

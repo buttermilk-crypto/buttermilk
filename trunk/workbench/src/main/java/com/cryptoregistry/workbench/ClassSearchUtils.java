@@ -34,6 +34,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
 
+@SuppressWarnings("rawtypes")
 public class ClassSearchUtils {
 
     private static final Logger log = Logger.getAnonymousLogger();
@@ -46,7 +47,8 @@ public class ClassSearchUtils {
     /**
      * List of the resource found in the classpath.
      */
-    private ArrayList list;
+ 
+	private ArrayList list;
 
     /**
      * Extension of the resource to be found in the classpath.
@@ -63,7 +65,8 @@ public class ClassSearchUtils {
      * allowed and will cause method to fail.
      * @return List of all resources with specified extension.
      */
-    public static List<Class<?>> searchClassPath(String prefix) {
+    @SuppressWarnings("unchecked")
+	public static List<Class<?>> searchClassPath(String prefix) {
         return searchClassPath(prefix, ".class");
     }
     /**
@@ -87,7 +90,8 @@ public class ClassSearchUtils {
      * allowed and will cause method to fail.
      * @return List of all resources with specified extension.
      */
-    @SuppressWarnings("rawtypes")
+   
+	@SuppressWarnings("unchecked")
 	private List<Class<?>> find(String extension) {
         this.extension = extension;
         this.list = new ArrayList();
@@ -133,7 +137,8 @@ public class ClassSearchUtils {
      * separator)
      * @param dir Directory to be searched for classes.
      */
-    private void lookInDirectory(String name, File dir) {
+    @SuppressWarnings("unchecked")
+	private void lookInDirectory(String name, File dir) {
         log.fine( "Looking in directory [" + dir.getName() + "].");
         File[] files = dir.listFiles();
         File file;
@@ -190,7 +195,8 @@ public class ClassSearchUtils {
      * Search archive files for required resource.
      * @param archive Jar or zip to be searched for classes or other resources.
      */
-    private void lookInArchive(File archive) {
+    @SuppressWarnings({ "resource", "unchecked" })
+	private void lookInArchive(File archive) {
         log.fine(
             "Looking in archive ["
                 + archive.getName()

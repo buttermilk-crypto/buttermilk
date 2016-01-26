@@ -13,6 +13,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.cryptoregistry.workbench.ButtonTabComponent;
 import com.cryptoregistry.workbench.UUIDTextPane;
 import com.cryptoregistry.workbench.WorkbenchGUI;
 
@@ -57,7 +58,8 @@ public class OpenFileAction extends AbstractAction {
 	            	pane = new UUIDTextPane(file);
 					pane.setFont(WorkbenchGUI.plainTextFont);
 	            	JScrollPane scroll= new JScrollPane(pane);
-	            	tabs.add(title, scroll);
+	            	tabs.add(title,scroll);
+	            	tabs.setTabComponentAt(tabs.indexOfComponent(scroll), new ButtonTabComponent(tabs));
 	            }else{
 	            	if(currentIndex == -1) return; // fail because no tabs found
 	            	pane = (UUIDTextPane) ((JScrollPane)tabs.getComponentAt(currentIndex)).getViewport().getView();
@@ -68,7 +70,6 @@ public class OpenFileAction extends AbstractAction {
 				try {
 					String s = new String(Files.readAllBytes(file.toPath()),StandardCharsets.UTF_8);
 					pane.setText(s);
-					//tabs.setSelectedIndex(currentIndex+1);
 					pane.requestFocusInWindow();
 				} catch (Exception e) {
 					e.printStackTrace();

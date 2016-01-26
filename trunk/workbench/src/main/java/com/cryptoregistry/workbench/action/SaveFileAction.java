@@ -37,6 +37,7 @@ public class SaveFileAction extends AbstractAction {
 		this.statusPane = statusPane;
 		if(this.saveTo){
 			this.putValue(Action.NAME, "Save...");
+			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK));
 		}else{
 			this.putValue(Action.NAME, "Save");
 			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK));
@@ -49,7 +50,7 @@ public class SaveFileAction extends AbstractAction {
 		UUIDTextPane pane = (UUIDTextPane) ((JScrollPane)tabs.getComponentAt(index)).getViewport().getView();
 		File file = null;
 		// if no file is set, we'll get one with the dialog. We'll also get one anyway if doing Save To...
-		if(pane.getTargetFile() == null || saveTo) {
+		if(pane.getTargetFile() == null) {
 			// file was not set, request where to save to using dialog
 			Component comp = (Component) evt.getSource();
 			int returnVal = fc.showSaveDialog(comp);
