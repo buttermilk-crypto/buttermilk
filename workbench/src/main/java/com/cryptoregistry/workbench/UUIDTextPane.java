@@ -1,6 +1,7 @@
 package com.cryptoregistry.workbench;
 
 import java.awt.Component;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,8 +24,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.StyledDocument;
 import javax.swing.undo.UndoManager;
 
 import com.cryptoregistry.MapData;
@@ -33,6 +35,8 @@ import com.cryptoregistry.formats.JSONReader;
 import com.cryptoregistry.formats.MapDataFormatter;
 import com.cryptoregistry.formats.SignatureFormatter;
 import com.cryptoregistry.signature.CryptoSignature;
+import com.cryptoregistry.workbench.UndoManagerHelper.RedoAction;
+import com.cryptoregistry.workbench.UndoManagerHelper.UndoAction;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,22 +49,28 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 	
 	public final String identifier;
 	public File targetFile;
-	public UndoManager manager = new UndoManager();
+	protected UndoAction undoAction;
+	protected RedoAction redoAction;
+	protected UndoManager undo = new UndoManager();
 	JPopupMenu popup;
 	String message;
 	private Point currentClickPoint;
+	
+	 //This one listens for edits that can be undone.
+    protected class MyUndoableEditListener
+                    implements UndoableEditListener {
+        public void undoableEditHappened(UndoableEditEvent e) {
+            //Remember the edit and update the menus.
+            undo.addEdit(e.getEdit());
+        }
+    }
 
 	public UUIDTextPane() {
 		super();
 		identifier = UUID.randomUUID().toString();
-		this.getDocument().addUndoableEditListener(manager);
-		createPopup();
-	}
-	
-	public UUIDTextPane(String uuid) {
-		super();
-		identifier = uuid;
-		this.getDocument().addUndoableEditListener(manager);
+		setCaretPosition(0);
+	    setMargin(new Insets(5,5,5,5));
+		this.getDocument().addUndoableEditListener(new MyUndoableEditListener());
 		createPopup();
 	}
 	
@@ -68,13 +78,15 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 		this();
 		this.targetFile = file;
 	}
-
-	public UUIDTextPane(StyledDocument arg0) {
-		super(arg0);
-		identifier = UUID.randomUUID().toString();
-		this.getDocument().addUndoableEditListener(manager);
+	
+	public UUIDTextPane(String uuid) {
+		this.identifier = uuid;
+		setCaretPosition(0);
+	    setMargin(new Insets(5,5,5,5));
+		this.getDocument().addUndoableEditListener(new MyUndoableEditListener());
 		createPopup();
 	}
+
 	
 	private void createPopup() {
 		 popup = new JPopupMenu();
@@ -126,8 +138,8 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 				}
 			});
 			editMenu.addSeparator();
-			editMenu.add(UndoManagerHelper.getUndoAction(manager));
-			editMenu.add(UndoManagerHelper.getRedoAction(manager));
+			editMenu.add(UndoManagerHelper.getUndoAction(undo));
+			editMenu.add(UndoManagerHelper.getRedoAction(undo));
 			editMenu.addSeparator();
 			
 		   
@@ -260,7 +272,7 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 			}
 		}
 		if(topLevel){
-			System.err.println("open editor for top level: "+last.text);
+			//System.err.println("open editor for top level: "+last.text);
 			JFrame frame = (JFrame) SwingUtilities.getRoot(this);
 			EditAttributeDialog dialog = new EditAttributeDialog(frame);
 			dialog.open();

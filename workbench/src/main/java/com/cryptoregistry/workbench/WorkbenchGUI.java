@@ -462,7 +462,8 @@ implements ChangeListener,
 				pane.setFont(WorkbenchGUI.plainTextFont);
 				String identifier = pane.identifier;
 				JScrollPane scroll= new JScrollPane(pane);
-				tabs.add(title, scroll);
+				tabs.add(title,scroll);
+            	tabs.setTabComponentAt(tabs.indexOfComponent(scroll), new ButtonTabComponent(tabs));
 				int count = tabs.getComponentCount();
 				for(int i = 0; i<count;i++){
 					JScrollPane sc = (JScrollPane) tabs.getComponentAt(i);
