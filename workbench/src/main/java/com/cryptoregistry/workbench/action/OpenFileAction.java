@@ -60,11 +60,15 @@ public class OpenFileAction extends AbstractAction {
 	            	JScrollPane scroll= new JScrollPane(pane);
 	            	tabs.add(title,scroll);
 	            	tabs.setTabComponentAt(tabs.indexOfComponent(scroll), new ButtonTabComponent(tabs));
+	            	tabs.setSelectedIndex(currentIndex+1);
+	            	
 	            }else{
 	            	if(currentIndex == -1) return; // fail because no tabs found
 	            	pane = (UUIDTextPane) ((JScrollPane)tabs.getComponentAt(currentIndex)).getViewport().getView();
 	            	pane.setTargetFile(file);
 	            	tabs.setTitleAt(currentIndex, file.getName());
+	            	tabs.setSelectedIndex(currentIndex+1);
+	            	
 	            }
 				
 				try {
