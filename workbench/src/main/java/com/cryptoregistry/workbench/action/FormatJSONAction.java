@@ -39,7 +39,7 @@ public class FormatJSONAction extends AbstractAction {
 			return; // fail because no tabs found
 		UUIDTextPane pane = (UUIDTextPane) ((JScrollPane) tabs
 				.getComponentAt(index)).getViewport().getView();
-		String text = pane.getText();
+	//	String text = pane.getText();
 		
 		String input = null;
 		boolean selection = false;
