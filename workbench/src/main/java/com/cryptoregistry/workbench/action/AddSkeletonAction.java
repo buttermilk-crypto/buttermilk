@@ -94,6 +94,7 @@ public class AddSkeletonAction extends AbstractAction implements RegHandleListen
 			case INDIVIDUAL: {
 				MapData iContact = genMapData("template-contacts-individual.properties");
 				JSONFormatter format = new JSONFormatter(regHandle,adminEmail);
+				format.setIncludeEmpty(true);
 				format.add(new CryptoContact(iContact));
 				if(currentKey != null) {
 					format.add(currentKey);
@@ -106,6 +107,7 @@ public class AddSkeletonAction extends AbstractAction implements RegHandleListen
 			case BUSINESS: {
 				MapData busContact = genMapData("template-contacts-business.properties");
 				JSONFormatter format = new JSONFormatter(regHandle,adminEmail);
+				format.setIncludeEmpty(true);
 				format.add(new CryptoContact(busContact));
 				if(currentKey != null) {
 					format.add(currentKey);
@@ -120,6 +122,7 @@ public class AddSkeletonAction extends AbstractAction implements RegHandleListen
 				MapData wc1 = genMapData("template-contacts-website-admin.properties");
 				MapData wc2 = genMapData("template-contacts-website-technical.properties");
 				JSONFormatter format = new JSONFormatter(regHandle,adminEmail);
+				format.setIncludeEmpty(true);
 				format.add(new CryptoContact(wc0));
 				format.add(new CryptoContact(wc1));
 				format.add(new CryptoContact(wc2));
@@ -145,7 +148,7 @@ public class AddSkeletonAction extends AbstractAction implements RegHandleListen
 	@Override
 	public void currentKeyChanged(EventObject evt) {
 		CryptoKeySelectionEvent e = (CryptoKeySelectionEvent) evt;
-		currentKey = e.getKey();
+		currentKey = e.getKey().keyForPublication();
 	}
 	
 	private MapData genMapData(String propName) {
