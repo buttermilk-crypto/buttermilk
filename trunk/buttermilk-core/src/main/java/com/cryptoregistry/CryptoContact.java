@@ -39,6 +39,11 @@ public class CryptoContact {
 		this.handle = handle;
 	}
 	
+	public CryptoContact(MapData data) {
+		map = data.data;
+		this.handle = data.uuid;
+	}
+	
 	/**
 	 * Validates content values for length - security feature
 	 *  
