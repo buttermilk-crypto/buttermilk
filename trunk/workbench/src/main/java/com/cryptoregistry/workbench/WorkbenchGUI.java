@@ -47,6 +47,7 @@ import com.cryptoregistry.workbench.action.OpenFileAction;
 import com.cryptoregistry.workbench.action.OpenSignatureAction;
 import com.cryptoregistry.workbench.action.PrintAction;
 import com.cryptoregistry.workbench.action.RegisterAction;
+import com.cryptoregistry.workbench.action.RegistrationType;
 import com.cryptoregistry.workbench.action.RetrieveRegDataAction;
 import com.cryptoregistry.workbench.action.SaveFileAction;
 import com.cryptoregistry.workbench.action.SignatureValidationAction;
@@ -86,7 +87,10 @@ implements ChangeListener,
 	private FormatJSONAction formatJSONAction;
 	private Base64EncodeAction base64EncodeAction;
 	private Base64EncodeAction base64DecodeAction;
-	private AddSkeletonAction addSkeletonAction;
+	private AddSkeletonAction addSkeletonAction0;
+	private AddSkeletonAction addSkeletonAction1;
+	private AddSkeletonAction addSkeletonAction2;
+	private AddSkeletonAction addSkeletonAction3;
 	private OpenSignatureAction openSignatureAction;
 	
 	private CheckRegHandleAction checkRegHandleAction;
@@ -330,10 +334,27 @@ implements ChangeListener,
 		formatJSONAction.setEnabled(false);
 		sourceMenu.add(formatJSONAction);
 		sourceMenu.addSeparator();
-		addSkeletonAction = new AddSkeletonAction(tabs,regHandle,adminEmail);
-		addSkeletonAction.setEnabled(false);
-		sourceMenu.add(addSkeletonAction);
-		sourceMenu.addSeparator();
+		
+		JMenu templateSubmenu = new JMenu("Templates");
+		sourceMenu.add(templateSubmenu);
+		
+		addSkeletonAction0 = new AddSkeletonAction(tabs,regHandle,adminEmail, RegistrationType.BASIC);
+		addSkeletonAction0.setEnabled(false);
+		templateSubmenu.add(addSkeletonAction0);
+		
+		addSkeletonAction1 = new AddSkeletonAction(tabs,regHandle,adminEmail, RegistrationType.INDIVIDUAL);
+		addSkeletonAction1.setEnabled(false);
+		templateSubmenu.add(addSkeletonAction1);
+		
+		addSkeletonAction2 = new AddSkeletonAction(tabs,regHandle,adminEmail, RegistrationType.BUSINESS);
+		addSkeletonAction2.setEnabled(false);
+		templateSubmenu.add(addSkeletonAction2);
+		
+		addSkeletonAction3 = new AddSkeletonAction(tabs,regHandle,adminEmail, RegistrationType.WEBSITE);
+		addSkeletonAction3.setEnabled(false);
+		templateSubmenu.add(addSkeletonAction3);
+		
+		templateSubmenu.addSeparator();
 		
 		base64EncodeAction = new Base64EncodeAction(tabs, true, "Base64 Encode");
 		base64EncodeAction.setEnabled(false);
@@ -361,8 +382,12 @@ implements ChangeListener,
 		final SetDefaultPasswordDialog enterPasswordDialog = new SetDefaultPasswordDialog(frame, "Enter a Password");
     	enterPasswordDialog.addPasswordChangedListener(instance);
     	enterPasswordDialog.addPasswordChangedListener(createKeyDialog.getPanel());
-    	rhsd.addRegHandleListener(addSkeletonAction);
+    	rhsd.addRegHandleListener(addSkeletonAction0);
     	createKeyDialog.addCreateKeyListener(openSignatureAction);
+    	unlockedKeyDialog.getPanel().addCryptoKeySelectionListener(this.addSkeletonAction0);
+    	unlockedKeyDialog.getPanel().addCryptoKeySelectionListener(this.addSkeletonAction1);
+    	unlockedKeyDialog.getPanel().addCryptoKeySelectionListener(this.addSkeletonAction2);
+    	unlockedKeyDialog.getPanel().addCryptoKeySelectionListener(this.addSkeletonAction3);
     	
 		JMenu keysMenu = new JMenu("Key Materials");
 		menuBar.add(keysMenu);
@@ -464,7 +489,8 @@ implements ChangeListener,
 				JScrollPane scroll= new JScrollPane(pane);
 				tabs.add(title,scroll);
             	tabs.setTabComponentAt(tabs.indexOfComponent(scroll), new ButtonTabComponent(tabs));
-				int count = tabs.getComponentCount();
+				int count = tabs.getTabCount();
+		
 				for(int i = 0; i<count;i++){
 					JScrollPane sc = (JScrollPane) tabs.getComponentAt(i);
 					UUIDTextPane editor = (UUIDTextPane) sc.getViewport().getView();
@@ -568,7 +594,10 @@ implements ChangeListener,
 			this.formatJSONAction.setEnabled(false);
 			this.base64EncodeAction.setEnabled(false);
 			this.base64DecodeAction.setEnabled(false);
-			this.addSkeletonAction.setEnabled(false);
+			this.addSkeletonAction0.setEnabled(false);
+			this.addSkeletonAction1.setEnabled(false);
+			this.addSkeletonAction2.setEnabled(false);
+			this.addSkeletonAction3.setEnabled(false);
 			
 			this.checkRegHandleAction.setEnabled(false);
 			this.retrieveRegDataAction.setEnabled(false);
@@ -605,7 +634,10 @@ implements ChangeListener,
 				
 				this.validateJSONAction.setEnabled(true);
 				this.formatJSONAction.setEnabled(true);
-				this.addSkeletonAction.setEnabled(true);
+				this.addSkeletonAction0.setEnabled(true);
+				this.addSkeletonAction1.setEnabled(true);
+				this.addSkeletonAction2.setEnabled(true);
+				this.addSkeletonAction3.setEnabled(true);
 				this.base64EncodeAction.setEnabled(true);
 				this.base64DecodeAction.setEnabled(true);
 				this.openSignatureAction.setEnabled(true);
@@ -629,7 +661,10 @@ implements ChangeListener,
 				
 				this.validateJSONAction.setEnabled(true);
 				this.formatJSONAction.setEnabled(true);
-				this.addSkeletonAction.setEnabled(true);
+				this.addSkeletonAction0.setEnabled(true);
+				this.addSkeletonAction1.setEnabled(true);
+				this.addSkeletonAction2.setEnabled(true);
+				this.addSkeletonAction3.setEnabled(true);
 				this.base64EncodeAction.setEnabled(true);
 				this.base64DecodeAction.setEnabled(true);
 				
