@@ -47,6 +47,8 @@ public class JSONFormatter {
 	protected List<ListData> listData;
 	protected List<MapData> macs;
 	
+	protected boolean includeEmpty;
+	
 	public JSONFormatter() {
 		this("");
 	}
@@ -180,6 +182,11 @@ public class JSONFormatter {
 				cf.format(g, writer);
 				
 				g.writeEndObject();
+			}else{
+				if(this.includeEmpty){
+					g.writeObjectFieldStart("Contacts");
+					g.writeEndObject();
+				}
 			}
 			
 			if(mapData.size()>0 || listData.size()>0){
@@ -209,6 +216,13 @@ public class JSONFormatter {
 				
 				g.writeEndObject();
 				
+			}else{
+				if(this.includeEmpty){
+					g.writeObjectFieldStart("Data");
+						g.writeObjectFieldStart("Local");
+						g.writeEndObject();
+					g.writeEndObject();
+				}
 			}
 			
 			if(keys.size()> 0) {
@@ -255,6 +269,11 @@ public class JSONFormatter {
 				}
 				
 				g.writeEndObject();
+			}else{
+				if(this.includeEmpty){
+					g.writeObjectFieldStart("Keys");
+					g.writeEndObject();
+				}
 			}
 			
 			if(macs.size()>0){
@@ -265,6 +284,11 @@ public class JSONFormatter {
 					ldf.format(g, writer);
 				
 				g.writeEndObject();
+			}else{
+				if(this.includeEmpty){
+					g.writeObjectFieldStart("Macs");
+					g.writeEndObject();
+				}
 			}
 			
 			if(signatures.size()> 0) {
@@ -275,6 +299,11 @@ public class JSONFormatter {
 				sf.format(g, writer);
 				
 				g.writeEndObject();
+			}else{
+				if(this.includeEmpty){
+					g.writeObjectFieldStart("Signatures");
+					g.writeEndObject();
+				}
 			}
 			
 		} catch (IOException x) {
@@ -291,6 +320,14 @@ public class JSONFormatter {
 
 	public void setRegistrationHandle(String registrationHandle) {
 		this.registrationHandle = registrationHandle;
+	}
+
+	public boolean isIncludeEmpty() {
+		return includeEmpty;
+	}
+
+	public void setIncludeEmpty(boolean includeEmpty) {
+		this.includeEmpty = includeEmpty;
 	}
 
 }
