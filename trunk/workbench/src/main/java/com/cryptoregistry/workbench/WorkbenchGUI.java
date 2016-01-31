@@ -384,7 +384,7 @@ implements ChangeListener,
     	enterPasswordDialog.addPasswordChangedListener(createKeyDialog.getPanel());
     	rhsd.addRegHandleListener(addSkeletonAction0);
     	createKeyDialog.addCreateKeyListener(openSignatureAction);
-    	unlockKeysAction.addUnlockKeyListener(openSignatureAction);
+    
     	unlockedKeyDialog.getPanel().addCryptoKeySelectionListener(this.openSignatureAction);
     	unlockedKeyDialog.getPanel().addCryptoKeySelectionListener(this.addSkeletonAction0);
     	unlockedKeyDialog.getPanel().addCryptoKeySelectionListener(this.addSkeletonAction1);
