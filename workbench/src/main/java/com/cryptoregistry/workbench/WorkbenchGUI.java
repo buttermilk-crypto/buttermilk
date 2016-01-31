@@ -384,6 +384,8 @@ implements ChangeListener,
     	enterPasswordDialog.addPasswordChangedListener(createKeyDialog.getPanel());
     	rhsd.addRegHandleListener(addSkeletonAction0);
     	createKeyDialog.addCreateKeyListener(openSignatureAction);
+    	unlockKeysAction.addUnlockKeyListener(openSignatureAction);
+    	unlockedKeyDialog.getPanel().addCryptoKeySelectionListener(this.openSignatureAction);
     	unlockedKeyDialog.getPanel().addCryptoKeySelectionListener(this.addSkeletonAction0);
     	unlockedKeyDialog.getPanel().addCryptoKeySelectionListener(this.addSkeletonAction1);
     	unlockedKeyDialog.getPanel().addCryptoKeySelectionListener(this.addSkeletonAction2);
@@ -723,7 +725,7 @@ implements ChangeListener,
 		String identifier = pane.identifier;
 		JScrollPane scroll= new JScrollPane(pane);
 		tabs.add(title, scroll);
-		int count = tabs.getComponentCount();
+		int count = tabs.getTabCount();
 		for(int i = 0; i<count;i++){
 			JScrollPane sc = (JScrollPane) tabs.getComponentAt(i);
 			UUIDTextPane editor = (UUIDTextPane) sc.getViewport().getView();

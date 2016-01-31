@@ -145,8 +145,8 @@ public class UnlockedKeyPanel extends JPanel implements CreateKeyListener, Unloc
 	
 	public String describe(CryptoKey key){
 		StringBuffer buf = new StringBuffer();
-		buf.append(key.getMetadata().getDistinguishedHandle());
-		buf.append("\n");
+	//	buf.append(key.getMetadata().getDistinguishedHandle());
+	//	buf.append("\n");
 		buf.append(key.getMetadata().getKeyAlgorithm());
 		buf.append("\n");
 		buf.append("CreatedOn: ");

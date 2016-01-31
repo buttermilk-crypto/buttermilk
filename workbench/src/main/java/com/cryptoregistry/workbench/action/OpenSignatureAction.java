@@ -20,6 +20,8 @@ import com.cryptoregistry.signature.CryptoSignature;
 import com.cryptoregistry.util.Lf2SpacesIndenter;
 import com.cryptoregistry.workbench.CreateKeyEvent;
 import com.cryptoregistry.workbench.CreateKeyListener;
+import com.cryptoregistry.workbench.CryptoKeySelectionEvent;
+import com.cryptoregistry.workbench.CryptoKeySelectionListener;
 import com.cryptoregistry.workbench.KeyWrapper;
 import com.cryptoregistry.workbench.SignatureItemSelectionDialog;
 import com.cryptoregistry.workbench.UUIDTextPane;
@@ -33,7 +35,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class OpenSignatureAction extends AbstractAction implements CreateKeyListener, UnlockKeyListener {
+public class OpenSignatureAction extends AbstractAction 
+	implements CreateKeyListener, UnlockKeyListener, CryptoKeySelectionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JTabbedPane tabs;
@@ -120,6 +123,12 @@ public class OpenSignatureAction extends AbstractAction implements CreateKeyList
 	public void keyCreated(CreateKeyEvent evt) {
 		KeyWrapper wrapper = new KeyWrapper(evt.getKey());
 		keys.add(wrapper);
+	}
+
+	@Override
+	public void currentKeyChanged(EventObject evt) {
+		CryptoKeySelectionEvent e = (CryptoKeySelectionEvent) evt;
+		 keys.add(new KeyWrapper(e.getKey()));
 	}
 
 }
