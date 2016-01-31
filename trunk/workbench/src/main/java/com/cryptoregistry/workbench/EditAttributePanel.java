@@ -231,6 +231,9 @@ public class EditAttributePanel extends JPanel {
 	private void loadTemplates() {
 		templates.add(new Template("Available Templates...", new PropertiesImpl()));
 		List list = ClassSearchUtils.searchClassPath("template", ".properties");
+		if(list == null || list.size() == 0){
+			System.err.println("Warning, template list size is zero.");
+		}
 		for(Object obj:list){
 			String s = String.valueOf(obj);
 			InputStream in = this.getClass().getResourceAsStream(String.valueOf(obj));
