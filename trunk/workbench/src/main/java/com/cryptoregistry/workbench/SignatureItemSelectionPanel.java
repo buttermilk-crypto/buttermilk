@@ -31,7 +31,6 @@ import com.cryptoregistry.ec.ECKeyContents;
 import com.cryptoregistry.formats.JSONGenericReader;
 import com.cryptoregistry.rsa.RSAKeyContents;
 import com.cryptoregistry.signature.CryptoSignature;
-import com.cryptoregistry.signature.builder.C2SignatureBuilder;
 import com.cryptoregistry.signature.builder.C2SignatureCollector;
 import com.cryptoregistry.signature.builder.ECDSASignatureBuilder;
 import com.cryptoregistry.signature.builder.RSASignatureBuilder;
@@ -43,7 +42,7 @@ public class SignatureItemSelectionPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JTable table;
 	private JComboBox<KeyWrapper> comboBox;
-	private DefaultComboBoxModel<KeyWrapper> comboBoxModel;
+//	private DefaultComboBoxModel<KeyWrapper> comboBoxModel;
 	JLabel uuidLabel;
 	SignatureItemTableModel dataModel;
 	
