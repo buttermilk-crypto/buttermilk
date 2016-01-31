@@ -172,14 +172,45 @@ public class RegisterAction extends AbstractAction {
 					"Too many contact records, max of 20 allowed");
 		}
 
-		if (keys.size() > 4) {
+		if (keys.size() > 3) {
 			return new ErrorMsg("Registration Pre-check Failed",
-					"Too many keys, max of 4 allowed");
+					"Too many keys, max of 3 allowed");
 		}
 
 		if (km.mapData().size() > 3) {
 			return new ErrorMsg("Registration Pre-check Failed",
 					"Too many local data entries, max of 3 allowed");
+		}
+		
+		boolean foundCopyright = false;
+		boolean foundAgreement = false;
+		boolean affirmation = false;
+		
+		for(MapData md : km.mapData()){
+			if(md.data.containsKey("Copyright")) {
+				foundCopyright = true;
+			}
+			if(md.data.containsKey("TermsOfServiceAgreement")){
+				foundAgreement = true;
+			}
+			if(md.data.containsKey("InfoAffirmation")){
+				foundAgreement = true;
+			}
+		}
+		
+		if (!foundCopyright) {
+			return new ErrorMsg("Registration Pre-check Failed",
+					"No 'Copyright' field found in local data");
+		}
+		
+		if (!foundAgreement) {
+			return new ErrorMsg("Registration Pre-check Failed",
+					"No 'TermsOfServiceAgreement' field found in local data, this is required");
+		}
+		
+		if (!affirmation) {
+			return new ErrorMsg("Registration Pre-check Failed",
+					"No 'InfoAffirmation' field found in local data, this is required");
 		}
 
 		// OK
