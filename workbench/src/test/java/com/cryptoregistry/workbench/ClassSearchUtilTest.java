@@ -11,8 +11,8 @@ public class ClassSearchUtilTest {
 	@Test
 	public void classSearchUtilTest() {
 		@SuppressWarnings("rawtypes")
-		List list = ClassSearchUtils.searchClassPath("demo", ".properties");
-		Assert.assertEquals(4, list.size());
+		List list = ClassSearchUtils.searchClassPath("template", ".properties");
+		Assert.assertEquals(6, list.size());
 	}
 
 }
