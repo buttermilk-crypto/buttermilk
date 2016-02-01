@@ -403,6 +403,27 @@ implements ChangeListener,
 				}else{
 					createKeyItem.setEnabled(true);
 				}
+				
+				UUIDTextPane pane = instance.currentTextPane();
+				if(pane != null){
+					
+					// if text contains a possible signature 
+					if(pane.paneContainsAtLeastOneSignature()){
+						signatureValidationAction.setEnabled(true);
+					}else{
+						signatureValidationAction.setEnabled(false);
+					}
+					
+					// if the tab text relates to secure keys...
+					if(pane.paneContainsAtLeastOneSecureKey()){
+						unlockKeysAction.setEnabled(true);
+					}else{
+						unlockKeysAction.setEnabled(false);
+					}
+				}
+				
+				
+				
 			}
 			@Override
 			public void menuDeselected(MenuEvent e) {}
@@ -457,6 +478,7 @@ implements ChangeListener,
 		keysMenu.add(sigSubmenu);
 		
 		signatureValidationAction = new SignatureValidationAction(tabs, propsMgr.getProps(),statusLabel);
+		signatureValidationAction.setEnabled(false);
 		sigSubmenu.add(signatureValidationAction);
 		
 		JMenu remoteMenu = new JMenu("Remote/Registry");
@@ -617,14 +639,6 @@ implements ChangeListener,
 			// has at least one tab
 			UUIDTextPane pane = currentTextPane();
 			
-			// if the tab text relates to secure keys...
-			if(pane.paneContainsAtLeastOneSecureKey()){
-				this.unlockKeysAction.setEnabled(true);
-			}else{
-				this.unlockKeysAction.setEnabled(false);
-			}
-			
-			
 			// tab is a newly created one with no file backing
 			if(pane.getTargetFile()==null){
 				this.openToFileAction.setEnabled(true);
@@ -695,6 +709,7 @@ implements ChangeListener,
 			return null;		
 		}
 		else {
+			System.err.println("Selection tab index = "+index);
 			return  (UUIDTextPane) ((JScrollPane)tabs.getComponentAt(index)).getViewport().getView();
 		}
 	}
