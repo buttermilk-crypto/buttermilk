@@ -187,6 +187,8 @@ public class RegisterAction extends AbstractAction {
 		boolean affirmation = false;
 		
 		for(MapData md : km.mapData()){
+			System.err.println(md);
+			
 			if(md.data.containsKey("Copyright")) {
 				foundCopyright = true;
 			}
@@ -194,7 +196,7 @@ public class RegisterAction extends AbstractAction {
 				foundAgreement = true;
 			}
 			if(md.data.containsKey("InfoAffirmation")){
-				foundAgreement = true;
+				affirmation = true;
 			}
 		}
 		

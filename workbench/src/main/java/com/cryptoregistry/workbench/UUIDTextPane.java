@@ -248,13 +248,11 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 	
 	public boolean paneContainsAtLeastOneSignature() {
 		int length = this.getDocument().getLength();
-		System.err.println("doc length: "+length);
 		String t;
 		try {
 			t = this.getDocument().getText(0, length);
 			return t.contains("SignedWith") && t.contains("SignedBy");
 		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
