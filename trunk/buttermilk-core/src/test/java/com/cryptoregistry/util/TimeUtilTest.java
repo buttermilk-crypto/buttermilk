@@ -16,5 +16,14 @@ public class TimeUtilTest {
 		Date _now = TimeUtil.getISO8601FormatDate(formatted);
 		Assert.assertEquals(now, _now);
 	}
+	
+	@Test
+	public void test1(){
+		// fix or at least still parse previously generated incorrect values
+		String formatted = "2016-01-24T04:18:27+0000";
+		Date date = TimeUtil.getISO8601FormatDate(formatted);
+		Assert.assertNotNull(date);
+		
+	}
 
 }
