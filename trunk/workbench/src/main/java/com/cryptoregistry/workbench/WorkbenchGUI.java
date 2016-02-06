@@ -50,6 +50,7 @@ import com.cryptoregistry.workbench.action.RegisterAction;
 import com.cryptoregistry.workbench.action.RegistrationType;
 import com.cryptoregistry.workbench.action.RetrieveRegDataAction;
 import com.cryptoregistry.workbench.action.SaveFileAction;
+import com.cryptoregistry.workbench.action.ShowPropertiesAction;
 import com.cryptoregistry.workbench.action.SignatureValidationAction;
 import com.cryptoregistry.workbench.action.UnlockKeysAction;
 import com.cryptoregistry.workbench.action.ValidateJSONAction;
@@ -95,6 +96,7 @@ implements ChangeListener,
 	
 	private CheckRegHandleAction checkRegHandleAction;
 	private RetrieveRegDataAction retrieveRegDataAction;
+	private ShowPropertiesAction showPropertiesAction;
 	private SignatureValidationAction signatureValidationAction;
 	private RegisterAction registerAction;
 	
@@ -491,6 +493,10 @@ implements ChangeListener,
 		remoteMenu.add(retrieveRegDataAction);
 		retrieveRegDataAction.setEnabled(false);
 		
+		showPropertiesAction = new ShowPropertiesAction(tabs,propsMgr.getProps());
+		remoteMenu.add(showPropertiesAction);
+		showPropertiesAction.setEnabled(true);
+		
 		remoteMenu.addSeparator();
 		
 		registerAction = new RegisterAction(tabs,propsMgr.getProps(),statusLabel);
@@ -756,19 +762,26 @@ implements ChangeListener,
 	}
 
 	public static void main(String[] args) {
+		final String [] myargs = args;
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
+				String config = "regwizard.properties";
+				if(myargs.length == 1){
+					config = myargs[0];
+					System.err.println("using non-standard props file name: "+config);
+				}
 				List<PropertiesReference> refs = new ArrayList<PropertiesReference>();
-			    refs.add(new PropertiesReference(ReferenceType.CLASSLOADED,"regwizard.properties"));
+			    refs.add(new PropertiesReference(ReferenceType.CLASSLOADED,config));
 				try {
 					File home = new File(System.getProperty("user.home"));
-					File regwizExternal = new File(home,"regwizard.properties");
+					File regwizExternal = new File(home,config);
 					refs.add(new PropertiesReference(ReferenceType.EXTERNAL,regwizExternal.getCanonicalPath()));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			
 			   Properties props = Properties.Factory.loadReferences(refs);
+			//   System.err.println(props);
 			   new WorkbenchGUI(props);
 			}
 		});
