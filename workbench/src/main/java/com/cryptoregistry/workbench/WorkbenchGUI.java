@@ -113,8 +113,8 @@ implements ChangeListener,
 	
 	private ExternalPropsManager propsMgr;
 
-	public WorkbenchGUI(Properties props) {
-		propsMgr = new ExternalPropsManager(props);
+	public WorkbenchGUI(String fileName, Properties props) {
+		propsMgr = new ExternalPropsManager(fileName, props);
 		createSourceCodeFont();
 		createGUI();
 	}
@@ -385,13 +385,17 @@ implements ChangeListener,
     	enterPasswordDialog.addPasswordChangedListener(instance);
     	enterPasswordDialog.addPasswordChangedListener(createKeyDialog.getPanel());
     	rhsd.addRegHandleListener(addSkeletonAction0);
+    	rhsd.addRegHandleListener(addSkeletonAction1);
+    	rhsd.addRegHandleListener(addSkeletonAction2);
+    	rhsd.addRegHandleListener(addSkeletonAction3);
+    	
     	createKeyDialog.addCreateKeyListener(openSignatureAction);
     
-    	unlockedKeyDialog.getPanel().addCryptoKeySelectionListener(this.openSignatureAction);
-    	unlockedKeyDialog.getPanel().addCryptoKeySelectionListener(this.addSkeletonAction0);
-    	unlockedKeyDialog.getPanel().addCryptoKeySelectionListener(this.addSkeletonAction1);
-    	unlockedKeyDialog.getPanel().addCryptoKeySelectionListener(this.addSkeletonAction2);
-    	unlockedKeyDialog.getPanel().addCryptoKeySelectionListener(this.addSkeletonAction3);
+    	unlockedKeyDialog.getPanel().addCryptoKeySelectionListener(openSignatureAction);
+    	unlockedKeyDialog.getPanel().addCryptoKeySelectionListener(addSkeletonAction0);
+    	unlockedKeyDialog.getPanel().addCryptoKeySelectionListener(addSkeletonAction1);
+    	unlockedKeyDialog.getPanel().addCryptoKeySelectionListener(addSkeletonAction2);
+    	unlockedKeyDialog.getPanel().addCryptoKeySelectionListener(addSkeletonAction3);
     	
 		JMenu keysMenu = new JMenu("Key Materials");
 		menuBar.add(keysMenu);
@@ -782,7 +786,7 @@ implements ChangeListener,
 			
 			   Properties props = Properties.Factory.loadReferences(refs);
 			//   System.err.println(props);
-			   new WorkbenchGUI(props);
+			   new WorkbenchGUI(config, props);
 			}
 		});
 	}
