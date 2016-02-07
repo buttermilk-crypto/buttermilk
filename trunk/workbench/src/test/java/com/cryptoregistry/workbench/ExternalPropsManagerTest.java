@@ -18,17 +18,18 @@ public class ExternalPropsManagerTest {
 	public void test0() throws IOException {
 		
 		// first remove any traces
+		String config = "regwizard.properties";
 		File home = new File(System.getProperty("user.home"));
-		File regwizExternal = new File(home,"regwizard.properties");
+		File regwizExternal = new File(home,config);
 		regwizExternal.delete();
 		
 		List<PropertiesReference> refs = new ArrayList<PropertiesReference>();
-	    refs.add(new PropertiesReference(ReferenceType.CLASSLOADED,"regwizard.properties"));
+	    refs.add(new PropertiesReference(ReferenceType.CLASSLOADED,config));
 		refs.add(new PropertiesReference(ReferenceType.EXTERNAL,regwizExternal.getCanonicalPath()));
 		
 	   Properties props = Properties.Factory.loadReferences(refs);
 	   Assert.assertTrue(props.containsKey("app.version"));
-	   ExternalPropsManager mgr = new ExternalPropsManager(props);
+	   ExternalPropsManager mgr = new ExternalPropsManager(config, props);
 	   Assert.assertTrue(!mgr.externalFileExists());
 	   Assert.assertTrue(!mgr.hasDefaultKeyDirectoryLocation());
 	   

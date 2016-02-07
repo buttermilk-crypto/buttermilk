@@ -22,9 +22,15 @@ public class ExternalPropsManager implements RegHandleListener {
 		File home = new File(System.getProperty("user.home"));
 		file = new File(home,"regwizard.properties");
 	}
+	
+	public ExternalPropsManager(String fileName) {
+		super();
+		File home = new File(System.getProperty("user.home"));
+		file = new File(home,fileName);
+	}
 
-	public ExternalPropsManager(Properties props) {
-		this();
+	public ExternalPropsManager(String fileName, Properties props) {
+		this(fileName);
 		this.props = props;
 	}
 	
