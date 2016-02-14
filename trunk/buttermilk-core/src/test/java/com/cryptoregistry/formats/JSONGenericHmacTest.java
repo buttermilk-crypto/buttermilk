@@ -1,13 +1,10 @@
 package com.cryptoregistry.formats;
 
 import java.io.File;
-import java.io.StringReader;
-import java.io.StringWriter;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.cryptoregistry.KeyMaterials;
 
 public class JSONGenericHmacTest {
 
@@ -35,17 +32,7 @@ public class JSONGenericHmacTest {
 						'0','1','2'};
 		byte [] result = reader.hmac(key);
 		Assert.assertTrue(reader.hmacValidate(key, result));
-		reader.embedHMac(key);
-		StringWriter writer = new StringWriter();
-		reader.reformat(writer);
-		String out = writer.toString();
-		StringReader sreader = new StringReader(out);
-		JSONReader jreader = new JSONReader(sreader);
-		KeyMaterials km = jreader.parse();
-		Assert.assertTrue(km.contacts().size()==1);
-		Assert.assertTrue(km.keys().size()==1);
-		Assert.assertTrue(km.mapData().size()==1);
-		Assert.assertTrue(km.signatures().size()==1);
+		
 	}
 
 }
