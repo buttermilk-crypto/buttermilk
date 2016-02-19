@@ -134,7 +134,14 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 		undo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				undoManager.undo();
+				try {
+					getUndoManager().undo();
+				}catch(CannotUndoException x){
+					JOptionPane.showMessageDialog(null, "Sorry, cannot Undo...",
+							"Error",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 			}
 		});
 
@@ -143,7 +150,14 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 		redo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				undoManager.redo();
+				try {
+					getUndoManager().redo();
+				}catch(CannotUndoException x){
+					JOptionPane.showMessageDialog(null, "Sorry, cannot Redo...",
+							"Error",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 			}
 		});
 		editMenu.addSeparator();
