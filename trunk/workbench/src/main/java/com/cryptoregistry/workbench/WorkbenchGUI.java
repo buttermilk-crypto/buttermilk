@@ -26,6 +26,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -34,6 +35,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
+import javax.swing.undo.CannotUndoException;
 
 import com.cryptoregistry.CryptoKey;
 import com.cryptoregistry.passwords.Password;
@@ -328,7 +330,14 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener,
 			public void actionPerformed(ActionEvent e) {
 				UUIDTextPane pane = currentTextPane();
 				if (pane != null) {
-					pane.getUndoManager().undo();
+					try {
+						pane.getUndoManager().undo();
+					}catch(CannotUndoException x){
+						JOptionPane.showMessageDialog(null, "Sorry, cannot Undo...",
+								"Error",
+								JOptionPane.ERROR_MESSAGE);
+						return;
+					}
 				}
 			}
 		});
@@ -340,7 +349,14 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener,
 			public void actionPerformed(ActionEvent e) {
 				UUIDTextPane pane = currentTextPane();
 				if (pane != null) {
-					pane.getUndoManager().redo();
+					try {
+						pane.getUndoManager().redo();
+					}catch(CannotUndoException x){
+						JOptionPane.showMessageDialog(null, "Sorry, cannot Redo...",
+								"Error",
+								JOptionPane.ERROR_MESSAGE);
+						return;
+					}
 				}
 			}
 		});
