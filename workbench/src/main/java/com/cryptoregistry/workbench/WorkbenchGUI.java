@@ -324,6 +324,30 @@ implements ChangeListener,
 			}
 		});
 		editMenu.addSeparator();
+		JMenuItem undo = new JMenuItem("Undo");
+		editMenu.add(undo);
+		undo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				UUIDTextPane pane = currentTextPane();
+				if(pane != null) {
+					pane.getUndoManager().undo();
+				}
+			}
+		});
+		
+		JMenuItem redo = new JMenuItem("Redo");
+		editMenu.add(redo);
+		redo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				UUIDTextPane pane = currentTextPane();
+				if(pane != null) {
+					pane.getUndoManager().redo();
+				}
+			}
+		});
+		editMenu.addSeparator();
 		
 
 		// Build the source menu.

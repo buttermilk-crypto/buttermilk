@@ -26,8 +26,12 @@ import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
+import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
-import javax.swing.undo.UndoManager;
+import javax.swing.undo.AbstractUndoableEdit;
+import javax.swing.undo.CannotUndoException;
+import javax.swing.undo.CompoundEdit;
+import javax.swing.undo.UndoableEdit;
 
 import com.cryptoregistry.MapData;
 import com.cryptoregistry.formats.JSONGenericReader;
@@ -35,8 +39,6 @@ import com.cryptoregistry.formats.JSONReader;
 import com.cryptoregistry.formats.MapDataFormatter;
 import com.cryptoregistry.formats.SignatureFormatter;
 import com.cryptoregistry.signature.CryptoSignature;
-import com.cryptoregistry.workbench.UndoManagerHelper.RedoAction;
-import com.cryptoregistry.workbench.UndoManagerHelper.UndoAction;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,30 +49,20 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 	private static final Pattern DoubleQuotesPat = Pattern.compile("\"([^\"]*)\"");
 	private static final String [] topLevelTokens =  {"Contacts", "Data", "Local", "Keys", "Macs", "Signatures"};
 	
-	public final String identifier;
+	public String identifier;
 	public File targetFile;
-	protected UndoAction undoAction;
-	protected RedoAction redoAction;
-	protected UndoManager undo = new UndoManager();
 	JPopupMenu popup;
 	String message;
 	private Point currentClickPoint;
 	
-	 //This one listens for edits that can be undone.
-    protected class MyUndoableEditListener
-                    implements UndoableEditListener {
-        public void undoableEditHappened(UndoableEditEvent e) {
-            //Remember the edit and update the menus.
-            undo.addEdit(e.getEdit());
-        }
-    }
+	private UndoManager undoManager=new UndoManager();
 
 	public UUIDTextPane() {
 		super();
+		getDocument().addUndoableEditListener(undoManager);
 		identifier = UUID.randomUUID().toString();
 		setCaretPosition(0);
 	    setMargin(new Insets(5,5,5,5));
-		this.getDocument().addUndoableEditListener(new MyUndoableEditListener());
 		createPopup();
 	}
 	
@@ -80,11 +72,8 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 	}
 	
 	public UUIDTextPane(String uuid) {
+		this();
 		this.identifier = uuid;
-		setCaretPosition(0);
-	    setMargin(new Insets(5,5,5,5));
-		this.getDocument().addUndoableEditListener(new MyUndoableEditListener());
-		createPopup();
 	}
 
 	
@@ -137,11 +126,26 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 						selectAll();
 				}
 			});
-			editMenu.addSeparator();
-			editMenu.add(UndoManagerHelper.getUndoAction(undo));
-			editMenu.add(UndoManagerHelper.getRedoAction(undo));
-			editMenu.addSeparator();
 			
+			editMenu.addSeparator();
+			JMenuItem undo = new JMenuItem("Undo");
+			editMenu.add(undo);
+			undo.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+						undoManager.undo();
+				}
+			});
+			
+			JMenuItem redo = new JMenuItem("Redo");
+			editMenu.add(redo);
+			redo.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+						undoManager.redo();
+				}
+			});
+			editMenu.addSeparator();
 		   
 		 MouseListener popupListener = new PopupListener(this);
 		 this.addMouseListener(popupListener);
@@ -358,4 +362,128 @@ public class UUIDTextPane extends JTextPane implements ActionListener {
 			e.printStackTrace();
 		}
 	}
+	
+	// Undo support - taken from http://java-sl.com/tip_merge_undo_edits.html
+	
+	 class MyCompoundEdit extends CompoundEdit {
+	       
+		private static final long serialVersionUID = 1L;
+		
+			boolean isUnDone=false;
+	        public int getLength() {
+	            return edits.size();
+	        }
+	 
+	        public void undo() throws CannotUndoException {
+	            super.undo();
+	            isUnDone=true;
+	        }
+	        public void redo() throws CannotUndoException {
+	            super.redo();
+	            isUnDone=false;
+	        }
+	        public boolean canUndo() {
+	            return edits.size()>0 && !isUnDone;
+	        }
+
+	        public boolean canRedo() {
+	            return edits.size()>0 && isUnDone;
+	        }
+	 
+	    }
+	 
+	    class UndoManager extends AbstractUndoableEdit implements UndoableEditListener {
+	    	
+			private static final long serialVersionUID = 1L;
+			
+			String lastEditName=null;
+	        ArrayList<MyCompoundEdit> edits=new ArrayList<MyCompoundEdit>();
+	        MyCompoundEdit current;
+	        int pointer=-1;
+	 
+	        public void undoableEditHappened(UndoableEditEvent e) {
+	            UndoableEdit edit=e.getEdit();
+	            if (edit instanceof AbstractDocument.DefaultDocumentEvent) {
+	                try {
+	                    AbstractDocument.DefaultDocumentEvent event=(AbstractDocument.DefaultDocumentEvent)edit;
+	                    int start=event.getOffset();
+	                    int len=event.getLength();
+	                    String text=event.getDocument().getText(start, len);
+	                    boolean isNeedStart=false;
+	                    if (current==null) {
+	                        isNeedStart=true;
+	                    }
+	                    else if (text.contains("\n")) {
+	                        isNeedStart=true;
+	                    }
+	                    else if (lastEditName==null || !lastEditName.equals(edit.getPresentationName())) {
+	                        isNeedStart=true;
+	                    }
+	 
+	                    while (pointer<edits.size()-1) {
+	                        edits.remove(edits.size()-1);
+	                        isNeedStart=true;
+	                    }
+	                    if (isNeedStart) {
+	                        createCompoundEdit();
+	                    }
+	 
+	                    current.addEdit(edit);
+	                    lastEditName=edit.getPresentationName();
+	 
+	                } catch (BadLocationException e1) {
+	                    e1.printStackTrace();
+	                }
+	            }
+	        }
+	 
+	        public void createCompoundEdit() {
+	            if (current==null) {
+	                current= new MyCompoundEdit();
+	            }
+	            else if (current.getLength()>0) {
+	                current= new MyCompoundEdit();
+	            }
+	 
+	            edits.add(current);
+	            pointer++;
+	        }
+	 
+	        public void undo() throws CannotUndoException {
+	            if (!canUndo()) {
+	                throw new CannotUndoException();
+	            }
+	 
+	            MyCompoundEdit u=edits.get(pointer);
+	            u.undo();
+	            pointer--;
+	 
+	        }
+	 
+	        public void redo() throws CannotUndoException {
+	            if (!canRedo()) {
+	                throw new CannotUndoException();
+	            }
+	 
+	            pointer++;
+	            MyCompoundEdit u=edits.get(pointer);
+	            u.redo();
+	 
+	        }
+	 
+	        public boolean canUndo() {
+	            return pointer>=0;
+	        }
+
+	        public boolean canRedo() {
+	            return edits.size()>0 && pointer<edits.size()-1;
+	        }
+	 
+	    }
+
+		public UndoManager getUndoManager() {
+			return undoManager;
+		}
+	    
+	    
 }
