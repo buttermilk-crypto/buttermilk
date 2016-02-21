@@ -142,7 +142,7 @@ public class RegHandlePanel extends JPanel {
 			}
 		});
 		
-		JLabel lblIAlReady = new JLabel("I already have a registration handle in mind:");
+		JLabel lblIAlReady = new JLabel("I already have a registration handle in mind, or pre-existing:");
 		
 		existingHandleTextField = new JTextField();
 		existingHandleTextField.setColumns(10);

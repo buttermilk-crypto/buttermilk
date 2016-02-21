@@ -50,6 +50,10 @@ public class ExternalPropsManager implements RegHandleListener {
 		return file.exists() && props.containsKey("registration.email");
 	}
 	
+	public boolean hasIntroSuppressFlag() {
+		return file.exists() && props.containsKey("intro.suppress") && props.booleanValue("intro.suppress");
+	}
+	
 	/**
 	 * Return true if file created
 	 * 

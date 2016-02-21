@@ -1,7 +1,12 @@
 package com.cryptoregistry.workbench.action;
 
 import java.awt.Component;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -45,12 +50,20 @@ public class CheckRegHandleAction extends AbstractAction {
 		String input = null;
 
 		if(selectionFound(pane)){
-			input = pane.getSelectedText(); // do only selection
+			input = pane.getSelectedText(); // do selection or clipboard only
 		}else{
-			JOptionPane.showMessageDialog(comp,
-				    "You must select some text for this to work",
-				    "Registration Handle Results",
+			
+			// check clip board
+			String clip = this.getClipboard();
+			
+			if(clip != null){ // data on the clipboard may be a handle
+				input = clip;
+			}else{
+			   JOptionPane.showMessageDialog(comp,
+				    "You must select some text put on clipboard for this to work",
+				    "Registration Handle Check Results",
 				    JOptionPane.INFORMATION_MESSAGE);
+			}
 			
 			return;
 		}
@@ -128,6 +141,19 @@ public class CheckRegHandleAction extends AbstractAction {
 		if(in.startsWith("\"") && in.endsWith("\"")){
 			return in.substring(1, in.length()-1);
 		}else return in;
+	}
+	
+	private String getClipboard() {
+		Clipboard c=Toolkit.getDefaultToolkit().getSystemClipboard();
+		try {
+			return String.valueOf( c.getData(DataFlavor.stringFlavor) );
+		} catch (UnsupportedFlavorException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 
 }
