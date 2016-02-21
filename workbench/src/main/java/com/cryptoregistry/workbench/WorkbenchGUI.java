@@ -9,6 +9,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -206,6 +207,28 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener,
 		statusLabel.setPreferredSize(new Dimension(frame.getWidth() / 8, 20));
 		statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		statusPanel.add(statusLabel);
+		
+		// add one initial text pane with a welcome
+		
+		UUIDTextPane pane = new UUIDTextPane();
+		pane.setFont(WorkbenchGUI.plainTextFont);
+		JScrollPane scroll = null;
+		
+		if(propsMgr.hasIntroSuppressFlag()){
+		InputStream in = this.getClass().getResourceAsStream("/intro.txt");
+		try {
+			pane.setText(readFully(in));
+		}catch(IOException x) {}
+		scroll = new JScrollPane(pane);
+		tabs.add("Intro",scroll);
+		
+		}else{
+			scroll = new JScrollPane(pane);
+			tabs.add("New Tab",scroll);
+		}
+		
+    	tabs.setTabComponentAt(tabs.indexOfComponent(scroll), new ButtonTabComponent(tabs));
+		pane.requestFocusInWindow();
 
 		// size the window
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -851,6 +874,17 @@ public class WorkbenchGUI implements ChangeListener, PasswordListener,
 				new WorkbenchGUI(config, props);
 			}
 		});
+	}
+	
+	public String readFully(InputStream inputStream)
+	        throws IOException {
+	    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	    byte[] buffer = new byte[1024];
+	    int length = 0;
+	    while ((length = inputStream.read(buffer)) != -1) {
+	        baos.write(buffer, 0, length);
+	    }
+	    return baos.toString("UTF-8");
 	}
 
 }
