@@ -101,7 +101,7 @@
     </plugins>
   </build>
 	
-	  <url>http://code.google.com/p/buttermilk/</url>
+	  <url>https://www.cryptoregistry.com/svn/buttermilk</url>
 	   <licenses>
     	<license>
       		<name>The Apache Software License, Version 2.0</name>
@@ -110,15 +110,15 @@
    	    </license>
        </licenses>
 
-	  <inceptionYear>2013</inceptionYear>
+	  <inceptionYear>2011</inceptionYear>
 	  <organization>
 	  	<name>David R. Smith</name>
-	  	<url>http://code.google.com/p/buttermilk/</url>
+	  	<url>https://www.cryptoregistry.com/svn/buttermilk/trunk/</url>
 	  </organization>
 	  <scm>
-    	<connection>scm:svn:http://buttermilk.googlecode.com/svn/trunk</connection>
-    	<developerConnection>scm:svn:https://buttermilk.googlecode.com/svn/trunk</developerConnection>
-    	<url>http://buttermilk.googlecode.com/svn/trunk</url>
+    	<connection>scm:svn:https://www.cryptoregistry.com/svn/buttermilk/trunk/</connection>
+    	<developerConnection>scm:svn:https://www.cryptoregistry.com/svn/buttermilk/trunk/</developerConnection>
+    	<url>https://www.cryptoregistry.com/svn/buttermilk</url>
   	  </scm>
 	  <developers>
 	  	<developer>
