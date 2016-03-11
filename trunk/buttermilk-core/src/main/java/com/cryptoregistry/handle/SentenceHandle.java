@@ -11,12 +11,13 @@ package com.cryptoregistry.handle;
  * 
  * Rules:
  * 
- * 1) Use dictionary words
+ * 1) Use of dictionary words OK but not required
  * 2) Only one space between words
  * 3) Up to 127 words
  * 4) UTF-8 characters, any language, not a space
  * 5) Max length per word, 34 characters
  * 6) NO embedded html tags
+ * 7) May end with a full stop, etc.
  * 
  * 
  * </pre>
