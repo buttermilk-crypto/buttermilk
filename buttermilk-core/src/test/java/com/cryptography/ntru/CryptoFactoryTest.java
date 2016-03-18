@@ -7,11 +7,11 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import x.org.bouncycastle.pqc.math.ntru.polynomial.DenseTernaryPolynomial;
-import x.org.bouncycastle.pqc.math.ntru.polynomial.IntegerPolynomial;
-import x.org.bouncycastle.pqc.math.ntru.polynomial.ProductFormPolynomial;
-import x.org.bouncycastle.pqc.math.ntru.polynomial.SparseTernaryPolynomial;
-import x.org.bouncycastle.util.Arrays;
+import org.bouncycastle.pqc.math.ntru.polynomial.DenseTernaryPolynomial;
+import org.bouncycastle.pqc.math.ntru.polynomial.IntegerPolynomial;
+import org.bouncycastle.pqc.math.ntru.polynomial.ProductFormPolynomial;
+import org.bouncycastle.pqc.math.ntru.polynomial.SparseTernaryPolynomial;
+import org.bouncycastle.util.Arrays;
 
 import com.cryptoregistry.formats.JSONFormatter;
 import com.cryptoregistry.ntru.CryptoFactory;

@@ -11,20 +11,19 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.concurrent.locks.ReentrantLock;
 
-import x.org.bouncycastle.crypto.encodings.PKCS1Encoding;
+import org.bouncycastle.crypto.encodings.PKCS1Encoding;
 
 import com.cryptoregistry.SignatureAlgorithm;
 import com.cryptoregistry.signature.RSACryptoSignature;
 import com.cryptoregistry.signature.RSASignature;
 import com.cryptoregistry.signature.SignatureMetadata;
 
-import x.org.bouncycastle.crypto.InvalidCipherTextException;
-import x.org.bouncycastle.crypto.engines.RSABlindedEngine;
+import org.bouncycastle.crypto.InvalidCipherTextException;
+import org.bouncycastle.crypto.engines.RSABlindedEngine;
 
-import x.org.bouncycastle.crypto.AsymmetricBlockCipher;
-import x.org.bouncycastle.crypto.generators.RSAKeyPairGenerator;
-import x.org.bouncycastle.crypto.params.RSAKeyGenerationParameters;
-import x.org.bouncycastle.crypto.params.RSAKeyParameters;
+import org.bouncycastle.crypto.AsymmetricBlockCipher;
+import org.bouncycastle.crypto.params.RSAKeyGenerationParameters;
+import org.bouncycastle.crypto.params.RSAKeyParameters;
 
 public class CryptoFactory {
 
@@ -64,7 +63,7 @@ public class CryptoFactory {
 	public RSAKeyContents generateKeys(char [] password) {
 		lock.lock();
 		try {
-			RSAKeyPairGenerator kpGen = new RSAKeyPairGenerator(password);
+			ButtermilkRSAKeyPairGenerator kpGen = new ButtermilkRSAKeyPairGenerator(password);
 			kpGen.init(new RSAKeyGenerationParameters(DEFAULT_PUBLIC_EXPONENT, rand, KEY_STRENGTH, CERTAINTY));
 			return kpGen.generateKeys();
 		} finally {
@@ -80,7 +79,7 @@ public class CryptoFactory {
 	public RSAKeyContents generateKeys() {
 		lock.lock();
 		try {
-			RSAKeyPairGenerator kpGen = new RSAKeyPairGenerator();
+			ButtermilkRSAKeyPairGenerator kpGen = new ButtermilkRSAKeyPairGenerator();
 			kpGen.init(new RSAKeyGenerationParameters(DEFAULT_PUBLIC_EXPONENT, rand, KEY_STRENGTH, CERTAINTY));
 			return kpGen.generateKeys();
 		} finally {
@@ -91,7 +90,7 @@ public class CryptoFactory {
 	public RSAKeyContents generateKeys(int strength) {
 		lock.lock();
 		try {
-			RSAKeyPairGenerator kpGen = new RSAKeyPairGenerator();
+			ButtermilkRSAKeyPairGenerator kpGen = new ButtermilkRSAKeyPairGenerator();
 			kpGen.init(new RSAKeyGenerationParameters(DEFAULT_PUBLIC_EXPONENT, rand, strength, CERTAINTY));
 			return kpGen.generateKeys();
 		} finally {
@@ -115,7 +114,7 @@ public class CryptoFactory {
 	public RSAKeyContents generateKeys(RSAKeyMetadata metadata, int publicExp, int keyStrength, int certainty) {
 		lock.lock();
 		try {
-			RSAKeyPairGenerator kpGen = new RSAKeyPairGenerator(metadata);
+			ButtermilkRSAKeyPairGenerator kpGen = new ButtermilkRSAKeyPairGenerator(metadata);
 			kpGen.init(new RSAKeyGenerationParameters(BigInteger.valueOf(publicExp), rand, keyStrength, certainty));
 			return kpGen.generateKeys();
 		} finally {
@@ -126,7 +125,7 @@ public class CryptoFactory {
 	public RSAKeyContents generateKeys(RSAKeyMetadata metadata, PUBLIC_EXPONENTS px, int keyStrength, int certainty) {
 		lock.lock();
 		try {
-			RSAKeyPairGenerator kpGen = new RSAKeyPairGenerator(metadata);
+			ButtermilkRSAKeyPairGenerator kpGen = new ButtermilkRSAKeyPairGenerator(metadata);
 			kpGen.init(new RSAKeyGenerationParameters(BigInteger.valueOf(px.exponent), rand, keyStrength, certainty));
 			return kpGen.generateKeys();
 		} finally {
@@ -220,7 +219,7 @@ public class CryptoFactory {
 	 * @see RSASignatureBuilder
 	 * 
 	 */
-	public RSACryptoSignature sign(String signedBy, RSAKeyContents sKeys, String digestName, byte [] msgHashBytes){
+	public RSACryptoSignature sign(String signedBy, RSAKeyContents sKeys, String digestName, byte [] msgHashBytes) {
 		
 		lock.lock();
 		try {
@@ -234,12 +233,15 @@ public class CryptoFactory {
 					sKeys.getMetadata().getHandle(),
 					signedBy);
 			return new RSACryptoSignature(meta,sig);
+		
+		} catch (InvalidCipherTextException e) {
+			throw new RuntimeException(e);
 		} finally {
 			lock.unlock();
 		}
 	}
 	
-	public RSACryptoSignature sign(SignatureMetadata meta, RSAKeyContents sKeys, byte [] msgHashBytes){
+	public RSACryptoSignature sign(SignatureMetadata meta, RSAKeyContents sKeys, byte [] msgHashBytes) {
 		
 		lock.lock();
 		try {
@@ -248,6 +250,8 @@ public class CryptoFactory {
 			byte [] sigBytes = rsaEngine.processBlock(msgHashBytes, 0, msgHashBytes.length);
 			RSASignature sig = new RSASignature(sigBytes);
 			return new RSACryptoSignature(meta,sig);
+		} catch (InvalidCipherTextException e) {
+			throw new RuntimeException(e);
 		} finally {
 			lock.unlock();
 		}
@@ -269,6 +273,8 @@ public class CryptoFactory {
 			byte [] sigBytes = sig.signature.s.decodeToBytes();
 			byte [] rawBytes = rsaEngine.processBlock(sigBytes, 0, sigBytes.length);
 			return test_equal(rawBytes,msgHashBytes);
+		} catch (InvalidCipherTextException e) {
+			throw new RuntimeException(e);
 		} finally {
 			lock.unlock();
 		}

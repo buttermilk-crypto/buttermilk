@@ -7,7 +7,7 @@ import net.iharder.Base64;
 import org.junit.Assert;
 import org.junit.Test;
 
-import x.org.bouncycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import com.cryptoregistry.rsa.CryptoFactory;
 import com.cryptoregistry.rsa.RSAKeyContents;

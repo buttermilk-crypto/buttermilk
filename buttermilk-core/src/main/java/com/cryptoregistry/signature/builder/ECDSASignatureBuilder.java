@@ -9,8 +9,8 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-import x.org.bouncycastle.crypto.Digest;
-import x.org.bouncycastle.crypto.digests.SHA1Digest;
+import org.bouncycastle.crypto.Digest;
+import org.bouncycastle.crypto.digests.SHA1Digest;
 
 import com.cryptoregistry.SignatureAlgorithm;
 import com.cryptoregistry.ec.ECKeyContents;

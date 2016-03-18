@@ -7,10 +7,10 @@ package com.cryptoregistry.ec;
 
 import java.math.BigInteger;
 
-import x.org.bouncycastle.crypto.params.ECDomainParameters;
-import x.org.bouncycastle.math.ec.ECCurve;
-import x.org.bouncycastle.math.ec.ECPoint;
-import x.org.bouncycastle.util.encoders.Hex;
+import org.bouncycastle.crypto.params.ECDomainParameters;
+import org.bouncycastle.math.ec.ECCurve;
+import org.bouncycastle.math.ec.ECPoint;
+import org.bouncycastle.util.encoders.Hex;
 
 public class Secp256r1 extends ECParametersHolderBase {
 
@@ -53,7 +53,7 @@ public class Secp256r1 extends ECParametersHolderBase {
 								+ "6B17D1F2E12C4247F8BCE6E563A440F277037D812DEB33A0F4A13945D898C296"
 								+ "4FE342E2FE1A7F9B8EE7EB4A7C0F9E162BCE33576B315ECECBB6406837BF51F5"));
 
-		return new ECDomainParameters(curve, G, n, h, S, name);
+		return new NamedECDomainParameters(curve, G, n, h, S, name);
 	}
 
 	@Override

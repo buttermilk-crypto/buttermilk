@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import x.org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.crypto.Digest;
 
 import com.cryptoregistry.SignatureAlgorithm;
 import com.cryptoregistry.c2.key.Curve25519KeyContents;

@@ -15,14 +15,13 @@ import net.iharder.Base64;
 import org.junit.Assert;
 import org.junit.Test;
 
-import x.org.bouncycastle.crypto.digests.SHA256Digest;
-import x.org.bouncycastle.util.Arrays;
+import org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.util.Arrays;
 
 import com.cryptoregistry.CryptoContact;
 import com.cryptoregistry.CryptoKey;
 import com.cryptoregistry.CryptoKeyWrapper;
 import com.cryptoregistry.KeyMaterials;
-import com.cryptoregistry.ListData;
 import com.cryptoregistry.MapData;
 import com.cryptoregistry.c2.CryptoFactory;
 import com.cryptoregistry.c2.key.AgreementPrivateKey;

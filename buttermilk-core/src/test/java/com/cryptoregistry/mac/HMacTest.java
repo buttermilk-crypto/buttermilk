@@ -8,10 +8,10 @@ import java.security.SecureRandom;
 import org.junit.Test;
 
 import net.iharder.Base64;
-import x.org.bouncycastle.crypto.Digest;
-import x.org.bouncycastle.crypto.digests.SHA256Digest;
-import x.org.bouncycastle.crypto.macs.HMac;
-import x.org.bouncycastle.crypto.params.KeyParameter;
+import org.bouncycastle.crypto.Digest;
+import org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.crypto.macs.HMac;
+import org.bouncycastle.crypto.params.KeyParameter;
 
 
 public class HMacTest {

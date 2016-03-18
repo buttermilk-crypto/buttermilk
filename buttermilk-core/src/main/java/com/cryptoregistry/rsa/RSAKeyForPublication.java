@@ -17,7 +17,7 @@ import com.cryptoregistry.util.TimeUtil;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 
-import x.org.bouncycastle.crypto.params.RSAKeyParameters;
+import org.bouncycastle.crypto.params.RSAKeyParameters;
 
 public class RSAKeyForPublication  implements CryptoKey,Verifier {
 	

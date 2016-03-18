@@ -9,7 +9,8 @@ import com.cryptoregistry.pbe.PBEParams;
 import com.cryptoregistry.pbe.PBEParamsFactory;
 
 /**
- * Encapsulate various modes for formatting. pbeParams is here to pass into the formatter if encryption of the key is requested
+ * Encapsulate various modes for formatting. pbeParams is here to pass into the formatter if encryption 
+ * of the key is requested
  * 
  * @author Dave
  *

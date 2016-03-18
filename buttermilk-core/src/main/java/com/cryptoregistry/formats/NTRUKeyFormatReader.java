@@ -9,9 +9,9 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 
-import x.org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionParameters;
-import x.org.bouncycastle.pqc.math.ntru.polynomial.IntegerPolynomial;
-import x.org.bouncycastle.pqc.math.ntru.polynomial.Polynomial;
+import org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionParameters;
+import org.bouncycastle.pqc.math.ntru.polynomial.IntegerPolynomial;
+import org.bouncycastle.pqc.math.ntru.polynomial.Polynomial;
 
 import com.cryptoregistry.ntru.NTRUKeyContents;
 import com.cryptoregistry.ntru.NTRUKeyMetadata;
@@ -52,16 +52,16 @@ public class NTRUKeyFormatReader {
 				IntegerPolynomial h = PolynomialAdapter.unwrapIntegerPolynomial(_h);
 				IntegerPolynomial fp = PolynomialAdapter.unwrapIntegerPolynomial(_fp);
 				
+				
+				// FIX ME
 				// find t
-				String _t0, _t1, _t2, _ts, _td;
+				String _tp, _ts, _td;
 				
 				Polynomial t = null;
 				
-				if(inner.containsKey("t0")) {
-					_t0 = String.valueOf(inner.get("t0"));
-					_t1 = String.valueOf(inner.get("t1"));
-					_t2 = String.valueOf(inner.get("t2"));
-					t = PolynomialAdapter.unwrapProductForm(_t0, _t1, _t2);
+				if(inner.containsKey("tp")) {
+					_tp = String.valueOf(inner.get("tp"));
+					t = PolynomialAdapter.unwrapProductForm(_tp);
 				}
 				
 				if(inner.containsKey("ts")) {

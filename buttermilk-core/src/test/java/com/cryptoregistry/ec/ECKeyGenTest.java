@@ -14,8 +14,8 @@ import org.junit.Test;
 
 import com.cryptoregistry.formats.JSONFormatter;
 
-import x.org.bouncycastle.math.ec.ECCurve;
-import x.org.bouncycastle.math.ec.ECPoint;
+import org.bouncycastle.math.ec.ECCurve;
+import org.bouncycastle.math.ec.ECPoint;
 
 
 public class ECKeyGenTest {
@@ -37,23 +37,17 @@ public class ECKeyGenTest {
 	
 	@Test
 	public void test1() {
+		
 		String curveName = "P-256";
 		ECKeyContents ecc = CryptoFactory.INSTANCE.generateKeys(curveName);
-		
-		String [] xy = ecc.Q.serialize().split("\\,");
+		ECPointSerializer pointSerializer = new ECPointSerializer(ecc.Q);
+		String [] xy = pointSerializer.serialize().split("\\,");
 		BigInteger biX = new BigInteger(xy[0],16);
 		BigInteger biY = new BigInteger(xy[1],16);
 		ECCurve curve = CurveFactory.getCurveForName(curveName).getCurve();
 		ECPoint recovered = curve.createPoint(biX, biY);
-		Assert.assertEquals(ecc.Q.serialize(),recovered.serialize());
-		
-
-		final String registrationHandle = "Chinese Eyes";
-		JSONFormatter f = new JSONFormatter(registrationHandle);
-		f.add(ecc);
-		StringWriter writer = new StringWriter();
-		f.format(writer);
-		System.err.println(writer.toString());
+		ECPointSerializer recoveredSerializer = new ECPointSerializer(recovered);
+		Assert.assertEquals(pointSerializer.serialize(),recoveredSerializer.serialize());
 		
 	}
 	

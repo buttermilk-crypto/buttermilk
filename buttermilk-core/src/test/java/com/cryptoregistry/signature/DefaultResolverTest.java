@@ -11,7 +11,7 @@ import net.iharder.Base64;
 
 import org.junit.Test;
 
-import x.org.bouncycastle.util.Arrays;
+import org.bouncycastle.util.Arrays;
 
 public class DefaultResolverTest {
 	

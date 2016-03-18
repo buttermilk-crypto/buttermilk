@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import net.iharder.Base64;
-import x.org.bouncycastle.crypto.Digest;
-import x.org.bouncycastle.crypto.digests.SHA1Digest;
+import org.bouncycastle.crypto.Digest;
+import org.bouncycastle.crypto.digests.SHA1Digest;
 
 import com.cryptoregistry.CryptoKey;
 import com.cryptoregistry.CryptoKeyWrapper;

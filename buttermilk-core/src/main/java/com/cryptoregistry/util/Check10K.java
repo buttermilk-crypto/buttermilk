@@ -12,7 +12,7 @@ import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Set;
 
-import x.org.bouncycastle.util.Arrays;
+import org.bouncycastle.util.Arrays;
 
 /**
  * Validate if a password is one of the known values people most often use based

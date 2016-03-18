@@ -7,15 +7,15 @@ package com.cryptoregistry.pbe;
 
 import com.cryptoregistry.passwords.SensitiveBytes;
 
-import x.org.bouncycastle.crypto.PBEParametersGenerator;
-import x.org.bouncycastle.crypto.engines.AESFastEngine;
-import x.org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
-import x.org.bouncycastle.crypto.generators.SCrypt;
-import x.org.bouncycastle.crypto.modes.CBCBlockCipher;
-import x.org.bouncycastle.crypto.paddings.PKCS7Padding;
-import x.org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
-import x.org.bouncycastle.crypto.params.KeyParameter;
-import x.org.bouncycastle.crypto.params.ParametersWithIV;
+import org.bouncycastle.crypto.PBEParametersGenerator;
+import org.bouncycastle.crypto.engines.AESFastEngine;
+import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
+import org.bouncycastle.crypto.generators.SCrypt;
+import org.bouncycastle.crypto.modes.CBCBlockCipher;
+import org.bouncycastle.crypto.paddings.PKCS7Padding;
+import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
+import org.bouncycastle.crypto.params.KeyParameter;
+import org.bouncycastle.crypto.params.ParametersWithIV;
 
 /**
  * Do password based encryption.This is used to encapsulate generated key materials.
@@ -47,12 +47,17 @@ public class PBE {
 	 * @param input
 	 * @return
 	 */
-	public ArmoredPBEResult encrypt(byte [] input) {
+	public ArmoredPBEResult encrypt(byte [] input){
 		ParametersWithIV holder = this.buildKey();
 		CBCBlockCipher blockCipher = new CBCBlockCipher(new AESFastEngine());
 		PaddedBufferedBlockCipher aesCipher = new PaddedBufferedBlockCipher(blockCipher, new PKCS7Padding());
 		aesCipher.init(true, holder);
-		byte [] encrypted = genCipherData(aesCipher, input);
+		byte[] encrypted;
+		try {
+			encrypted = genCipherData(aesCipher, input);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		switch(params.getAlg()){
 			case PBKDF2: {
 				return new ArmoredPBKDF2Result(encrypted,params.getSalt().getData(),params.getIterations());
@@ -76,10 +81,14 @@ public class PBE {
 		CBCBlockCipher blockCipher = new CBCBlockCipher(new AESFastEngine());
 		PaddedBufferedBlockCipher aesCipher = new PaddedBufferedBlockCipher(blockCipher, new PKCS7Padding());
 		aesCipher.init(false, holder);
+		try {
 		return genCipherData(aesCipher, encrypted);
+		}catch(Exception x){
+			throw new RuntimeException(x);
+		}
 	}
 	
-	private byte[] genCipherData(PaddedBufferedBlockCipher cipher, byte[] data) {
+	private byte[] genCipherData(PaddedBufferedBlockCipher cipher, byte[] data) throws Exception {
 	    int minSize = cipher.getOutputSize(data.length);
 	    byte[] outBuf = new byte[minSize];
 	    int length1 = cipher.processBytes(data, 0, data.length, outBuf, 0);

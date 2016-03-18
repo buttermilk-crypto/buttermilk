@@ -6,7 +6,7 @@
 package com.cryptoregistry;
 
 /**
- * Interface for any key either contents or for publication
+ * Interface for any key - either contents or for-publication keys
  * 
  * @author Dave
  *

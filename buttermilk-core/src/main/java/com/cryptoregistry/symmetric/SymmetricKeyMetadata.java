@@ -10,10 +10,7 @@ import java.util.UUID;
 
 import com.cryptoregistry.CryptoKeyMetadata;
 import com.cryptoregistry.KeyGenerationAlgorithm;
-import com.cryptoregistry.formats.EncodingHint;
 import com.cryptoregistry.formats.KeyFormat;
-import com.cryptoregistry.pbe.PBEParams;
-import com.cryptoregistry.pbe.PBEParamsFactory;
 
 
 public class SymmetricKeyMetadata implements CryptoKeyMetadata {

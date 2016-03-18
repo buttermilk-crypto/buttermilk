@@ -7,6 +7,12 @@ import com.cryptoregistry.ntru.NTRUKeyContents;
 import com.cryptoregistry.rsa.RSAKeyContents;
 import com.cryptoregistry.symmetric.SymmetricKeyContents;
 
+/**
+ * 
+ * 
+ * @author Dave
+ *
+ */
 public class KeyHolder {
 
 	final Curve25519KeyContents c2Keys;

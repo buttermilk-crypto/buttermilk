@@ -7,8 +7,8 @@ package com.cryptoregistry.ec;
 
 import java.math.BigInteger;
 
-import x.org.bouncycastle.crypto.params.ECDomainParameters;
-import x.org.bouncycastle.util.encoders.Hex;
+import org.bouncycastle.crypto.params.ECDomainParameters;
+import org.bouncycastle.util.encoders.Hex;
 
 public abstract class ECParametersHolderBase implements ECParametersHolder {
 

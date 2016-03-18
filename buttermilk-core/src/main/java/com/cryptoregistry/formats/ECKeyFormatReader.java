@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import x.org.bouncycastle.math.ec.ECPoint;
+import org.bouncycastle.math.ec.ECPoint;
 
 import com.cryptoregistry.ec.ECCustomParameters;
 import com.cryptoregistry.ec.ECF2MCustomParameters;

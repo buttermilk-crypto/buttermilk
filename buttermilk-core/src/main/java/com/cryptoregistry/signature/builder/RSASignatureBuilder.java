@@ -5,14 +5,12 @@
  */
 package com.cryptoregistry.signature.builder;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.iharder.Base64;
-import x.org.bouncycastle.crypto.Digest;
-import x.org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.crypto.Digest;
+import org.bouncycastle.crypto.digests.SHA256Digest;
 
 import com.cryptoregistry.SignatureAlgorithm;
 import com.cryptoregistry.rsa.CryptoFactory;

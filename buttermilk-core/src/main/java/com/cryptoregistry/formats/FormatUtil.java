@@ -11,8 +11,8 @@ import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
-import x.org.bouncycastle.math.ec.ECCurve;
-import x.org.bouncycastle.math.ec.ECPoint;
+import org.bouncycastle.math.ec.ECCurve;
+import org.bouncycastle.math.ec.ECPoint;
 
 import com.cryptoregistry.ec.CurveFactory;
 
