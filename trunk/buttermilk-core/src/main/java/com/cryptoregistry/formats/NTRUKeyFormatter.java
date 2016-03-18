@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.cryptoregistry.KeyGenerationAlgorithm;
 import com.cryptoregistry.ntru.NTRUKeyContents;
@@ -19,12 +21,12 @@ import com.cryptoregistry.pbe.ArmoredPBKDF2Result;
 import com.cryptoregistry.pbe.ArmoredScryptResult;
 import com.cryptoregistry.pbe.PBE;
 import com.cryptoregistry.pbe.PBEParams;
-import com.cryptoregistry.util.ArmoredCompressedString;
 import com.cryptoregistry.util.StringToList;
 import com.cryptoregistry.util.TimeUtil;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.cryptoregistry.util.*;
 
 class NTRUKeyFormatter {
 
@@ -122,21 +124,13 @@ class NTRUKeyFormatter {
 		
 		g.writeStringField("h", ntruKeys.wrappedH().toString());
 		g.writeStringField("fp", ((NTRUKeyContents)ntruKeys).wrappedFp().toString());
-		Object obj = ((NTRUKeyContents)ntruKeys).wrappedT();
-		// product form
-		if(obj.getClass().isArray()){
-			ArmoredCompressedString [] ar = (ArmoredCompressedString[])obj;
-			g.writeStringField("t0", ar[0].toString());
-			g.writeStringField("t1", ar[1].toString());
-			g.writeStringField("t2", ar[2].toString());
-		}else{
-			if(ntruKeys.params.sparse){
-				ArmoredCompressedString ar = (ArmoredCompressedString)obj;
-				g.writeStringField("ts", ar.toString());
-			}else{
-				ArmoredCompressedString ar = (ArmoredCompressedString)obj;
-				g.writeStringField("td", ar.toString());
-			}
+		
+		Map<String,ArmoredString> obj = ((NTRUKeyContents)ntruKeys).wrappedT();
+		Iterator<String> iter = obj.keySet().iterator();
+		// should write td, ts, or tp and an encoded string
+		while(iter.hasNext()){
+			String key = iter.next();
+			g.writeStringField(key, obj.get(key).toString());
 		}
 		
 		NTRUParametersFormatter pFormat = null;
@@ -180,21 +174,13 @@ class NTRUKeyFormatter {
 			
 			g.writeStringField("h", ntruKeys.wrappedH().toString());
 			g.writeStringField("fp", ((NTRUKeyContents)ntruKeys).wrappedFp().toString());
-			Object obj = ((NTRUKeyContents)ntruKeys).wrappedT();
-			// product form
-			if(obj.getClass().isArray()){
-				ArmoredCompressedString [] ar = (ArmoredCompressedString[])obj;
-				g.writeStringField("t0", ar[0].toString());
-				g.writeStringField("t1", ar[1].toString());
-				g.writeStringField("t2", ar[2].toString());
-			}else{
-				if(ntruKeys.params.sparse){
-					ArmoredCompressedString ar = (ArmoredCompressedString)obj;
-					g.writeStringField("ts", ar.toString());
-				}else{
-					ArmoredCompressedString ar = (ArmoredCompressedString)obj;
-					g.writeStringField("td", ar.toString());
-				}
+			
+			Map<String,ArmoredString> obj = ((NTRUKeyContents)ntruKeys).wrappedT();
+			Iterator<String> iter = obj.keySet().iterator();
+			// should write td, ts, or tp and an encoded string
+			while(iter.hasNext()){
+				String key = iter.next();
+				g.writeStringField(key, obj.get(key).toString());
 			}
 			
 			NTRUParametersFormatter pFormat = null;

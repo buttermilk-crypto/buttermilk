@@ -13,7 +13,7 @@ import com.cryptoregistry.util.ArmoredString;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 
-import x.org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionParameters;
+import org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionParameters;
 
 /**
  * For a named param, use the appropriate constructor. To serialize the attributes, 

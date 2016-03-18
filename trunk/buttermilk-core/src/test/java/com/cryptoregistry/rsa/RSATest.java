@@ -12,9 +12,9 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import x.org.bouncycastle.crypto.Digest;
-import x.org.bouncycastle.crypto.digests.SHA256Digest;
-import x.org.bouncycastle.util.Arrays;
+import org.bouncycastle.crypto.Digest;
+import org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.util.Arrays;
 
 import com.cryptoregistry.CryptoKey;
 import com.cryptoregistry.KeyMaterials;

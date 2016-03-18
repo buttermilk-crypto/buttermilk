@@ -56,6 +56,10 @@ public class SymmetricKeyContents extends SecretKey implements CryptoKey  {
 		return true;
 	}
 
+	/**
+	 * Does not actually print the key contents, just the metadata
+	 * 
+	 */
 	@Override
 	public String toString() {
 		return "SymmetricKeyContents [metadata=" + metadata + "]";

@@ -13,7 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import net.iharder.Base64;
-import x.org.bouncycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import com.cryptoregistry.util.FileUtil;
 import com.fasterxml.jackson.core.JsonGenerationException;

@@ -19,17 +19,18 @@ import com.cryptoregistry.util.TimeUtil;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 
-import x.org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionParameters;
-import x.org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionPublicKeyParameters;
-import x.org.bouncycastle.pqc.math.ntru.polynomial.IntegerPolynomial;
+import org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionParameters;
+import org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionPublicKeyParameters;
+import org.bouncycastle.pqc.math.ntru.polynomial.IntegerPolynomial;
 
 /**
- * When parameterName is defined, we can format this using our internal definitions (NTRUNamedParams)
+ * When parameterName is defined, we can format this using our internal definitions (NTRUNamedParams).
+ * this is similar to the concept of a well-known curve name as found in EC.
  * 
  * @author Dave
  *
  */
-public class NTRUKeyForPublication implements CryptoKey,Verifier {
+public class NTRUKeyForPublication implements CryptoKey, Verifier {
 
 	public final NTRUKeyMetadata metadata;
 	public final NTRUEncryptionParameters params; 

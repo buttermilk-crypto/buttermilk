@@ -17,18 +17,18 @@ import com.cryptoregistry.signature.ECDSASignature;
 
 import com.cryptoregistry.signature.SignatureMetadata;
 
-import x.org.bouncycastle.crypto.AsymmetricCipherKeyPair;
-import x.org.bouncycastle.crypto.Digest;
-import x.org.bouncycastle.crypto.agreement.ECDHBasicAgreement;
-import x.org.bouncycastle.crypto.digests.SHA1Digest;
-import x.org.bouncycastle.crypto.generators.ECKeyPairGenerator;
-import x.org.bouncycastle.crypto.params.ECDomainParameters;
-import x.org.bouncycastle.crypto.params.ECKeyGenerationParameters;
-import x.org.bouncycastle.crypto.params.ECPrivateKeyParameters;
-import x.org.bouncycastle.crypto.params.ECPublicKeyParameters;
-import x.org.bouncycastle.crypto.params.ParametersWithRandom;
-import x.org.bouncycastle.crypto.signers.ECDSASigner;
-import x.org.bouncycastle.crypto.signers.HMacDSAKCalculator;
+import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
+import org.bouncycastle.crypto.Digest;
+import org.bouncycastle.crypto.agreement.ECDHBasicAgreement;
+import org.bouncycastle.crypto.digests.SHA1Digest;
+import org.bouncycastle.crypto.generators.ECKeyPairGenerator;
+import org.bouncycastle.crypto.params.ECDomainParameters;
+import org.bouncycastle.crypto.params.ECKeyGenerationParameters;
+import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
+import org.bouncycastle.crypto.params.ECPublicKeyParameters;
+import org.bouncycastle.crypto.params.ParametersWithRandom;
+import org.bouncycastle.crypto.signers.ECDSASigner;
+import org.bouncycastle.crypto.signers.HMacDSAKCalculator;
 
 public class CryptoFactory {
 
@@ -57,8 +57,9 @@ public class CryptoFactory {
 			gen.init(params);
 			AsymmetricCipherKeyPair pair = gen.generateKeyPair();
 			ECPrivateKeyParameters priv = (ECPrivateKeyParameters) pair.getPrivate();
+			NamedECDomainParameters override = (NamedECDomainParameters) priv.getParameters();
 			ECPublicKeyParameters pub = (ECPublicKeyParameters) pair.getPublic();
-			return new ECKeyContents(pub.getQ(),priv.getParameters().getName(),priv.getD());
+			return new ECKeyContents(pub.getQ(),override.getName(),priv.getD());
 		} finally {
 			lock.unlock();
 		}
@@ -100,8 +101,9 @@ public class CryptoFactory {
 			gen.init(params);
 			AsymmetricCipherKeyPair pair = gen.generateKeyPair();
 			ECPrivateKeyParameters priv = (ECPrivateKeyParameters) pair.getPrivate();
+			NamedECDomainParameters override = (NamedECDomainParameters) priv.getParameters();
 			ECPublicKeyParameters pub = (ECPublicKeyParameters) pair.getPublic();
-			return new ECKeyContents(password,pub.getQ(),priv.getParameters().getName(),priv.getD());
+			return new ECKeyContents(password,pub.getQ(),override.getName(),priv.getD());
 		} finally {
 			lock.unlock();
 		}
@@ -116,8 +118,9 @@ public class CryptoFactory {
 			gen.init(params);
 			AsymmetricCipherKeyPair pair = gen.generateKeyPair();
 			ECPrivateKeyParameters priv = (ECPrivateKeyParameters) pair.getPrivate();
+			NamedECDomainParameters override = (NamedECDomainParameters) priv.getParameters();
 			ECPublicKeyParameters pub = (ECPublicKeyParameters) pair.getPublic();
-			return new ECKeyContents(meta,pub.getQ(),priv.getParameters().getName(),priv.getD());
+			return new ECKeyContents(meta,pub.getQ(),override.getName(),priv.getD());
 		} finally {
 			lock.unlock();
 		}
@@ -229,6 +232,7 @@ public class CryptoFactory {
 			BigInteger [] sigRes = signer.generateSignature(hash);
 			ECDSASignature esig =  new ECDSASignature(sigRes[0],sigRes[1]);
 			return new ECDSACryptoSignature(meta,esig);
+			
 		} finally {
 			lock.unlock();
 		}
@@ -260,7 +264,5 @@ public class CryptoFactory {
 			lock.unlock();
 		}
 	}
-	
-	
 	
 }

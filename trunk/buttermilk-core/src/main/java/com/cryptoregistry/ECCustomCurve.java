@@ -5,7 +5,7 @@
  */
 package com.cryptoregistry;
 
-import x.org.bouncycastle.crypto.params.ECDomainParameters;
+import org.bouncycastle.crypto.params.ECDomainParameters;
 
 /**
  * Classes which implement this interface can function as custom curve definitions (as opposed

@@ -5,15 +5,16 @@
  */
 package com.cryptoregistry.symmetric;
 
-import x.org.bouncycastle.crypto.engines.AESFastEngine;
-import x.org.bouncycastle.crypto.modes.CBCBlockCipher;
-import x.org.bouncycastle.crypto.paddings.PKCS7Padding;
-import x.org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
-import x.org.bouncycastle.crypto.params.KeyParameter;
-import x.org.bouncycastle.crypto.params.ParametersWithIV;
+import org.bouncycastle.crypto.engines.AESFastEngine;
+import org.bouncycastle.crypto.modes.CBCBlockCipher;
+import org.bouncycastle.crypto.paddings.PKCS7Padding;
+import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
+import org.bouncycastle.crypto.params.KeyParameter;
+import org.bouncycastle.crypto.params.ParametersWithIV;
 
 /**
- * Standard block cipher encryption using AES CBC and PKCS7 for padding. 
+ * Standard block cipher encryption using AES CBC and PKCS7 for padding. Assume the Fast Engine.If you need
+ * something different you can override init
  * 
  * @author Dave
  *
@@ -47,17 +48,27 @@ public class AESCBCPKCS7 {
 		if(!ENCRYPT_MODE){
 			init(true);
 		}
-		return genCipherData(aesCipher, input);
+		
+		try {
+			return genCipherData(aesCipher, input);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	public byte [] decrypt(byte [] encrypted) {
 		if(ENCRYPT_MODE){
 			init(false);
 		}
-		return genCipherData(aesCipher, encrypted);
+		
+		try {
+			return genCipherData(aesCipher, encrypted);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
-	private byte[] genCipherData(PaddedBufferedBlockCipher cipher, byte[] data) {
+	private byte[] genCipherData(PaddedBufferedBlockCipher cipher, byte[] data) throws Exception {
 	    int minSize = cipher.getOutputSize(data.length);
 	    byte[] outBuf = new byte[minSize];
 	    int length1 = cipher.processBytes(data, 0, data.length, outBuf, 0);

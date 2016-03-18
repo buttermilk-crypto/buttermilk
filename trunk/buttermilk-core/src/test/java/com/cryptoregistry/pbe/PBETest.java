@@ -12,8 +12,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import x.org.bouncycastle.crypto.generators.SCrypt;
-import x.org.bouncycastle.util.Arrays;
+import org.bouncycastle.crypto.generators.SCrypt;
+import org.bouncycastle.util.Arrays;
 
 import com.cryptoregistry.passwords.NewPassword;
 import com.cryptoregistry.passwords.Password;

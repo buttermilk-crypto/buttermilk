@@ -5,8 +5,8 @@
  */
 package com.cryptoregistry.c2.key;
 
-import x.org.bouncycastle.crypto.Digest;
-import x.org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.crypto.Digest;
+import org.bouncycastle.crypto.digests.SHA256Digest;
 
 /**
  * Wrapper for the bytes produced by the C25519 key agreement algorithm 

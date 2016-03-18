@@ -7,8 +7,8 @@ import java.io.StringWriter;
 import org.junit.Assert;
 import org.junit.Test;
 
-import x.org.bouncycastle.crypto.digests.SHA1Digest;
-import x.org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.crypto.digests.SHA1Digest;
+import org.bouncycastle.crypto.digests.SHA256Digest;
 
 import com.cryptoregistry.KeyMaterials;
 import com.cryptoregistry.MapData;

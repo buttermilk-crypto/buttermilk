@@ -27,6 +27,7 @@ public class ArmoredString implements CharSequence,Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	public final String data;
+	public int options = init();
 	
 	public ArmoredString(String encoded) {
 		if(encoded == null) encoded = "";
@@ -36,10 +37,14 @@ public class ArmoredString implements CharSequence,Serializable {
 	public ArmoredString(byte[] bytes) {
 		if(bytes == null)throw new RuntimeException("Cannot armor a null value");
 		try {
-			data=Base64.encodeBytes(bytes, Base64.URL_SAFE);
+			data=Base64.encodeBytes(bytes, options);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	protected int init() {
+		return Base64.URL_SAFE;
 	}
 	
 	/**
@@ -53,7 +58,6 @@ public class ArmoredString implements CharSequence,Serializable {
 			byte [] bytes = unencoded.getBytes("UTF-8");
 			return new ArmoredString(bytes);
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			throw new RuntimeException(e);
 		}
 	}
@@ -75,7 +79,7 @@ public class ArmoredString implements CharSequence,Serializable {
 	
 	public String decode() {
 		try {
-			return new String(Base64.decode(data, Base64.URL_SAFE), "UTF-8");
+			return new String(Base64.decode(data, options), "UTF-8");
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -83,7 +87,7 @@ public class ArmoredString implements CharSequence,Serializable {
 	
 	public byte [] decodeToBytes() {
 		try {
-			return Base64.decode(data, Base64.URL_SAFE);
+			return Base64.decode(data, options);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -91,7 +95,7 @@ public class ArmoredString implements CharSequence,Serializable {
 	
 	public String plainVanillaBase64() {
 		try {
-			byte [] bytes = Base64.decode(data, Base64.URL_SAFE);
+			byte [] bytes = Base64.decode(data, options);
 			return Base64.encodeBytes(bytes, Base64.NO_OPTIONS);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -107,6 +111,7 @@ public class ArmoredString implements CharSequence,Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((data == null) ? 0 : data.hashCode());
+		result = prime * result + options;
 		return result;
 	}
 
@@ -123,6 +128,8 @@ public class ArmoredString implements CharSequence,Serializable {
 			if (other.data != null)
 				return false;
 		} else if (!data.equals(other.data))
+			return false;
+		if (options != other.options)
 			return false;
 		return true;
 	}

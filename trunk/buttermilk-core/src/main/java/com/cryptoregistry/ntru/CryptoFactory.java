@@ -5,20 +5,19 @@
  */
 package com.cryptoregistry.ntru;
 
-import x.org.bouncycastle.crypto.AsymmetricCipherKeyPair;
-import x.org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionKeyGenerationParameters;
-import x.org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionKeyPairGenerator;
-import x.org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionPrivateKeyParameters;
-import x.org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionPublicKeyParameters;
-import x.org.bouncycastle.pqc.crypto.ntru.NTRUEngine;
+import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
+import org.bouncycastle.crypto.InvalidCipherTextException;
+import org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionKeyGenerationParameters;
+import org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionKeyPairGenerator;
+import org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionPrivateKeyParameters;
+import org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionPublicKeyParameters;
+import org.bouncycastle.pqc.crypto.ntru.NTRUEngine;
 
 public class CryptoFactory {
 	
 	public static final CryptoFactory INSTANCE = new CryptoFactory();
 
-	private CryptoFactory() {
-		
-	}
+	private CryptoFactory() {}
 	
 	/**
 	 * A reasonable default choice for parameters
@@ -32,9 +31,14 @@ public class CryptoFactory {
 		return new NTRUKeyContents(NTRUNamedParameters.EES1087EP2,pub.h,priv.t,priv.fp);
 	}
 	
+	/**
+	 * Similar in concept to EC well-defined CurveNames
+	 * @param paramName
+	 * @return
+	 */
 	public NTRUKeyContents generateKeys(NTRUNamedParameters paramName) {
 		NTRUEncryptionKeyPairGenerator gen = new NTRUEncryptionKeyPairGenerator();
-		gen.init(NTRUEncryptionKeyGenerationParameters.EES1087EP2);
+		gen.init(paramName.getKeyGenerationParameters());
 		AsymmetricCipherKeyPair pair = gen.generateKeyPair();
 		NTRUEncryptionPublicKeyParameters pub  = (NTRUEncryptionPublicKeyParameters) pair.getPublic();
 		NTRUEncryptionPrivateKeyParameters priv =  (NTRUEncryptionPrivateKeyParameters) pair.getPrivate();
@@ -83,7 +87,11 @@ public class CryptoFactory {
 		engine.init(true, pKey.getPublicKey());
 		if(in.length > pKey.params.maxMsgLenBytes)
 			throw new RuntimeException("Max size we can work with = "+ pKey.params.maxMsgLenBytes);
-	    return engine.processBlock(in, 0, in.length);
+	    try {
+			return engine.processBlock(in, 0, in.length);
+		} catch (InvalidCipherTextException e) {
+			throw new RuntimeException(e);
+		}
 		
 	}
 	
@@ -91,7 +99,11 @@ public class CryptoFactory {
 		
 		NTRUEngine engine = new NTRUEngine();
 		engine.init(false, sKey.getPrivateKey());
-	    return engine.processBlock(encrypted, 0, encrypted.length);
+	    try {
+			return engine.processBlock(encrypted, 0, encrypted.length);
+		} catch (InvalidCipherTextException e) {
+			throw new RuntimeException(e);
+		}
 		
 	}
 

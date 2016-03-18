@@ -5,7 +5,7 @@
  */
 package com.cryptoregistry.ec;
 
-import x.org.bouncycastle.crypto.params.ECDomainParameters;
+import org.bouncycastle.crypto.params.ECDomainParameters;
 
 /**
  * Static definitions of the various curves. These are adapted from Bouncy Castle's definitions

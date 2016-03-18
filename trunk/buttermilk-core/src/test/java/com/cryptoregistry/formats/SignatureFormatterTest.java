@@ -6,7 +6,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import x.org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.crypto.digests.SHA256Digest;
 
 import com.cryptoregistry.c2.CryptoFactory;
 import com.cryptoregistry.c2.key.Curve25519KeyContents;

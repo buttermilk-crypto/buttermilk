@@ -7,9 +7,9 @@ package com.cryptoregistry.ec;
 
 import java.math.BigInteger;
 
-import x.org.bouncycastle.crypto.params.ECDomainParameters;
-import x.org.bouncycastle.math.ec.ECCurve;
-import x.org.bouncycastle.util.encoders.Hex;
+import org.bouncycastle.crypto.params.ECDomainParameters;
+import org.bouncycastle.math.ec.ECCurve;
+import org.bouncycastle.util.encoders.Hex;
 
 public class BrainpoolP160r1 extends ECParametersHolderBase {
 
@@ -31,7 +31,7 @@ public class BrainpoolP160r1 extends ECParametersHolderBase {
 	                new BigInteger("340E7BE2A280EB74E2BE61BADA745D97E8F7C300", 16), // a
 	                new BigInteger("1E589A8595423412134FAA2DBDEC95C8D8675E58", 16)); // b
 
-	     ECDomainParameters param = new ECDomainParameters(
+	     ECDomainParameters param = new NamedECDomainParameters(
 	                curve,
 	                curve.decodePoint(Hex.decode("04BED5AF16EA3F6A4F62938C4631EB5AF7BDBCDBC31667CB477A1A8EC338F94741669C976316DA6321")), // G
 	                new BigInteger("E95E4A5F737059DC60DF5991D45029409E60FC09", 16), //n

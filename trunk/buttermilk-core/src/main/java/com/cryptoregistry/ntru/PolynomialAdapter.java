@@ -8,11 +8,11 @@ package com.cryptoregistry.ntru;
 import com.cryptoregistry.util.ArmoredCompressedString;
 import com.cryptoregistry.util.ArrayUtil;
 
-import x.org.bouncycastle.pqc.math.ntru.polynomial.DenseTernaryPolynomial;
-import x.org.bouncycastle.pqc.math.ntru.polynomial.IntegerPolynomial;
-import x.org.bouncycastle.pqc.math.ntru.polynomial.Polynomial;
-import x.org.bouncycastle.pqc.math.ntru.polynomial.ProductFormPolynomial;
-import x.org.bouncycastle.pqc.math.ntru.polynomial.SparseTernaryPolynomial;
+import org.bouncycastle.pqc.math.ntru.polynomial.DenseTernaryPolynomial;
+import org.bouncycastle.pqc.math.ntru.polynomial.IntegerPolynomial;
+import org.bouncycastle.pqc.math.ntru.polynomial.Polynomial;
+import org.bouncycastle.pqc.math.ntru.polynomial.ProductFormPolynomial;
+import org.bouncycastle.pqc.math.ntru.polynomial.SparseTernaryPolynomial;
 
 public class PolynomialAdapter {
 	
@@ -35,20 +35,10 @@ public class PolynomialAdapter {
 		return new SparseTernaryPolynomial(array);
 	}
 	
-	public static Polynomial unwrapProductForm(String encoded0, String encoded1, String encoded2){
+	public static Polynomial unwrapProductForm(String encoded0){
 		
-		ArmoredCompressedString str0 = new ArmoredCompressedString(encoded0);
-		int [] array0 = ArrayUtil.unwrapIntArray(str0);
-		SparseTernaryPolynomial sp0 = new SparseTernaryPolynomial(array0);
+		return null;
 		
-		ArmoredCompressedString str1 = new ArmoredCompressedString(encoded1);
-		int [] array1 = ArrayUtil.unwrapIntArray(str1);
-		SparseTernaryPolynomial sp1 = new SparseTernaryPolynomial(array1);
-		
-		ArmoredCompressedString str2 = new ArmoredCompressedString(encoded2);
-		int [] array2 = ArrayUtil.unwrapIntArray(str2);
-		SparseTernaryPolynomial sp2 = new SparseTernaryPolynomial(array2);
-		
-		return new ProductFormPolynomial(sp0,sp1,sp2);
+		//return new ProductFormPolynomial(sp0,sp1,sp2);
 	}
 }

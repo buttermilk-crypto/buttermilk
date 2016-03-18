@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.Map;
 
 import net.iharder.Base64;
-import x.org.bouncycastle.crypto.digests.SHA256Digest;
-import x.org.bouncycastle.crypto.macs.HMac;
-import x.org.bouncycastle.crypto.params.KeyParameter;
-import x.org.bouncycastle.util.Arrays;
+import org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.crypto.macs.HMac;
+import org.bouncycastle.crypto.params.KeyParameter;
+import org.bouncycastle.util.Arrays;
 
 import com.cryptoregistry.MapData;
 import com.fasterxml.jackson.databind.ObjectMapper;

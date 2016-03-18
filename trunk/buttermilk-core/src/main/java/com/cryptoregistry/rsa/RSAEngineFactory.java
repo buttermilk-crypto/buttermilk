@@ -5,15 +5,15 @@
  */
 package com.cryptoregistry.rsa;
 
-import x.org.bouncycastle.crypto.digests.MD5Digest;
-import x.org.bouncycastle.crypto.digests.SHA1Digest;
-import x.org.bouncycastle.crypto.digests.SHA256Digest;
-import x.org.bouncycastle.crypto.digests.SHA512Digest;
-import x.org.bouncycastle.crypto.encodings.OAEPEncoding;
-import x.org.bouncycastle.crypto.encodings.ISO9796d1Encoding;
-import x.org.bouncycastle.crypto.encodings.PKCS1Encoding;
-import x.org.bouncycastle.crypto.engines.RSABlindedEngine;
-import x.org.bouncycastle.crypto.AsymmetricBlockCipher;
+import org.bouncycastle.crypto.digests.MD5Digest;
+import org.bouncycastle.crypto.digests.SHA1Digest;
+import org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.crypto.digests.SHA512Digest;
+import org.bouncycastle.crypto.encodings.OAEPEncoding;
+import org.bouncycastle.crypto.encodings.ISO9796d1Encoding;
+import org.bouncycastle.crypto.encodings.PKCS1Encoding;
+import org.bouncycastle.crypto.engines.RSABlindedEngine;
+import org.bouncycastle.crypto.AsymmetricBlockCipher;
 
 public class RSAEngineFactory {
 

@@ -7,6 +7,8 @@ package com.cryptoregistry.ntru;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.cryptoregistry.KeyGenerationAlgorithm;
 import com.cryptoregistry.Signer;
@@ -14,18 +16,20 @@ import com.cryptoregistry.formats.NTRUParametersFormatter;
 import com.cryptoregistry.passwords.Password;
 import com.cryptoregistry.pbe.PBEParams;
 import com.cryptoregistry.util.ArmoredCompressedString;
+import com.cryptoregistry.util.ArmoredString;
 import com.cryptoregistry.util.ArrayUtil;
 import com.cryptoregistry.util.TimeUtil;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 
-import x.org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionParameters;
-import x.org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionPrivateKeyParameters;
-import x.org.bouncycastle.pqc.math.ntru.polynomial.DenseTernaryPolynomial;
-import x.org.bouncycastle.pqc.math.ntru.polynomial.IntegerPolynomial;
-import x.org.bouncycastle.pqc.math.ntru.polynomial.Polynomial;
-import x.org.bouncycastle.pqc.math.ntru.polynomial.ProductFormPolynomial;
-import x.org.bouncycastle.pqc.math.ntru.polynomial.SparseTernaryPolynomial;
+import org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionParameters;
+import org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionPrivateKeyParameters;
+import org.bouncycastle.pqc.math.ntru.polynomial.DenseTernaryPolynomial;
+import org.bouncycastle.pqc.math.ntru.polynomial.IntegerPolynomial;
+import org.bouncycastle.pqc.math.ntru.polynomial.Polynomial;
+import org.bouncycastle.pqc.math.ntru.polynomial.ProductFormPolynomial;
+import org.bouncycastle.pqc.math.ntru.polynomial.SparseTernaryPolynomial;
+
 
 public class NTRUKeyContents extends NTRUKeyForPublication implements Signer{
 	
@@ -70,24 +74,29 @@ public class NTRUKeyContents extends NTRUKeyForPublication implements Signer{
 		return ArrayUtil.wrapAndCompressIntArray(fp.coeffs);
 	}
 	
-	public Object wrappedT() {
+	/**
+	 * Return a map with a key of td, ts, or tp (for Dense, Sparse or Product Form polynomials)
+	 * 
+	 * @return
+	 */
+	
+	public Map<String,ArmoredString> wrappedT() {
+		
+		Map<String,ArmoredString> map = new HashMap<String,ArmoredString>();
 		if(t instanceof DenseTernaryPolynomial) {
 			DenseTernaryPolynomial poly = (DenseTernaryPolynomial) t;
-			return ArrayUtil.wrapAndCompressIntArray(poly.coeffs);
+			map.put("td", ArrayUtil.wrapAndCompressIntArray(poly.coeffs));
 		}else if(t instanceof SparseTernaryPolynomial) {
 			SparseTernaryPolynomial poly = (SparseTernaryPolynomial) t;
-			return ArrayUtil.wrapAndCompressIntArray(poly.getCoeffs());
+			byte [] polyBytes = poly.toBinary();
+			map.put("ts", new ArmoredString(polyBytes));
 		}else if(t instanceof ProductFormPolynomial) {
 			ProductFormPolynomial poly = (ProductFormPolynomial) t;
-			SparseTernaryPolynomial []array = poly.getData();
-			ArmoredCompressedString [] wrapper = new ArmoredCompressedString[3];
-			wrapper[0] = ArrayUtil.wrapAndCompressIntArray(array[0].getCoeffs());
-			wrapper[1] = ArrayUtil.wrapAndCompressIntArray(array[1].getCoeffs());
-			wrapper[2] = ArrayUtil.wrapAndCompressIntArray(array[2].getCoeffs());
-			return wrapper;
+			byte [] polyBytes = poly.toBinary();
+			map.put("tp", new ArmoredString(polyBytes));
 		}
 		
-		throw new RuntimeException("Sorry, don't know how to create a wrapper which is not a DenseTernary, SparseTernary, or ProductForm Polynomial");
+		return map;
 	}
 
 	@Override

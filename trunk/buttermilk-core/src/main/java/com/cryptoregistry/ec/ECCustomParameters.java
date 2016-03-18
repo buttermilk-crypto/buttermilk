@@ -10,7 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import x.org.bouncycastle.crypto.params.ECDomainParameters;
+import org.bouncycastle.crypto.params.ECDomainParameters;
 
 import com.cryptoregistry.ECCustomCurve;
 import com.cryptoregistry.util.MapIterator;

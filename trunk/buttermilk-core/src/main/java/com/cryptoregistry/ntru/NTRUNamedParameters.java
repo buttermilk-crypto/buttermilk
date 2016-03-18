@@ -5,8 +5,8 @@
  */
 package com.cryptoregistry.ntru;
 
-import x.org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionKeyGenerationParameters;
-import x.org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionParameters;
+import org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionKeyGenerationParameters;
+import org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionParameters;
 
 /**
  * A little bit like NamedCurves in the EC package

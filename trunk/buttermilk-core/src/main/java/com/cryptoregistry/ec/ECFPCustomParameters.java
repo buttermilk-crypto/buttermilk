@@ -14,9 +14,9 @@ import com.cryptoregistry.formats.EncodingHint;
 import com.cryptoregistry.formats.FormatUtil;
 import com.cryptoregistry.util.ArmoredString;
 
-import x.org.bouncycastle.crypto.params.ECDomainParameters;
-import x.org.bouncycastle.math.ec.ECCurve;
-import x.org.bouncycastle.math.ec.ECPoint;
+import org.bouncycastle.crypto.params.ECDomainParameters;
+import org.bouncycastle.math.ec.ECCurve;
+import org.bouncycastle.math.ec.ECPoint;
 
 /**
  * Custom parameters for Elliptic curve over the prime field Fp
@@ -140,7 +140,7 @@ public class ECFPCustomParameters extends ECCustomParameters {
 		 ECPoint G = FormatUtil.parseECPoint(curve, enc, String.valueOf(parameters.get("G")));
 		 byte [] S = new ArmoredString(String.valueOf(parameters.get("S"))).decodeToBytes();
 			
-		 return new ECDomainParameters(curve,G,n,h,S,null);
+		 return new NamedECDomainParameters(curve,G,n,h,S,null);
 	}
 
 }

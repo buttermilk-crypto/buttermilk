@@ -13,8 +13,8 @@ import java.util.Date;
 import java.util.List;
 
 import net.iharder.Base64;
-import x.org.bouncycastle.crypto.digests.SHA1Digest;
-import x.org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.crypto.digests.SHA1Digest;
+import org.bouncycastle.crypto.digests.SHA256Digest;
 
 import com.cryptoregistry.SignatureAlgorithm;
 import com.cryptoregistry.c2.key.Curve25519KeyContents;

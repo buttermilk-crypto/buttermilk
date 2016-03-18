@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import x.org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.crypto.digests.SHA256Digest;
 
 import com.cryptoregistry.CryptoKey;
 import com.cryptoregistry.CryptoKeyWrapper;

@@ -22,9 +22,9 @@ import com.cryptoregistry.util.TimeUtil;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 
-import x.org.bouncycastle.crypto.params.ECDomainParameters;
-import x.org.bouncycastle.crypto.params.ECPrivateKeyParameters;
-import x.org.bouncycastle.math.ec.ECPoint;
+import org.bouncycastle.crypto.params.ECDomainParameters;
+import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
+import org.bouncycastle.math.ec.ECPoint;
 
 public class ECKeyContents extends ECKeyForPublication implements Signer {
 	

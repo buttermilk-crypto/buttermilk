@@ -9,10 +9,10 @@ import java.util.Map;
 
 import com.cryptoregistry.util.ArmoredString;
 
-import x.org.bouncycastle.crypto.Digest;
-import x.org.bouncycastle.crypto.digests.SHA256Digest;
-import x.org.bouncycastle.crypto.digests.SHA512Digest;
-import x.org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionParameters;
+import org.bouncycastle.crypto.Digest;
+import org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.crypto.digests.SHA512Digest;
+import org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionParameters;
 
 
 /**

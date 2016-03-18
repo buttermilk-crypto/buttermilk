@@ -15,13 +15,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import x.org.bouncycastle.math.ec.ECPoint;
-import x.org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionParameters;
-import x.org.bouncycastle.pqc.math.ntru.polynomial.DenseTernaryPolynomial;
-import x.org.bouncycastle.pqc.math.ntru.polynomial.IntegerPolynomial;
-import x.org.bouncycastle.pqc.math.ntru.polynomial.Polynomial;
-import x.org.bouncycastle.pqc.math.ntru.polynomial.ProductFormPolynomial;
-import x.org.bouncycastle.pqc.math.ntru.polynomial.SparseTernaryPolynomial;
+import org.bouncycastle.math.ec.ECPoint;
+import org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionParameters;
+import org.bouncycastle.pqc.math.ntru.polynomial.DenseTernaryPolynomial;
+import org.bouncycastle.pqc.math.ntru.polynomial.IntegerPolynomial;
+import org.bouncycastle.pqc.math.ntru.polynomial.Polynomial;
+import org.bouncycastle.pqc.math.ntru.polynomial.ProductFormPolynomial;
+import org.bouncycastle.pqc.math.ntru.polynomial.SparseTernaryPolynomial;
 
 import com.cryptoregistry.CryptoContact;
 import com.cryptoregistry.CryptoKeyMetadata;

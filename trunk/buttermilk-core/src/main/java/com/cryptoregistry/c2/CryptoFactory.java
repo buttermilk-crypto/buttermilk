@@ -11,7 +11,7 @@ import java.security.SecureRandom;
 import java.util.concurrent.locks.ReentrantLock;
 
 import net.iharder.Base64;
-import x.org.bouncycastle.crypto.Digest;
+import org.bouncycastle.crypto.Digest;
 
 import com.cryptoregistry.CryptoKey;
 import com.cryptoregistry.KeyGenerationAlgorithm;

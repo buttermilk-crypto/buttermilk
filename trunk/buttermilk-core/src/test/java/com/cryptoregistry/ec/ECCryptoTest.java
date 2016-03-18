@@ -25,13 +25,13 @@ import com.cryptoregistry.signature.builder.ECDSASignatureBuilder;
 import com.cryptoregistry.signature.builder.MapDataContentsIterator;
 import com.cryptoregistry.signature.validator.SelfContainedSignatureValidator;
 
-import x.org.bouncycastle.crypto.Digest;
-import x.org.bouncycastle.crypto.digests.SHA1Digest;
-import x.org.bouncycastle.crypto.digests.SHA256Digest;
-import x.org.bouncycastle.crypto.digests.SHA512Digest;
-import x.org.bouncycastle.math.ec.ECCurve;
-import x.org.bouncycastle.math.ec.ECPoint;
-import x.org.bouncycastle.util.encoders.Hex;
+import org.bouncycastle.crypto.Digest;
+import org.bouncycastle.crypto.digests.SHA1Digest;
+import org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.crypto.digests.SHA512Digest;
+import org.bouncycastle.math.ec.ECCurve;
+import org.bouncycastle.math.ec.ECPoint;
+import org.bouncycastle.util.encoders.Hex;
 
 public class ECCryptoTest {
 	
