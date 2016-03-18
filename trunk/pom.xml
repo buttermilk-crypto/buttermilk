@@ -14,12 +14,9 @@
     <modules>
         <module>bientropy</module>
         <module>buttermilk-core</module>
-        <module>frame</module>
-        <module>handshake</module>
-        <module>io</module>
-        <module>registration-client</module>
         <module>keyvault</module>
         <module>workbench</module>
+        <module>jneo-ntru</module>
     </modules>
 
     <build>
@@ -66,11 +63,10 @@
 	
 	<dependency>
 	<groupId>org.bouncycastle</groupId>
-	<artifactId>bcprov-jdk15on</artifactId>
+	<artifactId>bcprov-ext-jdk15on</artifactId>
 	<version>${bc.version}</version>
-</dependency>
-	
-	
+	</dependency>
+
     </dependencies>
  
     
@@ -78,7 +74,7 @@
             <junit.version>4.8.2</junit.version>
             <iharder.version>2.3.8</iharder.version>
             <jackson.version>2.5.3</jackson.version>
-            <bc.version>1.52</bc.version>
+            <bc.version>1.54</bc.version>
             <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     
