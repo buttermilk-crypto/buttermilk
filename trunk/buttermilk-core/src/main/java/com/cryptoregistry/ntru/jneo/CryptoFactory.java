@@ -1,14 +1,19 @@
+/*
+ *  This file is part of Buttermilk
+ *  Copyright 2011-2016 David R. Smith All Rights Reserved.
+ *
+ */
 package com.cryptoregistry.ntru.jneo;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Arrays;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.securityinnovation.jneo.CiphertextBadLengthException;
 import com.securityinnovation.jneo.DecryptionFailureException;
-import com.securityinnovation.jneo.NoPrivateKeyException;
-import com.securityinnovation.jneo.ObjectClosedException;
 import com.securityinnovation.jneo.PlaintextBadLengthException;
 import com.securityinnovation.jneo.Random;
 import com.securityinnovation.jneo.inputstream.IGF2;
@@ -19,52 +24,96 @@ import com.securityinnovation.jneo.math.FullPolynomial;
 import com.securityinnovation.jneo.math.MGF_TP_1;
 import com.securityinnovation.jneo.ntruencrypt.KeyParams;
 
+/**
+ * Implement the buttermilk library model of keys for securityinnovation's
+ * implementation of NTRU, which I call "JNEO".
+ * 
+ * Note that all of the public methods in this class are thread-safe.
+ * 
+ * @author Dave
+ *
+ */
+
 public class CryptoFactory {
-	
-	private static SecureRandom rand = new SecureRandom();
+
+	private static SecureRandom rand;
+	private final ReentrantLock lock;
 
 	public static final CryptoFactory INSTANCE = new CryptoFactory();
 
-	private CryptoFactory() {}
-	
-	/**
-	 * Return a reasonable default which is EES1087EP2. This set of params has max plaintext length = 86 bytes
-	 * 
-	 * @return
-	 */
-	public JNEOKeyContents generateKeys(){
-		JNEOKeyMetadata meta = JNEOKeyMetadata.createDefault();
-		KeyParams params = JNEONamedParameters.EES1087EP1.params;
-		byte [] seed = new byte[32];
-		rand.nextBytes(seed);
-		return genKey(meta, params,new Random(seed).rng);
-	}
-	
-	public JNEOKeyContents generateKeys(JNEOKeyMetadata meta){
-		KeyParams params = JNEONamedParameters.EES1087EP1.params;
-		byte [] seed = new byte[32];
-		rand.nextBytes(seed);
-		return genKey(meta, params,new Random(seed).rng);
-	}
-	
-	public JNEOKeyContents generateKeys(JNEONamedParameters name){
-		JNEOKeyMetadata meta = JNEOKeyMetadata.createDefault();
-		byte [] seed = new byte[32];
-		rand.nextBytes(seed);
-		return genKey(meta, name.params,new Random(seed).rng);
-	}
-	
-	public JNEOKeyContents generateKeys(JNEOKeyMetadata meta, JNEONamedParameters name){
-		byte [] seed = new byte[32];
-		rand.nextBytes(seed);
-		return genKey(meta, name.params,new Random(seed).rng);
+	private CryptoFactory() {
+		lock = new ReentrantLock();
+		try {
+			rand = SecureRandom.getInstance("SHA1PRNG");
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		}
+
 	}
 
 	/**
-	 * Generate a new key pair for the specified parameter set using the supplied
-	 * InputStream as a source of randomness.
+	 * Return a reasonable default which is EES1087EP1. This set of params has
+	 * maximum plaintext byte length of 177 bytes.
+	 * 
+	 * @return
 	 */
-	private JNEOKeyContents genKey(JNEOKeyMetadata meta, KeyParams keyParams, InputStream prng) {
+	public JNEOKeyContents generateKeys() {
+		lock.lock();
+		try {
+			JNEOKeyMetadata meta = JNEOKeyMetadata.createDefault();
+			KeyParams params = JNEONamedParameters.EES1087EP1.params;
+			byte[] seed = new byte[32];
+			rand.nextBytes(seed);
+			return genKey(meta, params, new Random(seed).rng);
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	public JNEOKeyContents generateKeys(JNEOKeyMetadata meta) {
+		lock.lock();
+		try {
+			KeyParams params = JNEONamedParameters.EES1087EP1.params;
+			byte[] seed = new byte[32];
+			rand.nextBytes(seed);
+			return genKey(meta, params, new Random(seed).rng);
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	public JNEOKeyContents generateKeys(JNEONamedParameters name) {
+		lock.lock();
+		try {
+			JNEOKeyMetadata meta = JNEOKeyMetadata.createDefault();
+			byte[] seed = new byte[32];
+			rand.nextBytes(seed);
+			return genKey(meta, name.params, new Random(seed).rng);
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	public JNEOKeyContents generateKeys(JNEOKeyMetadata meta,
+			JNEONamedParameters name) {
+		lock.lock();
+		try {
+			byte[] seed = new byte[32];
+			rand.nextBytes(seed);
+			return genKey(meta, name.params, new Random(seed).rng);
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	/**
+	 * Generate a new key pair for the specified parameter set using the
+	 * supplied InputStream as a source of randomness.
+	 * 
+	 * Note: Locking happens in the public methods so not required here
+	 */
+	private JNEOKeyContents genKey(JNEOKeyMetadata meta, KeyParams keyParams,
+			InputStream prng) {
 
 		IGF2 igf = new IGF2(keyParams.N, keyParams.c, prng);
 
@@ -72,7 +121,8 @@ public class CryptoFactory {
 		FullPolynomial g = null;
 		boolean gIsInvertible = false;
 		while (!gIsInvertible) {
-			g = BPGM3.genTrinomial(keyParams.N, keyParams.dg + 1, keyParams.dg, igf);
+			g = BPGM3.genTrinomial(keyParams.N, keyParams.dg + 1, keyParams.dg,
+					igf);
 			FullPolynomial gInv = keyParams.polyInverter.invert(g);
 			gIsInvertible = (gInv != null);
 		}
@@ -82,7 +132,8 @@ public class CryptoFactory {
 		boolean fIsInvertible = false;
 		while (!fIsInvertible) {
 			// Generate random F
-			F = BPGM3.genTrinomial(keyParams.N, keyParams.df, keyParams.df, igf);
+			F = BPGM3
+					.genTrinomial(keyParams.N, keyParams.df, keyParams.df, igf);
 
 			// Calculate f = 1+p*f
 			f = new FullPolynomial(keyParams.N);
@@ -105,7 +156,7 @@ public class CryptoFactory {
 
 		return new JNEOKeyContents(meta, keyParams, h, f);
 	}
-	
+
 	/*
 	 * encrypt
 	 * 
@@ -114,58 +165,68 @@ public class CryptoFactory {
 	 */
 	public byte[] encrypt(JNEOKeyForPublication contents, byte message[])
 			throws PlaintextBadLengthException {
-		
-		// Check input length
-		if (contents.keyParams.maxMsgLenBytes < message.length)
-			throw new PlaintextBadLengthException(message.length,
-					contents.keyParams.maxMsgLenBytes);
-		
-		byte [] seed = new byte[32];
-		rand.nextBytes(seed);
-		Random prng = new Random(seed);
-		
-		KeyParams keyParams = contents.keyParams;
 
-		FullPolynomial mPrime, R;
-		do {
-			// Form M = b | len | message | p0
-			byte M[] = generateM(contents.keyParams, message, prng.rng);
+		lock.lock();
+		try {
 
-			// Form Mtrin = trinary poly derived from M
-			FullPolynomial Mtrin = new FullPolynomial(convPolyBinaryToTrinary(
-					keyParams.N, M));
+			// Check input length
+			if (contents.keyParams.maxMsgLenBytes < message.length)
+				throw new PlaintextBadLengthException(message.length,
+						contents.keyParams.maxMsgLenBytes);
 
-			// Form sData = OID | m | b | hTrunc
-			byte sData[] = form_sData(contents.keyParams, contents.h, message, 0, message.length, M, 0);
+			byte[] seed = new byte[32];
+			rand.nextBytes(seed);
+			Random prng = new Random(seed);
 
-			// Form r from sData.
-			IGF2 igf = new IGF2(keyParams.N, keyParams.c, keyParams.igfHash,
-					keyParams.minCallsR, sData, 0, sData.length);
-			FullPolynomial r = BPGM3.genTrinomial(keyParams.N, keyParams.dr,
-					keyParams.dr, igf);
-			igf.close();
+			KeyParams keyParams = contents.keyParams;
 
-			// Calculate R = r * h mod q
-			R = FullPolynomial.convolution(r, contents.h, keyParams.q);
+			FullPolynomial mPrime, R;
+			do {
+				// Form M = b | len | message | p0
+				byte M[] = generateM(contents.keyParams, message, prng.rng);
 
-			// calculate R4 = R mod 4, form octet string
-			// calc mask = MGF1(R4, N, minCallsMask)
-			FullPolynomial mask = calcEncryptionMask(contents.keyParams,R);
+				// Form Mtrin = trinary poly derived from M
+				FullPolynomial Mtrin = new FullPolynomial(
+						convPolyBinaryToTrinary(keyParams.N, M));
 
-			// calc m' = M + mask mod p
-			mPrime = FullPolynomial.addAndRecenter(Mtrin, mask, keyParams.p, -1);
+				// Form sData = OID | m | b | hTrunc
+				byte sData[] = form_sData(contents.keyParams, contents.h,
+						message, 0, message.length, M, 0);
 
-			// count #1s, #0s, #-1s in m', discard if less than dm0
-		} while (!check_dm0(mPrime, keyParams.dm0));
+				// Form r from sData.
+				IGF2 igf = new IGF2(keyParams.N, keyParams.c,
+						keyParams.igfHash, keyParams.minCallsR, sData, 0,
+						sData.length);
+				FullPolynomial r = BPGM3.genTrinomial(keyParams.N,
+						keyParams.dr, keyParams.dr, igf);
+				igf.close();
 
-		// e = R + m' mod q
-		FullPolynomial e = FullPolynomial.add(R, mPrime, keyParams.q);
+				// Calculate R = r * h mod q
+				R = FullPolynomial.convolution(r, contents.h, keyParams.q);
 
-		// Bit-pack e into the ciphertext and return.
-		int cLen = BitPack.pack(e.p.length, keyParams.q);
-		byte ciphertext[] = new byte[cLen];
-		BitPack.pack(e.p.length, keyParams.q, e.p, 0, ciphertext, 0);
-		return ciphertext;
+				// calculate R4 = R mod 4, form octet string
+				// calc mask = MGF1(R4, N, minCallsMask)
+				FullPolynomial mask = calcEncryptionMask(contents.keyParams, R);
+
+				// calc m' = M + mask mod p
+				mPrime = FullPolynomial.addAndRecenter(Mtrin, mask,
+						keyParams.p, -1);
+
+				// count #1s, #0s, #-1s in m', discard if less than dm0
+			} while (!check_dm0(mPrime, keyParams.dm0));
+
+			// e = R + m' mod q
+			FullPolynomial e = FullPolynomial.add(R, mPrime, keyParams.q);
+
+			// Bit-pack e into the ciphertext and return.
+			int cLen = BitPack.pack(e.p.length, keyParams.q);
+			byte ciphertext[] = new byte[cLen];
+			BitPack.pack(e.p.length, keyParams.q, e.p, 0, ciphertext, 0);
+			return ciphertext;
+
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	/**
@@ -177,98 +238,107 @@ public class CryptoFactory {
 	 *
 	 * @return the decrypted plaintext.
 	 */
-	public byte[] decrypt(JNEOKeyContents contents, byte ciphertext[]) throws NoPrivateKeyException,
-			CiphertextBadLengthException, ObjectClosedException,
-			DecryptionFailureException {
-		
-		KeyParams keyParams = contents.keyParams;
-		
-		int expectedCTLength = BitPack.pack(keyParams.N, keyParams.q);
-		if (ciphertext.length != expectedCTLength)
-			throw new CiphertextBadLengthException(ciphertext.length,
-					expectedCTLength);
+	public byte[] decrypt(JNEOKeyContents contents, byte ciphertext[]) {
 
-		boolean fail = false;
+		lock.lock();
+		try {
 
-		// Unpack ciphertext into the polynomial e.
-		FullPolynomial e = new FullPolynomial(keyParams.N);
-		int numUnpacked = BitPack.unpack(keyParams.N, keyParams.q, ciphertext,
-				0, e.p, 0);
-		if (numUnpacked != ciphertext.length)
-			throw new CiphertextBadLengthException(ciphertext.length,
-					BitPack.pack(keyParams.N, keyParams.q));
+			KeyParams keyParams = contents.keyParams;
 
-		// a = f*e with coefficients reduced to range [A..A+q-1], where
-		// A = lower bound decryption coefficient (-q/2 in all param sets)
-		FullPolynomial ci = FullPolynomial.convolution(contents.f, e, keyParams.q);
-		for (int i = 0; i < ci.p.length; i++)
-			if (ci.p[i] >= keyParams.q / 2)
-				ci.p[i] -= keyParams.q;
+			int expectedCTLength = BitPack.pack(keyParams.N, keyParams.q);
+			if (ciphertext.length != expectedCTLength)
+				throw new RuntimeException(new CiphertextBadLengthException(
+						ciphertext.length, expectedCTLength));
 
-		// Calculate ci = message candidate = a mod p in [-1,0,1]
-		for (int i = 0; i < keyParams.N; i++) {
-			ci.p[i] = (byte) (ci.p[i] % keyParams.p);
-			if (ci.p[i] == 2)
-				ci.p[i] = -1;
-			else if (ci.p[i] == -2)
-				ci.p[i] = 1;
+			boolean fail = false;
+
+			// Unpack ciphertext into the polynomial e.
+			FullPolynomial e = new FullPolynomial(keyParams.N);
+			int numUnpacked = BitPack.unpack(keyParams.N, keyParams.q,
+					ciphertext, 0, e.p, 0);
+			if (numUnpacked != ciphertext.length)
+				throw new RuntimeException(new CiphertextBadLengthException(
+						ciphertext.length, BitPack.pack(keyParams.N,
+								keyParams.q)));
+
+			// a = f*e with coefficients reduced to range [A..A+q-1], where
+			// A = lower bound decryption coefficient (-q/2 in all param sets)
+			FullPolynomial ci = FullPolynomial.convolution(contents.f, e,
+					keyParams.q);
+			for (int i = 0; i < ci.p.length; i++)
+				if (ci.p[i] >= keyParams.q / 2)
+					ci.p[i] -= keyParams.q;
+
+			// Calculate ci = message candidate = a mod p in [-1,0,1]
+			for (int i = 0; i < keyParams.N; i++) {
+				ci.p[i] = (byte) (ci.p[i] % keyParams.p);
+				if (ci.p[i] == 2)
+					ci.p[i] = -1;
+				else if (ci.p[i] == -2)
+					ci.p[i] = 1;
+			}
+
+			// Count the number of 1's, -1's, and 0's in ci. Fail if any
+			// count is less than dm0.
+			if (!check_dm0(ci, keyParams.dm0))
+				fail = true;
+
+			// Calculate the candidate for r*h: cR = e - ci;
+			FullPolynomial cR = FullPolynomial.subtract(e, ci, keyParams.q);
+
+			// Calculate cR4 = cR mod 4
+			// Generate masking polynomial mask by calling the given MGF with
+			// inputs (cR4, N, minCallsMask
+			FullPolynomial mask = calcEncryptionMask(contents.keyParams, cR);
+
+			// Form cMtrin by polynomial subtraction of cm' and mask mod p
+			// Note: cm' is actually called ci everywhere else in the spec.
+			FullPolynomial cMtrin = FullPolynomial.subtractAndRecenter(ci,
+					mask, keyParams.p, -1);
+
+			// Convert cMtrin to cMbin. Discard trailing bits
+			byte cM[] = convPolyTrinaryToBinary(contents.keyParams, cMtrin);
+
+			// Parse cMbin as b || l || m || p0. Fail if does not match.
+			int mOffset = (keyParams.db) / 8 + keyParams.lLen;
+			int mLen = verifyMFormat(contents.keyParams, cM);
+			if (mLen < 0) {
+				// Set mLen to 1 so that later steps won't have to deal
+				// with an invalid value.
+				mLen = 1;
+				fail = true;
+			}
+
+			// Form sData from OID, m, b, hTrunc
+			// Note: b is the leading bytes of cM.
+			byte sData[] = form_sData(contents.keyParams, contents.h, cM,
+					mOffset, mLen, cM, 0);
+
+			// Calc cr from sData
+			IGF2 igf = new IGF2(keyParams.N, keyParams.c, keyParams.igfHash,
+					keyParams.minCallsR, sData, 0, sData.length);
+			FullPolynomial cr = BPGM3.genTrinomial(keyParams.N, keyParams.dr,
+					keyParams.dr, igf);
+			igf.close();
+
+			// Calculate cR' = h * cr mod q
+			FullPolynomial cRPrime = FullPolynomial.convolution(cr, contents.h,
+					keyParams.q);
+			// If cR != cR', fail
+			if (!cR.equals(cRPrime))
+				fail = true;
+
+			if (fail)
+				throw new RuntimeException(new DecryptionFailureException());
+
+			// Return message
+			byte message[] = new byte[mLen];
+			System.arraycopy(cM, mOffset, message, 0, mLen);
+			return message;
+
+		} finally {
+			lock.unlock();
 		}
-
-		// Count the number of 1's, -1's, and 0's in ci. Fail if any
-		// count is less than dm0.
-		if (!check_dm0(ci, keyParams.dm0))
-			fail = true;
-
-		// Calculate the candidate for r*h: cR = e - ci;
-		FullPolynomial cR = FullPolynomial.subtract(e, ci, keyParams.q);
-
-		// Calculate cR4 = cR mod 4
-		// Generate masking polynomial mask by calling the given MGF with
-		// inputs (cR4, N, minCallsMask
-		FullPolynomial mask = calcEncryptionMask(contents.keyParams, cR);
-
-		// Form cMtrin by polynomial subtraction of cm' and mask mod p
-		// Note: cm' is actually called ci everywhere else in the spec.
-		FullPolynomial cMtrin = FullPolynomial.subtractAndRecenter(ci, mask,
-				keyParams.p, -1);
-
-		// Convert cMtrin to cMbin. Discard trailing bits
-		byte cM[] = convPolyTrinaryToBinary(contents.keyParams,cMtrin);
-
-		// Parse cMbin as b || l || m || p0. Fail if does not match.
-		int mOffset = (keyParams.db) / 8 + keyParams.lLen;
-		int mLen = verifyMFormat(contents.keyParams, cM);
-		if (mLen < 0) {
-			// Set mLen to 1 so that later steps won't have to deal
-			// with an invalid value.
-			mLen = 1;
-			fail = true;
-		}
-
-		// Form sData from OID, m, b, hTrunc
-		// Note: b is the leading bytes of cM.
-		byte sData[] = form_sData(contents.keyParams,contents.h, cM, mOffset, mLen, cM, 0);
-
-		// Calc cr from sData
-		IGF2 igf = new IGF2(keyParams.N, keyParams.c, keyParams.igfHash,
-				keyParams.minCallsR, sData, 0, sData.length);
-		FullPolynomial cr = BPGM3.genTrinomial(keyParams.N, keyParams.dr,
-				keyParams.dr, igf);
-		igf.close();
-
-		// Calculate cR' = h * cr mod q
-		FullPolynomial cRPrime = FullPolynomial.convolution(cr, contents.h, keyParams.q);
-		// If cR != cR', fail
-		if (!cR.equals(cRPrime))
-			fail = true;
-
-		if (fail)
-			throw new DecryptionFailureException();
-
-		// Return message
-		byte message[] = new byte[mLen];
-		System.arraycopy(cM, mOffset, message, 0, mLen);
-		return message;
 	}
 
 	/*
@@ -510,7 +580,8 @@ public class CryptoFactory {
 	 * Form the byte sequence sDaa = <OID | m | b | hTrunc>, where hTrunc is a
 	 * prefix of the bit-packed representtion of the public key h.
 	 */
-	byte[] form_sData(KeyParams keyParams, FullPolynomial h, byte m[], int mOffset, int mLen, byte b[], int bOffset) {
+	byte[] form_sData(KeyParams keyParams, FullPolynomial h, byte m[],
+			int mOffset, int mLen, byte b[], int bOffset) {
 		int bLen = keyParams.db >> 3; // convert numBits to numBytes
 		int hLen = keyParams.pkLen >> 3; // convert numBits to numBytes
 
@@ -638,6 +709,5 @@ public class CryptoFactory {
 		else
 			return -1;
 	}
-	
 
 }
