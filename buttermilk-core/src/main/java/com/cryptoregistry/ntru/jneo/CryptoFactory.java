@@ -61,10 +61,9 @@ public class CryptoFactory {
 		lock.lock();
 		try {
 			JNEOKeyMetadata meta = JNEOKeyMetadata.createDefault();
-			KeyParams params = JNEONamedParameters.EES1087EP1.params;
 			byte[] seed = new byte[32];
 			rand.nextBytes(seed);
-			return genKey(meta, params, new Random(seed).rng);
+			return genKey(meta, JNEONamedParameters.EES1087EP1, new Random(seed).rng);
 		} finally {
 			lock.unlock();
 		}
@@ -73,10 +72,9 @@ public class CryptoFactory {
 	public JNEOKeyContents generateKeys(JNEOKeyMetadata meta) {
 		lock.lock();
 		try {
-			KeyParams params = JNEONamedParameters.EES1087EP1.params;
 			byte[] seed = new byte[32];
 			rand.nextBytes(seed);
-			return genKey(meta, params, new Random(seed).rng);
+			return genKey(meta, JNEONamedParameters.EES1087EP1, new Random(seed).rng);
 		} finally {
 			lock.unlock();
 		}
@@ -88,7 +86,7 @@ public class CryptoFactory {
 			JNEOKeyMetadata meta = JNEOKeyMetadata.createDefault();
 			byte[] seed = new byte[32];
 			rand.nextBytes(seed);
-			return genKey(meta, name.params, new Random(seed).rng);
+			return genKey(meta, name, new Random(seed).rng);
 		} finally {
 			lock.unlock();
 		}
@@ -100,7 +98,7 @@ public class CryptoFactory {
 		try {
 			byte[] seed = new byte[32];
 			rand.nextBytes(seed);
-			return genKey(meta, name.params, new Random(seed).rng);
+			return genKey(meta, name, new Random(seed).rng);
 		} finally {
 			lock.unlock();
 		}
@@ -112,8 +110,10 @@ public class CryptoFactory {
 	 * 
 	 * Note: Locking happens in the public methods so not required here
 	 */
-	private JNEOKeyContents genKey(JNEOKeyMetadata meta, KeyParams keyParams,
+	private JNEOKeyContents genKey(JNEOKeyMetadata meta, JNEONamedParameters namedParams,
 			InputStream prng) {
+		
+		KeyParams keyParams = namedParams.params;
 
 		IGF2 igf = new IGF2(keyParams.N, keyParams.c, prng);
 
@@ -154,7 +154,7 @@ public class CryptoFactory {
 				h.p[i] += keyParams.q;
 		}
 
-		return new JNEOKeyContents(meta, keyParams, h, f);
+		return new JNEOKeyContents(meta, namedParams, h, f);
 	}
 
 	/*
@@ -168,29 +168,30 @@ public class CryptoFactory {
 
 		lock.lock();
 		try {
+			
+			KeyParams keyParams = contents.namedParameter.params;
 
 			// Check input length
-			if (contents.keyParams.maxMsgLenBytes < message.length)
+			if (keyParams.maxMsgLenBytes < message.length)
 				throw new PlaintextBadLengthException(message.length,
-						contents.keyParams.maxMsgLenBytes);
+						keyParams.maxMsgLenBytes);
 
 			byte[] seed = new byte[32];
 			rand.nextBytes(seed);
 			Random prng = new Random(seed);
 
-			KeyParams keyParams = contents.keyParams;
-
+		
 			FullPolynomial mPrime, R;
 			do {
 				// Form M = b | len | message | p0
-				byte M[] = generateM(contents.keyParams, message, prng.rng);
+				byte M[] = generateM(keyParams, message, prng.rng);
 
 				// Form Mtrin = trinary poly derived from M
 				FullPolynomial Mtrin = new FullPolynomial(
 						convPolyBinaryToTrinary(keyParams.N, M));
 
 				// Form sData = OID | m | b | hTrunc
-				byte sData[] = form_sData(contents.keyParams, contents.h,
+				byte sData[] = form_sData(keyParams, contents.h,
 						message, 0, message.length, M, 0);
 
 				// Form r from sData.
@@ -206,7 +207,7 @@ public class CryptoFactory {
 
 				// calculate R4 = R mod 4, form octet string
 				// calc mask = MGF1(R4, N, minCallsMask)
-				FullPolynomial mask = calcEncryptionMask(contents.keyParams, R);
+				FullPolynomial mask = calcEncryptionMask(keyParams, R);
 
 				// calc m' = M + mask mod p
 				mPrime = FullPolynomial.addAndRecenter(Mtrin, mask,
@@ -243,7 +244,7 @@ public class CryptoFactory {
 		lock.lock();
 		try {
 
-			KeyParams keyParams = contents.keyParams;
+			KeyParams keyParams = contents.namedParameter.params;
 
 			int expectedCTLength = BitPack.pack(keyParams.N, keyParams.q);
 			if (ciphertext.length != expectedCTLength)
@@ -289,7 +290,7 @@ public class CryptoFactory {
 			// Calculate cR4 = cR mod 4
 			// Generate masking polynomial mask by calling the given MGF with
 			// inputs (cR4, N, minCallsMask
-			FullPolynomial mask = calcEncryptionMask(contents.keyParams, cR);
+			FullPolynomial mask = calcEncryptionMask(keyParams, cR);
 
 			// Form cMtrin by polynomial subtraction of cm' and mask mod p
 			// Note: cm' is actually called ci everywhere else in the spec.
@@ -297,11 +298,11 @@ public class CryptoFactory {
 					mask, keyParams.p, -1);
 
 			// Convert cMtrin to cMbin. Discard trailing bits
-			byte cM[] = convPolyTrinaryToBinary(contents.keyParams, cMtrin);
+			byte cM[] = convPolyTrinaryToBinary(keyParams, cMtrin);
 
 			// Parse cMbin as b || l || m || p0. Fail if does not match.
 			int mOffset = (keyParams.db) / 8 + keyParams.lLen;
-			int mLen = verifyMFormat(contents.keyParams, cM);
+			int mLen = verifyMFormat(keyParams, cM);
 			if (mLen < 0) {
 				// Set mLen to 1 so that later steps won't have to deal
 				// with an invalid value.
@@ -311,7 +312,7 @@ public class CryptoFactory {
 
 			// Form sData from OID, m, b, hTrunc
 			// Note: b is the leading bytes of cM.
-			byte sData[] = form_sData(contents.keyParams, contents.h, cM,
+			byte sData[] = form_sData(keyParams, contents.h, cM,
 					mOffset, mLen, cM, 0);
 
 			// Calc cr from sData

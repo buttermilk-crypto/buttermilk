@@ -22,7 +22,7 @@ public class JNEOKeyMetadata extends NTRUKeyMetadata {
 	}
 	
 	/**
-	 * Returns a default handle, createOn, and KeyFormat for base64Encode, Mode.OPEN
+	 * Returns a default UUID-based handle, createdOn, and KeyFormat for EncodingHint.NoEncoding, Mode.UNSECURED
 	 * @return
 	 */
 	public static JNEOKeyMetadata createDefault() {
