@@ -22,13 +22,11 @@
 package com.securityinnovation.jneo.ntruencrypt.encoder;
 
 import java.io.ByteArrayOutputStream;
-import java.util.Arrays;
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import com.securityinnovation.jneo.math.BitPack;
 import com.securityinnovation.jneo.math.FullPolynomial;
 import com.securityinnovation.jneo.ntruencrypt.KeyParams;
 import com.securityinnovation.jneo.NtruException;
@@ -57,6 +55,8 @@ public class PubKeyFormatter_PUBLIC_KEY_v1TestCase {
 			// Build a blob using the code being tested.
 			PubKeyFormatter encoder = new PubKeyFormatter_PUBLIC_KEY_v1();
 			byte pubBlob[] = encoder.encode(keyParams, h);
+			
+			System.err.println(""+keyParams.OIDEnum.name()+": "+pubBlob.length);
 
 			// Build the expected blob:
 			byte expected[] = buildPubBlob(keyParams, tests[t].packedH);
