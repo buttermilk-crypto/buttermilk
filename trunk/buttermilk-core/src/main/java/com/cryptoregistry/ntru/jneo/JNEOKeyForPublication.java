@@ -9,19 +9,19 @@ import com.cryptoregistry.CryptoKey;
 import com.cryptoregistry.CryptoKeyMetadata;
 import com.cryptoregistry.Verifier;
 import com.securityinnovation.jneo.math.FullPolynomial;
-import com.securityinnovation.jneo.ntruencrypt.KeyParams;
 
 public class JNEOKeyForPublication implements CryptoKey, Verifier {
 	
 	protected JNEOKeyMetadata metadata;
-	protected KeyParams keyParams = null;
+	protected JNEONamedParameters namedParameter;
 	protected FullPolynomial h = null;
 
-	public JNEOKeyForPublication(JNEOKeyMetadata metadata, KeyParams keyParams,
+	public JNEOKeyForPublication(JNEOKeyMetadata metadata, 
+			JNEONamedParameters namedParameter,
 			FullPolynomial h) {
 		super();
 		this.metadata = metadata;
-		this.keyParams = keyParams;
+		this.namedParameter = namedParameter;
 		this.h = h;
 	}
 
@@ -38,7 +38,7 @@ public class JNEOKeyForPublication implements CryptoKey, Verifier {
 
 	@Override
 	public CryptoKey keyForPublication() {
-		return new JNEOKeyForPublication(metadata,keyParams,h);
+		return new JNEOKeyForPublication(metadata,namedParameter,h);
 	}
 
 }

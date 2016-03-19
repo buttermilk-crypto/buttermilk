@@ -6,16 +6,16 @@
 package com.cryptoregistry.ntru.jneo;
 
 import com.securityinnovation.jneo.math.FullPolynomial;
-import com.securityinnovation.jneo.ntruencrypt.KeyParams;
 
 public class JNEOKeyContents extends JNEOKeyForPublication {
 	
 	// the confidential key
 	protected FullPolynomial f = null;
 
-	public JNEOKeyContents(JNEOKeyMetadata metadata, KeyParams keyParams,
+	public JNEOKeyContents(JNEOKeyMetadata metadata, 
+			JNEONamedParameters namedParameter,
 			FullPolynomial h, FullPolynomial f) {
-		super(metadata, keyParams, h);
+		super(metadata, namedParameter, h);
 		this.f = f;
 	}
 	
