@@ -143,6 +143,7 @@ public class PrivKeyFormatter_PrivateKeyPackedFv1TestCase {
 		}
 
 		// Parse the test blob
+		@SuppressWarnings("unused")
 		RawKeyData key = encoder.decode(blob2);
 		fail("decoding short blob succeeded");
 	}
@@ -173,6 +174,7 @@ public class PrivKeyFormatter_PrivateKeyPackedFv1TestCase {
 		}
 
 		// Parse the test blob
+		@SuppressWarnings("unused")
 		RawKeyData key = encoder.decode(blob2);
 		fail("decoding long blob succeeded");
 	}

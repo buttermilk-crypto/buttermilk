@@ -21,7 +21,6 @@
 
 package com.securityinnovation.jneo.ntruencrypt.encoder;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 
@@ -29,9 +28,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import com.securityinnovation.jneo.math.BitPack;
 import com.securityinnovation.jneo.math.FullPolynomial;
-import com.securityinnovation.jneo.math.MGF_TP_1;
 import com.securityinnovation.jneo.ntruencrypt.KeyParams;
 import com.securityinnovation.jneo.NtruException;
 import com.securityinnovation.jneo.ParamSetNotSupportedException;
@@ -153,6 +150,7 @@ public class PrivKeyFormatter_PrivateKeyListedFv1TestCase {
 		}
 
 		// Parse the test blob
+		@SuppressWarnings("unused")
 		RawKeyData key = encoder.decode(blob2);
 		fail("decoding short blob succeeded");
 	}
@@ -183,6 +181,7 @@ public class PrivKeyFormatter_PrivateKeyListedFv1TestCase {
 		}
 
 		// Parse the test blob
+		@SuppressWarnings("unused")
 		RawKeyData key = encoder.decode(blob2);
 		fail("decoding long blob succeeded");
 	}

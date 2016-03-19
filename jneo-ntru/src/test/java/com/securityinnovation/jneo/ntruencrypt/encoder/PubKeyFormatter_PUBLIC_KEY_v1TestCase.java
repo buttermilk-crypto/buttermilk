@@ -130,6 +130,7 @@ public class PubKeyFormatter_PUBLIC_KEY_v1TestCase {
 		}
 
 		// Parse the test blob
+		@SuppressWarnings("unused")
 		RawKeyData key = encoder.decode(blob2);
 		fail("decoding short blob didn't throw an exception");
 	}
@@ -159,6 +160,7 @@ public class PubKeyFormatter_PUBLIC_KEY_v1TestCase {
 		}
 
 		// Parse the test blob
+		@SuppressWarnings("unused")
 		RawKeyData key = encoder.decode(blob2);
 		fail("decoding short blob didn't throw an exception");
 	}
