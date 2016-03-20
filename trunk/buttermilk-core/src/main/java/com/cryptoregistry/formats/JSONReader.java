@@ -48,6 +48,11 @@ import com.cryptoregistry.ntru.NTRUKeyContents;
 import com.cryptoregistry.ntru.NTRUKeyForPublication;
 import com.cryptoregistry.ntru.NTRUKeyMetadata;
 import com.cryptoregistry.ntru.NTRUNamedParameters;
+import com.cryptoregistry.ntru.jneo.FullPolynomialDecoder;
+import com.cryptoregistry.ntru.jneo.JNEOKeyContents;
+import com.cryptoregistry.ntru.jneo.JNEOKeyForPublication;
+import com.cryptoregistry.ntru.jneo.JNEOKeyMetadata;
+import com.cryptoregistry.ntru.jneo.JNEONamedParameters;
 import com.cryptoregistry.pbe.ArmoredPBEResult;
 import com.cryptoregistry.pbe.PBEAlg;
 import com.cryptoregistry.rsa.RSAKeyContents;
@@ -68,6 +73,7 @@ import com.cryptoregistry.util.ArmoredString;
 import com.cryptoregistry.util.ArrayUtil;
 import com.cryptoregistry.util.TimeUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.securityinnovation.jneo.math.FullPolynomial;
 
 /**
  * <p>Read the canonical format as output by JSONFormatter. This reader is for the scenario where
@@ -201,6 +207,18 @@ public class JSONReader {
 								list.add(new CryptoKeyWrapperImpl(distinguishedKey,p));
 								break;
 							}
+							case JNEO: {
+								meta = new JNEOKeyMetadata(handle,createdOn,format);
+								JNEONamedParameters param = JNEONamedParameters.valueOf((String)keyData.get("ParameterSet"));
+								FullPolynomialDecoder decoderH = new FullPolynomialDecoder((String)keyData.get("h"));
+							//	FullPolynomialDecoder decoderF = new FullPolynomialDecoder((String)keyData.get("f"));
+								FullPolynomial h = decoderH.decode();
+							//	FullPolynomial f = decoderF.decode();
+								
+								JNEOKeyForPublication p = new JNEOKeyForPublication((JNEOKeyMetadata)meta, param, h);
+								list.add(new CryptoKeyWrapperImpl(distinguishedKey,p));
+								
+							}
 							case NTRU: {
 								NTRUEncryptionParameters params = null;
 								String paramName = null;
@@ -331,6 +349,17 @@ public class JSONReader {
 									
 								}
 								break;
+							}
+							case JNEO: {
+								meta = new JNEOKeyMetadata(handle,createdOn,format);
+								JNEONamedParameters param = JNEONamedParameters.valueOf((String)keyData.get("ParameterSet"));
+								FullPolynomialDecoder decoderH = new FullPolynomialDecoder((String)keyData.get("h"));
+								FullPolynomialDecoder decoderF = new FullPolynomialDecoder((String)keyData.get("f"));
+								FullPolynomial h = decoderH.decode();
+								FullPolynomial f = decoderF.decode();
+								
+								JNEOKeyContents p = new JNEOKeyContents((JNEOKeyMetadata)meta, param, h, f);
+								list.add(new CryptoKeyWrapperImpl(distinguishedKey,p));
 							}
 							case NTRU: {
 								NTRUEncryptionParameters params = null;

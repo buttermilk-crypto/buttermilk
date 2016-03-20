@@ -8,17 +8,24 @@ package com.cryptoregistry.ntru.jneo;
 import java.util.Date;
 import java.util.UUID;
 
+import com.cryptoregistry.CryptoKeyMetadata;
+import com.cryptoregistry.KeyGenerationAlgorithm;
 import com.cryptoregistry.formats.EncodingHint;
 import com.cryptoregistry.formats.KeyFormat;
 import com.cryptoregistry.formats.Mode;
-import com.cryptoregistry.ntru.NTRUKeyMetadata;
 import com.cryptoregistry.pbe.PBEParams;
 import com.cryptoregistry.pbe.PBEParamsFactory;
 
-public class JNEOKeyMetadata extends NTRUKeyMetadata {
+public class JNEOKeyMetadata implements CryptoKeyMetadata {
+	
+	public final String handle;
+	public final Date createdOn;
+	public final KeyFormat format;
 
 	public JNEOKeyMetadata(String handle, Date createdOn, KeyFormat format) {
-		super(handle, createdOn, format);
+		this.handle = handle;
+		this.createdOn = createdOn;
+		this.format = format;
 	}
 	
 	/**
@@ -52,6 +59,30 @@ public class JNEOKeyMetadata extends NTRUKeyMetadata {
 				new KeyFormat(EncodingHint.NoEncoding,
 						Mode.REQUEST_SECURE, 
 						params));
+	}
+	
+	@Override
+	public String getHandle() {
+		return handle;
+	}
+	
+	public String getDistinguishedHandle() {
+		return handle+"-"+format.mode.code;
+	}
+
+	@Override
+	public KeyGenerationAlgorithm getKeyAlgorithm() {
+		return KeyGenerationAlgorithm.JNEO;
+	}
+
+	@Override
+	public Date getCreatedOn() {
+		return createdOn;
+	}
+
+	@Override
+	public KeyFormat getFormat() {
+		return format;
 	}
 
 }
