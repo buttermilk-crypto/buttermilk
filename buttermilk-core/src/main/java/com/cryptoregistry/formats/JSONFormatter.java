@@ -21,6 +21,7 @@ import com.cryptoregistry.Version;
 import com.cryptoregistry.c2.key.Curve25519KeyForPublication;
 import com.cryptoregistry.ec.ECKeyForPublication;
 import com.cryptoregistry.ntru.NTRUKeyForPublication;
+import com.cryptoregistry.ntru.jneo.JNEOKeyForPublication;
 import com.cryptoregistry.rsa.RSAKeyForPublication;
 import com.cryptoregistry.signature.CryptoSignature;
 import com.cryptoregistry.symmetric.SymmetricKeyContents;
@@ -249,6 +250,12 @@ public class JSONFormatter {
 						case EC: {
 							ECKeyForPublication contents = (ECKeyForPublication)key;
 							ECKeyFormatter formatter = new ECKeyFormatter(contents);
+							formatter.formatKeys(g, writer);
+							break;
+						}
+						case JNEO: {
+							JNEOKeyForPublication contents = (JNEOKeyForPublication)key;
+							JNEOKeyFormatter formatter = new JNEOKeyFormatter(contents);
 							formatter.formatKeys(g, writer);
 							break;
 						}

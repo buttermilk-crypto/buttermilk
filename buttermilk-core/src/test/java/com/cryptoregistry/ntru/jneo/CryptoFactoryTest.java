@@ -2,7 +2,7 @@ package com.cryptoregistry.ntru.jneo;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.StringWriter;
 import java.nio.ByteOrder;
 import java.security.SecureRandom;
 
@@ -12,12 +12,24 @@ import org.bouncycastle.util.Arrays;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.cryptoregistry.formats.JSONFormatter;
 import com.securityinnovation.jneo.PlaintextBadLengthException;
 import com.securityinnovation.jneo.math.FullPolynomial;
 
 public class CryptoFactoryTest {
 	
 	static SecureRandom rand;
+	
+	@Test
+	public void testFormat() {
+		JNEOKeyContents contents = CryptoFactory.INSTANCE.generateKeys();
+		Assert.assertNotNull(contents);
+		JSONFormatter formatter = new JSONFormatter("Chinese Knees", "dave@cryptoregistry.com");
+		formatter.add(contents);
+		StringWriter writer = new StringWriter();
+		formatter.format(writer, true);
+		System.err.println(writer.toString());
+	}
 
 	@Test
 	public void test0() {
@@ -45,8 +57,8 @@ public class CryptoFactoryTest {
 	@Test
 	public void test1() {
 		JNEOKeyContents contents = CryptoFactory.INSTANCE.generateKeys();
-		JNEONamedParameters np = contents.namedParameterSet;
-		JNEOKeyMetadata meta = (JNEOKeyMetadata) contents.getMetadata();
+		//JNEONamedParameters np = contents.namedParameterSet;
+		//JNEOKeyMetadata meta = (JNEOKeyMetadata) contents.getMetadata();
 		Assert.assertNotNull(contents);
 		FullPolynomialEncoder encoder0 = new FullPolynomialEncoder(contents.h);
 		FullPolynomialEncoder encoder1 = new FullPolynomialEncoder(contents.f);
@@ -57,9 +69,10 @@ public class CryptoFactoryTest {
 		FullPolynomial resultH = decoder0.decode();
 		FullPolynomial resultF = decoder1.decode();
 		
-		System.err.println(java.util.Arrays.toString(contents.h.p));
-		System.err.println(java.util.Arrays.toString(resultH.p));
+	//	System.err.println(java.util.Arrays.toString(contents.h.p));
+	//	System.err.println(java.util.Arrays.toString(resultH.p));
 		
+		@SuppressWarnings("unused")
 		boolean b = contents.h.equals(resultH);
 		
 		Assert.assertTrue(contents.h.equals(resultH));
@@ -95,6 +108,16 @@ public class CryptoFactoryTest {
 		}
 	}
 	
+	/**
+	 * Copy of code in the class. Here for convenience
+	 * 
+	 * @param byteArray
+	 * @param offset
+	 * @param length
+	 * @param order
+	 * @return
+	 * @throws ArrayIndexOutOfBoundsException
+	 */
 	private short[] byteToShortArray(byte[] byteArray, int offset, int length, ByteOrder order)
 			throws ArrayIndexOutOfBoundsException {
 		if (0 < length && (offset + length) <= byteArray.length) {
