@@ -21,6 +21,8 @@
 
 package com.securityinnovation.jneo.ntruencrypt;
 
+import java.util.Arrays;
+
 import com.securityinnovation.jneo.digest.DigestAlgorithm;
 
 import static com.securityinnovation.jneo.digest.DigestAlgorithm.*;
@@ -284,4 +286,92 @@ public class KeyParams {
 				79, 13, 17, 19, // dr, c, minCallsR, minCallsMask
 				256); // pkLen
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + N;
+		result = prime * result + Arrays.hashCode(OIDBytes);
+		result = prime * result + ((OIDEnum == null) ? 0 : OIDEnum.hashCode());
+		result = prime * result + bufferLenBits;
+		result = prime * result + bufferLenTrits;
+		result = prime * result + c;
+		result = prime * result + db;
+		result = prime * result + df;
+		result = prime * result + dg;
+		result = prime * result + dm0;
+		result = prime * result + dr;
+		result = prime * result + ((igfHash == null) ? 0 : igfHash.hashCode());
+		result = prime * result + lLen;
+		result = prime * result + maxMsgLenBytes;
+		result = prime * result + ((mgfHash == null) ? 0 : mgfHash.hashCode());
+		result = prime * result + minCallsMask;
+		result = prime * result + minCallsR;
+		result = prime * result + p;
+		result = prime * result + pkLen;
+		result = prime * result
+				+ ((polyInverter == null) ? 0 : polyInverter.hashCode());
+		result = prime * result + q;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		KeyParams other = (KeyParams) obj;
+		if (N != other.N)
+			return false;
+		if (!Arrays.equals(OIDBytes, other.OIDBytes))
+			return false;
+		if (OIDEnum != other.OIDEnum)
+			return false;
+		if (bufferLenBits != other.bufferLenBits)
+			return false;
+		if (bufferLenTrits != other.bufferLenTrits)
+			return false;
+		if (c != other.c)
+			return false;
+		if (db != other.db)
+			return false;
+		if (df != other.df)
+			return false;
+		if (dg != other.dg)
+			return false;
+		if (dm0 != other.dm0)
+			return false;
+		if (dr != other.dr)
+			return false;
+		if (igfHash != other.igfHash)
+			return false;
+		if (lLen != other.lLen)
+			return false;
+		if (maxMsgLenBytes != other.maxMsgLenBytes)
+			return false;
+		if (mgfHash != other.mgfHash)
+			return false;
+		if (minCallsMask != other.minCallsMask)
+			return false;
+		if (minCallsR != other.minCallsR)
+			return false;
+		if (p != other.p)
+			return false;
+		if (pkLen != other.pkLen)
+			return false;
+		if (polyInverter == null) {
+			if (other.polyInverter != null)
+				return false;
+		} else if (!polyInverter.equals(other.polyInverter))
+			return false;
+		if (q != other.q)
+			return false;
+		return true;
+	}
+	
+	
 }

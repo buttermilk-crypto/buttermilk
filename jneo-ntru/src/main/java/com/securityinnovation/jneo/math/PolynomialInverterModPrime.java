@@ -21,6 +21,8 @@
 
 package com.securityinnovation.jneo.math;
 
+import java.util.Arrays;
+
 /**
  * This class implements the algorithm for finding the inverse of a polynomial
  * in the ring (Z/pZ)[X]/(X^N-1) for some prime p, as defined in the NTRU
@@ -190,4 +192,31 @@ public class PolynomialInverterModPrime implements PolynomialInverter {
 			f.p[i] = f.p[i - 1];
 		f.p[0] = fn;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(invModPrime);
+		result = prime * result + this.prime;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PolynomialInverterModPrime other = (PolynomialInverterModPrime) obj;
+		if (!Arrays.equals(invModPrime, other.invModPrime))
+			return false;
+		if (prime != other.prime)
+			return false;
+		return true;
+	}
+	
+	
 }
