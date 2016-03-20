@@ -363,11 +363,7 @@ public class KeyParams {
 			return false;
 		if (pkLen != other.pkLen)
 			return false;
-		if (polyInverter == null) {
-			if (other.polyInverter != null)
-				return false;
-		} else if (!polyInverter.equals(other.polyInverter))
-			return false;
+		
 		if (q != other.q)
 			return false;
 		return true;
