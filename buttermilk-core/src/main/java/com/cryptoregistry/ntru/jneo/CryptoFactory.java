@@ -169,7 +169,7 @@ public class CryptoFactory {
 		lock.lock();
 		try {
 			
-			KeyParams keyParams = contents.namedParameter.params;
+			KeyParams keyParams = contents.namedParameterSet.params;
 
 			// Check input length
 			if (keyParams.maxMsgLenBytes < message.length)
@@ -244,7 +244,7 @@ public class CryptoFactory {
 		lock.lock();
 		try {
 
-			KeyParams keyParams = contents.namedParameter.params;
+			KeyParams keyParams = contents.namedParameterSet.params;
 
 			int expectedCTLength = BitPack.pack(keyParams.N, keyParams.q);
 			if (ciphertext.length != expectedCTLength)

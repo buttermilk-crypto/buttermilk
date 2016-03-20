@@ -13,15 +13,15 @@ import com.securityinnovation.jneo.math.FullPolynomial;
 public class JNEOKeyForPublication implements CryptoKey, Verifier {
 	
 	protected JNEOKeyMetadata metadata;
-	protected JNEONamedParameters namedParameter;
+	protected JNEONamedParameters namedParameterSet;
 	protected FullPolynomial h = null;
 
 	public JNEOKeyForPublication(JNEOKeyMetadata metadata, 
-			JNEONamedParameters namedParameter,
+			JNEONamedParameters namedParameterSet,
 			FullPolynomial h) {
 		super();
 		this.metadata = metadata;
-		this.namedParameter = namedParameter;
+		this.namedParameterSet = namedParameterSet;
 		this.h = h;
 	}
 
@@ -38,7 +38,7 @@ public class JNEOKeyForPublication implements CryptoKey, Verifier {
 
 	@Override
 	public CryptoKey keyForPublication() {
-		return new JNEOKeyForPublication(metadata,namedParameter,h);
+		return new JNEOKeyForPublication(metadata,namedParameterSet,h);
 	}
 
 }

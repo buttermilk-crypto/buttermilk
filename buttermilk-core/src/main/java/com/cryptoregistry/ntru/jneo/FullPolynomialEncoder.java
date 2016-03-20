@@ -38,8 +38,8 @@ public class FullPolynomialEncoder {
 			
 			bytes = baos.toByteArray();
 
-			// zlib, but should be gzip and pkzip format compatible according to the documentation 
-			Deflater compresser = new Deflater(Deflater.BEST_COMPRESSION, true);
+			// zip format, includes header
+			Deflater compresser = new Deflater();
 			compresser.setInput(bytes);
 			compresser.finish();
 			byte[] output = new byte[bytes.length];
