@@ -24,12 +24,12 @@ public class FullPolynomialDecoder {
 			//now uncompress
 			   Inflater decompresser = new Inflater();
 			     decompresser.setInput(bytes, 0, bytes.length);
-			     byte[] result = new byte[bytes.length*50];// should be a enough buffer
+			     byte[] result = new byte[bytes.length*50];// should be a big enough buffer
 			     int resultLength = decompresser.inflate(result);
 			     decompresser.end();
 			  //   byte [] exactbytes = new byte[resultLength];
 			  //   System.arraycopy(result, 0, exactbytes, 0, resultLength);
-			    short [] p = this.byteToShortArray(result, 0, resultLength, java.nio.ByteOrder.nativeOrder());
+			    short [] p = this.byteToShortArray(result, 0, resultLength, java.nio.ByteOrder.BIG_ENDIAN);
 			    
 			    return new FullPolynomial(p);
 			     
