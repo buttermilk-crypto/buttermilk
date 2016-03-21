@@ -25,8 +25,8 @@ import com.securityinnovation.jneo.math.MGF_TP_1;
 import com.securityinnovation.jneo.ntruencrypt.KeyParams;
 
 /**
- * Implement the buttermilk library model of keys for securityinnovation's
- * implementation of NTRU, which I call "JNEO".
+ * Implement the Buttermilk library model of keys for securityinnovation's
+ * java implementation of NTRU, which I call "JNEO".
  * 
  * Note that all of the public methods in this class are thread-safe.
  * 
@@ -176,6 +176,7 @@ public class CryptoFactory {
 				throw new PlaintextBadLengthException(message.length,
 						keyParams.maxMsgLenBytes);
 
+			// this is just my idea - I'm not sure what constitutes a good seed
 			byte[] seed = new byte[32];
 			rand.nextBytes(seed);
 			Random prng = new Random(seed);

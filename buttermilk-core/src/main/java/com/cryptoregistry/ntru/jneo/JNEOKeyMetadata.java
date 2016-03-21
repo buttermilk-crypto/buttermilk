@@ -33,30 +33,30 @@ public class JNEOKeyMetadata implements CryptoKeyMetadata {
 	 * @return
 	 */
 	public static JNEOKeyMetadata createDefault() {
-		return new JNEOKeyMetadata(UUID.randomUUID().toString(), new Date(),new KeyFormat(EncodingHint.NoEncoding,Mode.UNSECURED,null));
+		return new JNEOKeyMetadata(UUID.randomUUID().toString(), new Date(),new KeyFormat(EncodingHint.Base64urlZip,Mode.UNSECURED,null));
 	}
 	
 	public static JNEOKeyMetadata createForPublication() {
-		return new JNEOKeyMetadata(UUID.randomUUID().toString(), new Date(),new KeyFormat(EncodingHint.NoEncoding,Mode.REQUEST_FOR_PUBLICATION,null));
+		return new JNEOKeyMetadata(UUID.randomUUID().toString(), new Date(),new KeyFormat(EncodingHint.Base64urlZip,Mode.REQUEST_FOR_PUBLICATION,null));
 	}
 	
 	public static JNEOKeyMetadata createSecureDefault(char[]passwordChars) {
 		return new JNEOKeyMetadata(UUID.randomUUID().toString(), new Date(),
-				new KeyFormat(EncodingHint.NoEncoding, 
+				new KeyFormat(EncodingHint.Base64urlZip, 
 						Mode.REQUEST_SECURE, 
 						PBEParamsFactory.INSTANCE.createPBKDF2Params(passwordChars)));
 	}
 	
 	public static JNEOKeyMetadata createSecureScrypt(char[]password) {
 		return new JNEOKeyMetadata(UUID.randomUUID().toString(), new Date(),
-				new KeyFormat(EncodingHint.NoEncoding,
+				new KeyFormat(EncodingHint.Base64urlZip,
 						Mode.REQUEST_SECURE, 
 						PBEParamsFactory.INSTANCE.createScryptParams(password)));
 	}
 	
 	public static JNEOKeyMetadata createSecure(PBEParams params) {
 		return new JNEOKeyMetadata(UUID.randomUUID().toString(), new Date(),
-				new KeyFormat(EncodingHint.NoEncoding,
+				new KeyFormat(EncodingHint.Base64urlZip,
 						Mode.REQUEST_SECURE, 
 						params));
 	}

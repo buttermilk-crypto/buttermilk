@@ -44,10 +44,10 @@ import com.cryptoregistry.ec.ECFPCustomParameters;
 import com.cryptoregistry.ec.ECKeyContents;
 import com.cryptoregistry.ec.ECKeyForPublication;
 import com.cryptoregistry.ec.ECKeyMetadata;
-import com.cryptoregistry.ntru.NTRUKeyContents;
-import com.cryptoregistry.ntru.NTRUKeyForPublication;
-import com.cryptoregistry.ntru.NTRUKeyMetadata;
-import com.cryptoregistry.ntru.NTRUNamedParameters;
+import com.cryptoregistry.ntru.bc.NTRUKeyContents;
+import com.cryptoregistry.ntru.bc.NTRUKeyForPublication;
+import com.cryptoregistry.ntru.bc.NTRUKeyMetadata;
+import com.cryptoregistry.ntru.bc.NTRUNamedParameters;
 import com.cryptoregistry.ntru.jneo.FullPolynomialDecoder;
 import com.cryptoregistry.ntru.jneo.JNEOKeyContents;
 import com.cryptoregistry.ntru.jneo.JNEOKeyForPublication;
@@ -224,7 +224,7 @@ public class JSONReader {
 								String paramName = null;
 								meta = new NTRUKeyMetadata(handle,createdOn,format);
 								ArmoredCompressedString _h = new ArmoredCompressedString(String.valueOf(keyData.get("h")));
-								IntegerPolynomial h = new IntegerPolynomial(ArrayUtil.unwrapIntArray(_h));
+								IntegerPolynomial h = new IntegerPolynomial(ArrayUtil.unwrapCompressed(_h));
 							//	ArmoredCompressedString _fp = new ArmoredCompressedString(String.valueOf(keyData.get("fp")));
 							//	IntegerPolynomial fp = new IntegerPolynomial(ArrayUtil.unwrapIntArray(_fp));
 								if(keyData.containsKey("NTRUParams")){
@@ -366,21 +366,21 @@ public class JSONReader {
 								String paramName = null;
 								meta = new NTRUKeyMetadata(handle,createdOn,format);
 								ArmoredCompressedString _h = new ArmoredCompressedString(String.valueOf(keyData.get("h")));
-								IntegerPolynomial h = new IntegerPolynomial(ArrayUtil.unwrapIntArray(_h));
+								IntegerPolynomial h = new IntegerPolynomial(ArrayUtil.unwrapCompressed(_h));
 								ArmoredCompressedString _fp = new ArmoredCompressedString(String.valueOf(keyData.get("fp")));
-								IntegerPolynomial fp = new IntegerPolynomial(ArrayUtil.unwrapIntArray(_fp));
+								IntegerPolynomial fp = new IntegerPolynomial(ArrayUtil.unwrapCompressed(_fp));
 								
 								Polynomial t = null;
 								
 								if(keyData.containsKey("t0")){
 									// product form
-									int [] t0 = ArrayUtil.unwrapIntArray(
+									int [] t0 = ArrayUtil.unwrapCompressed(
 											new ArmoredCompressedString(String.valueOf(keyData.get("t0")))
 									);
-									int [] t1 = ArrayUtil.unwrapIntArray(
+									int [] t1 = ArrayUtil.unwrapCompressed(
 											new ArmoredCompressedString(String.valueOf(keyData.get("t1")))
 									);
-									int [] t2 = ArrayUtil.unwrapIntArray(
+									int [] t2 = ArrayUtil.unwrapCompressed(
 											new ArmoredCompressedString(String.valueOf(keyData.get("t2")))
 									);
 									
@@ -392,7 +392,7 @@ public class JSONReader {
 									
 								}else if(keyData.containsKey("td")){
 									// dense ternary 
-									int [] td = ArrayUtil.unwrapIntArray(
+									int [] td = ArrayUtil.unwrapCompressed(
 											new ArmoredCompressedString(String.valueOf(keyData.get("td")))
 									);
 									
@@ -400,7 +400,7 @@ public class JSONReader {
 									
 								}else if(keyData.containsKey("ts")){
 									// sparse ternary 
-									int [] td = ArrayUtil.unwrapIntArray(
+									int [] td = ArrayUtil.unwrapCompressed(
 											new ArmoredCompressedString(String.valueOf(keyData.get("ts")))
 									);
 									

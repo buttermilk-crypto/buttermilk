@@ -3,7 +3,7 @@
  *  Copyright 2011-2014 David R. Smith All Rights Reserved.
  *
  */
-package com.cryptoregistry.ntru;
+package com.cryptoregistry.ntru.bc;
 
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.InvalidCipherTextException;
@@ -54,24 +54,6 @@ public class CryptoFactory {
 		return new NTRUKeyContents(metadata,NTRUNamedParameters.EES1087EP2,pub.h,priv.t,priv.fp);
 	}
 	
-	public NTRUKeyContents generateKeys(NTRUEncryptionKeyGenerationParameters params) {
-		NTRUEncryptionKeyPairGenerator gen = new NTRUEncryptionKeyPairGenerator();
-		gen.init(params);
-		AsymmetricCipherKeyPair pair = gen.generateKeyPair();
-		NTRUEncryptionPublicKeyParameters pub  = (NTRUEncryptionPublicKeyParameters) pair.getPublic();
-		NTRUEncryptionPrivateKeyParameters priv =  (NTRUEncryptionPrivateKeyParameters) pair.getPrivate();
-		return new NTRUKeyContents(NTRUKeyMetadata.createDefault(),pub.getParameters(),pub.h,priv.t,priv.fp);
-	}
-	
-	public NTRUKeyContents generateKeys(NTRUKeyMetadata metadata, NTRUEncryptionKeyGenerationParameters params) {
-		NTRUEncryptionKeyPairGenerator gen = new NTRUEncryptionKeyPairGenerator();
-		gen.init(params);
-		AsymmetricCipherKeyPair pair = gen.generateKeyPair();
-		NTRUEncryptionPublicKeyParameters pub  = (NTRUEncryptionPublicKeyParameters) pair.getPublic();
-		NTRUEncryptionPrivateKeyParameters priv =  (NTRUEncryptionPrivateKeyParameters) pair.getPrivate();
-		return new NTRUKeyContents(metadata,pub.getParameters(),pub.h,priv.t,priv.fp);
-	}
-	
 	public NTRUKeyContents generateKeys(NTRUKeyMetadata metadata, NTRUNamedParameters e) {
 		NTRUEncryptionKeyPairGenerator gen = new NTRUEncryptionKeyPairGenerator();
 		gen.init(e.getKeyGenerationParameters());
@@ -85,8 +67,8 @@ public class CryptoFactory {
 		
 		NTRUEngine engine = new NTRUEngine();
 		engine.init(true, pKey.getPublicKey());
-		if(in.length > pKey.params.maxMsgLenBytes)
-			throw new RuntimeException("Max size we can work with = "+ pKey.params.maxMsgLenBytes);
+		if(in.length > pKey.parameterSetName.getParameters().maxMsgLenBytes)
+			throw new RuntimeException("Max size we can work with = "+ pKey.parameterSetName.getParameters().maxMsgLenBytes);
 	    try {
 			return engine.processBlock(in, 0, in.length);
 		} catch (InvalidCipherTextException e) {

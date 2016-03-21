@@ -20,7 +20,7 @@ import com.cryptoregistry.ListData;
 import com.cryptoregistry.Version;
 import com.cryptoregistry.c2.key.Curve25519KeyForPublication;
 import com.cryptoregistry.ec.ECKeyForPublication;
-import com.cryptoregistry.ntru.NTRUKeyForPublication;
+import com.cryptoregistry.ntru.bc.NTRUKeyForPublication;
 import com.cryptoregistry.ntru.jneo.JNEOKeyForPublication;
 import com.cryptoregistry.rsa.RSAKeyForPublication;
 import com.cryptoregistry.signature.CryptoSignature;

@@ -3,7 +3,7 @@
  *  Copyright 2011-2014 David R. Smith All Rights Reserved.
  *
  */
-package com.cryptoregistry.ntru;
+package com.cryptoregistry.ntru.bc;
 
 import org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionKeyGenerationParameters;
 import org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionParameters;

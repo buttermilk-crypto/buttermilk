@@ -13,10 +13,10 @@ import org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionParameters;
 import org.bouncycastle.pqc.math.ntru.polynomial.IntegerPolynomial;
 import org.bouncycastle.pqc.math.ntru.polynomial.Polynomial;
 
-import com.cryptoregistry.ntru.NTRUKeyContents;
-import com.cryptoregistry.ntru.NTRUKeyMetadata;
-import com.cryptoregistry.ntru.NTRUNamedParameters;
-import com.cryptoregistry.ntru.PolynomialAdapter;
+import com.cryptoregistry.ntru.bc.NTRUKeyContents;
+import com.cryptoregistry.ntru.bc.NTRUKeyMetadata;
+import com.cryptoregistry.ntru.bc.NTRUNamedParameters;
+import com.cryptoregistry.ntru.bc.PolynomialAdapter;
 import com.cryptoregistry.util.TimeUtil;
 
 /**
