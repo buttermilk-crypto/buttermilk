@@ -3,7 +3,7 @@ package com.cryptoregistry.formats;
 import com.cryptoregistry.CryptoKey;
 import com.cryptoregistry.c2.key.Curve25519KeyContents;
 import com.cryptoregistry.ec.ECKeyContents;
-import com.cryptoregistry.ntru.NTRUKeyContents;
+import com.cryptoregistry.ntru.bc.NTRUKeyContents;
 import com.cryptoregistry.rsa.RSAKeyContents;
 import com.cryptoregistry.symmetric.SymmetricKeyContents;
 

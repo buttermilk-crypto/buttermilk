@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.cryptoregistry.c2.key.Curve25519KeyContents;
-import com.cryptoregistry.ntru.NTRUKeyContents;
+import com.cryptoregistry.ntru.bc.NTRUKeyContents;
 
 public class CryptoKeyJSONTest {
 
@@ -16,7 +16,7 @@ public class CryptoKeyJSONTest {
 		System.err.println(k0);
 		Assert.assertNotNull(k0);
 		
-		NTRUKeyContents keys1 = com.cryptoregistry.ntru.CryptoFactory.INSTANCE.generateKeys();
+		NTRUKeyContents keys1 = com.cryptoregistry.ntru.bc.CryptoFactory.INSTANCE.generateKeys();
 		String k1 = keys1.formatJSON();
 		System.err.println(k1);
 		Assert.assertNotNull(k1);

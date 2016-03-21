@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.cryptoregistry.KeyGenerationAlgorithm;
-import com.cryptoregistry.ntru.NTRUKeyContents;
-import com.cryptoregistry.ntru.NTRUKeyForPublication;
+import com.cryptoregistry.ntru.bc.NTRUKeyContents;
+import com.cryptoregistry.ntru.bc.NTRUKeyForPublication;
 import com.cryptoregistry.pbe.ArmoredPBEResult;
 import com.cryptoregistry.pbe.ArmoredPBKDF2Result;
 import com.cryptoregistry.pbe.ArmoredScryptResult;

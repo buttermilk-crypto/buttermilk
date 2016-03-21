@@ -8,7 +8,7 @@ package com.cryptoregistry.formats;
 import java.io.IOException;
 import java.io.Writer;
 
-import com.cryptoregistry.ntru.NTRUNamedParameters;
+import com.cryptoregistry.ntru.bc.NTRUNamedParameters;
 import com.cryptoregistry.util.ArmoredString;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;

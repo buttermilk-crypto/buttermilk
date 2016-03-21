@@ -45,7 +45,7 @@ public class ArrayUtil {
 		}
 	}
 	
-	public static byte [] compressIntArray(int [] array) throws IOException{
+	public static byte [] compressGzip(int [] array) throws IOException{
 		ByteBuffer byteBuffer = ByteBuffer.allocate(array.length * 4);        
         IntBuffer intBuffer = byteBuffer.asIntBuffer();
         intBuffer.put(array);
@@ -57,7 +57,7 @@ public class ArrayUtil {
         return bout.toByteArray();
 	}
 	
-	public static int [] uncompressIntArray(byte [] compressed) {
+	public static int [] uncompressGzip(byte [] compressed) {
 		
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		GZIPInputStream in=null;
@@ -86,14 +86,14 @@ public class ArrayUtil {
 	    return array;
 	}
 	
-	public static ArmoredCompressedString wrapAndCompressIntArray(int [] array){
+	public static ArmoredCompressedString wrapAndCompress(int [] array){
 		ByteBuffer byteBuffer = ByteBuffer.allocate(array.length * 4);        
         IntBuffer intBuffer = byteBuffer.asIntBuffer();
         intBuffer.put(array);
         return new ArmoredCompressedString(byteBuffer.array());
 	}
 	
-	public static int [] unwrapIntArray(ArmoredCompressedString in){
+	public static int [] unwrapCompressed(ArmoredCompressedString in){
 		byte [] encoded = in.decodeToBytes();
 		IntBuffer intBuf = ByteBuffer.wrap(encoded).asIntBuffer();
 	    int [] array = new int[intBuf.remaining()];
@@ -101,14 +101,14 @@ public class ArrayUtil {
 	    return array;
 	}
 	
-	public static ArmoredString wrapIntArray(int [] array){
+	public static ArmoredString wrap(int [] array){
 		ByteBuffer byteBuffer = ByteBuffer.allocate(array.length * 4);        
         IntBuffer intBuffer = byteBuffer.asIntBuffer();
         intBuffer.put(array);
         return new ArmoredString(byteBuffer.array());
 	}
 	
-	public static int [] unwrapIntArray(ArmoredString in){
+	public static int [] unwrap(ArmoredString in){
 		byte [] encoded = in.decodeToBytes();
 		IntBuffer intBuf = ByteBuffer.wrap(encoded).asIntBuffer();
 	    int [] array = new int[intBuf.remaining()];

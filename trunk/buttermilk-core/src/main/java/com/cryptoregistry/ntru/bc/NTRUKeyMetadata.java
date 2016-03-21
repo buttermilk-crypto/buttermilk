@@ -3,7 +3,7 @@
  *  Copyright 2011-2014 David R. Smith All Rights Reserved.
  *
  */
-package com.cryptoregistry.ntru;
+package com.cryptoregistry.ntru.bc;
 
 import java.util.Date;
 import java.util.UUID;

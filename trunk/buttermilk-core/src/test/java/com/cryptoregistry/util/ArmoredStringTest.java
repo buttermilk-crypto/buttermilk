@@ -22,8 +22,8 @@ public class ArmoredStringTest {
 				array[i]=1;
 			}
 		}
-		ArmoredString as = ArrayUtil.wrapIntArray(array);
-		ArmoredCompressedString acs = ArrayUtil.wrapAndCompressIntArray(array);
+		ArmoredString as = ArrayUtil.wrap(array);
+		ArmoredCompressedString acs = ArrayUtil.wrapAndCompress(array);
 		
 		// compresses by at least a factor of 10, which seems worth the extra hassle
 		Assert.assertTrue(as.length()>acs.length()*10);
@@ -35,8 +35,8 @@ public class ArmoredStringTest {
 	public void test1(){
 		int [] array = {1,2,3,4,5,6,7,8,9,10};
 		try {
-			byte [] compressed = ArrayUtil.compressIntArray(array);
-			int [] out = ArrayUtil.uncompressIntArray(compressed);
+			byte [] compressed = ArrayUtil.compressGzip(array);
+			int [] out = ArrayUtil.uncompressGzip(compressed);
 			Assert.assertTrue(Arrays.equals(array, out));
 			
 		} catch (IOException e) {

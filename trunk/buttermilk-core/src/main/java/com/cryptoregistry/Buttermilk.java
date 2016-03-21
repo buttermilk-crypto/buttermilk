@@ -10,8 +10,8 @@ import com.cryptoregistry.c2.key.Curve25519KeyContents;
 import com.cryptoregistry.ec.ECCustomParameters;
 import com.cryptoregistry.ec.ECKeyContents;
 import com.cryptoregistry.ec.ECKeyMetadata;
-import com.cryptoregistry.ntru.NTRUKeyContents;
-import com.cryptoregistry.ntru.NTRUNamedParameters;
+import com.cryptoregistry.ntru.bc.NTRUKeyContents;
+import com.cryptoregistry.ntru.bc.NTRUNamedParameters;
 import com.cryptoregistry.passwords.Password;
 import com.cryptoregistry.rsa.RSAKeyContents;
 import com.cryptoregistry.rsa.RSAKeyMetadata;
@@ -84,11 +84,11 @@ public class Buttermilk {
 	}
 	
 	public final NTRUKeyContents generateNTRUKeys(){
-		return com.cryptoregistry.ntru.CryptoFactory.INSTANCE.generateKeys();
+		return com.cryptoregistry.ntru.bc.CryptoFactory.INSTANCE.generateKeys();
 	}
 	
 	public final NTRUKeyContents generateNTRUKeys(NTRUNamedParameters paramName){
-		return com.cryptoregistry.ntru.CryptoFactory.INSTANCE.generateKeys(paramName);
+		return com.cryptoregistry.ntru.bc.CryptoFactory.INSTANCE.generateKeys(paramName);
 	}
 
 }
