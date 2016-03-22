@@ -5,12 +5,12 @@
  */
 package com.cryptoregistry.pbe;
 
-import java.io.StringWriter;
-import java.util.List;
 import java.util.Map;
 
+import com.cryptoregistry.util.ListToString;
+
 /**
- * Algorithms we currently support for key derivation when encrypting key materials for Secure mode
+ * The algorithms we currently support for key derivation when encrypting key materials in a Secure mode wrapper
  * 
  * @author Dave
  *
@@ -32,7 +32,7 @@ public enum PBEAlg {
 		switch(algEnum){
 			case SCRYPT:{
 			//	String encryptedData = (String) keyData.get("KeyData.EncryptedData");
-				String encryptedData = collectListData(keyData);
+				String encryptedData = new ListToString(keyData).collectListData("KeyData.EncryptedData");
 				String salt = (String) keyData.get("KeyData.PBESalt");
 				String iv = (String) keyData.get("KeyData.IV");
 				int blockSize = Integer.parseInt((String) keyData.get("KeyData.BlockSize"));
@@ -42,7 +42,7 @@ public enum PBEAlg {
 			}
 			case PBKDF2: {
 			//	String encryptedData = (String) keyData.get("KeyData.EncryptedData");
-				String encryptedData = collectListData(keyData);
+				String encryptedData = new ListToString(keyData).collectListData("KeyData.EncryptedData");
 				String salt = (String) keyData.get("KeyData.PBESalt");
 				int iterations = Integer.parseInt((String) keyData.get("KeyData.Iterations"));
 				return new ArmoredPBKDF2Result(encryptedData,salt,iterations);
@@ -54,18 +54,4 @@ public enum PBEAlg {
 		}
 	}
 	
-	private static synchronized String collectListData(Map<String,Object> keyData){
-		Object obj = keyData.get("KeyData.EncryptedData");
-		if(obj instanceof String) return (String) obj;
-		else if(obj instanceof List){
-			StringWriter writer = new StringWriter();
-			@SuppressWarnings("rawtypes")
-			List list = (List) keyData.get("KeyData.EncryptedData"); 
-			for(Object o: list){
-				writer.write(String.valueOf(o));
-			}
-			return writer.toString();
-		}
-		return null;
-	}
 }
