@@ -13,6 +13,7 @@ import com.cryptoregistry.ntru.jneo.FullPolynomialDecoder;
 import com.cryptoregistry.ntru.jneo.JNEOKeyContents;
 import com.cryptoregistry.ntru.jneo.JNEOKeyMetadata;
 import com.cryptoregistry.ntru.jneo.JNEONamedParameters;
+import com.cryptoregistry.util.ListToString;
 import com.cryptoregistry.util.TimeUtil;
 import com.securityinnovation.jneo.math.FullPolynomial;
 
@@ -43,8 +44,10 @@ public class JNEOKeyFormatReader {
 				EncodingHint enc = EncodingHint.valueOf(String.valueOf(inner.get("Encoding")));
 				JNEOKeyMetadata meta = new JNEOKeyMetadata(distUUID, createdOn, new KeyFormat(enc, Mode.UNSECURED, null));
 				JNEONamedParameters param = JNEONamedParameters.valueOf((String)inner.get("ParameterSet"));
-				FullPolynomialDecoder decoderH = new FullPolynomialDecoder((String)inner.get("h"));
-				FullPolynomialDecoder decoderF = new FullPolynomialDecoder((String)inner.get("f"));
+				
+				ListToString lts = new ListToString(inner);
+				FullPolynomialDecoder decoderH = new FullPolynomialDecoder(lts.collectListData("h"));
+				FullPolynomialDecoder decoderF = new FullPolynomialDecoder(lts.collectListData("f"));
 				FullPolynomial h = decoderH.decode();
 				FullPolynomial f = decoderF.decode();
 				

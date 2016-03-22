@@ -67,12 +67,13 @@ import com.securityinnovation.jneo.math.FullPolynomial;
  * <p>Read the canonical format as output by JSONFormatter. This reader is for the scenario where
  * little or nothing is known at runtime about the contents of the JSON being passed in.</p>
  * 
- * <p>This reader builds Buttermilk cryptographic value objects. Use JSONGenericReader to get a 
+ * <p>This reader builds and returns Buttermilk cryptographic value objects. Use JSONGenericReader to get a 
  * simple, Map-based textual representation of the data instead.</p>
  * 
  * @author Dave
  * @see JSONFormatter
  * @see JSONGenericReader
+ * 
  * 
  */
 public class JSONReader {
@@ -139,8 +140,6 @@ public class JSONReader {
 				return String.valueOf(map.get("Email"));
 			}
 			
-		
-
 			/**
 			 * Create a list of CryptoKeyWrappers
 			 */
@@ -199,15 +198,11 @@ public class JSONReader {
 								meta = new JNEOKeyMetadata(handle,createdOn,format);
 								JNEONamedParameters param = JNEONamedParameters.valueOf((String)keyData.get("ParameterSet"));
 								FullPolynomialDecoder decoderH = new FullPolynomialDecoder((String)keyData.get("h"));
-							//	FullPolynomialDecoder decoderF = new FullPolynomialDecoder((String)keyData.get("f"));
 								FullPolynomial h = decoderH.decode();
-							//	FullPolynomial f = decoderF.decode();
 								
 								JNEOKeyForPublication p = new JNEOKeyForPublication((JNEOKeyMetadata)meta, param, h);
 								list.add(new CryptoKeyWrapperImpl(distinguishedKey,p));
-								
 							}
-							
 							case RSA: {
 								int strength = 0;
 								if(keyData.containsKey("Strength")){

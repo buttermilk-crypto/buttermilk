@@ -120,8 +120,23 @@ class JNEOKeyFormatter {
 		g.writeStringField("CreatedOn", TimeUtil.format(jneoKeys.getMetadata().getCreatedOn()));
 		g.writeStringField("Encoding", enc.toString());
 		g.writeStringField("ParameterSet", jneoKeys.getNamedParameterSet().name());
-		g.writeStringField("h", new FullPolynomialEncoder(jneoKeys.h).encode());
-		g.writeStringField("f", new FullPolynomialEncoder(((JNEOKeyContents)jneoKeys).f).encode());
+		
+		g.writeArrayFieldStart("h");
+		List<String> list = new StringToList(new FullPolynomialEncoder(jneoKeys.h).encode()).toList();
+			for(String s: list){
+				g.writeString(s);
+			}
+		g.writeEndArray();
+	//	g.writeStringField("h", new FullPolynomialEncoder(jneoKeys.h).encode());
+		
+		g.writeArrayFieldStart("f");
+		list = new StringToList(new FullPolynomialEncoder(((JNEOKeyContents)jneoKeys).f).encode()).toList();
+			for(String s: list){
+				g.writeString(s);
+			}
+		g.writeEndArray();
+	//	g.writeStringField("f", new FullPolynomialEncoder(((JNEOKeyContents)jneoKeys).f).encode());
+		
 		g.writeEndObject();
 
 	}
@@ -134,7 +149,15 @@ class JNEOKeyFormatter {
 		g.writeStringField("CreatedOn", TimeUtil.format(jneoKeys.getMetadata().getCreatedOn()));
 		g.writeStringField("Encoding", enc.toString());
 		g.writeStringField("ParameterSet", jneoKeys.getNamedParameterSet().name());
-		g.writeStringField("h", new FullPolynomialEncoder(jneoKeys.h).encode());
+		
+		g.writeArrayFieldStart("h");
+		List<String> list = new StringToList(new FullPolynomialEncoder(jneoKeys.h).encode()).toList();
+			for(String s: list){
+				g.writeString(s);
+			}
+		g.writeEndArray();
+	//	g.writeStringField("h", new FullPolynomialEncoder(jneoKeys.h).encode());
+		
 		g.writeEndObject();
 
 	}
@@ -152,8 +175,23 @@ class JNEOKeyFormatter {
 			g.writeStringField("CreatedOn", TimeUtil.format(jneoKeys.getMetadata().getCreatedOn()));
 			g.writeStringField("Encoding", enc.toString());
 			g.writeStringField("ParameterSet", jneoKeys.getNamedParameterSet().name());
-			g.writeStringField("h", new FullPolynomialEncoder(jneoKeys.h).encode());
-			g.writeStringField("f", new FullPolynomialEncoder(((JNEOKeyContents)jneoKeys).f).encode());
+			
+			g.writeArrayFieldStart("h");
+			List<String> list = new StringToList(new FullPolynomialEncoder(jneoKeys.h).encode()).toList();
+				for(String s: list){
+					g.writeString(s);
+				}
+			g.writeEndArray();
+		//	g.writeStringField("h", new FullPolynomialEncoder(jneoKeys.h).encode());
+			
+			g.writeArrayFieldStart("f");
+			list = new StringToList(new FullPolynomialEncoder(((JNEOKeyContents)jneoKeys).f).encode()).toList();
+				for(String s: list){
+					g.writeString(s);
+				}
+			g.writeEndArray();
+		//	g.writeStringField("f", new FullPolynomialEncoder(((JNEOKeyContents)jneoKeys).f).encode());
+			
 			g.writeEndObject();
 			g.writeEndObject();
 		} catch (IOException e) {

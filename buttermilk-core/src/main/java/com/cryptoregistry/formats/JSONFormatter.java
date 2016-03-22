@@ -30,7 +30,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 
 /**
- * A builder which will generate the canonical data structure for a buttermilk format JSON wrapper 
+ * A builder which will generate the canonical data structure for a Buttermilk-formatted JSON-encoded wrapper. 
  *    
  * @author Dave
  *
