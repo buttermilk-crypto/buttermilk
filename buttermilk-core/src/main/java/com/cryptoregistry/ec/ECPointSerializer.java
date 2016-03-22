@@ -1,8 +1,5 @@
 package com.cryptoregistry.ec;
 
-import java.math.BigInteger;
-
-import org.bouncycastle.math.ec.ECCurve;
 import org.bouncycastle.math.ec.ECPoint;
 
 /**
