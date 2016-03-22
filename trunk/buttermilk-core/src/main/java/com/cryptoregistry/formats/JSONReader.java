@@ -16,12 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.bouncycastle.math.ec.ECPoint;
-import org.bouncycastle.pqc.crypto.ntru.NTRUEncryptionParameters;
-import org.bouncycastle.pqc.math.ntru.polynomial.DenseTernaryPolynomial;
-import org.bouncycastle.pqc.math.ntru.polynomial.IntegerPolynomial;
-import org.bouncycastle.pqc.math.ntru.polynomial.Polynomial;
-import org.bouncycastle.pqc.math.ntru.polynomial.ProductFormPolynomial;
-import org.bouncycastle.pqc.math.ntru.polynomial.SparseTernaryPolynomial;
 
 import com.cryptoregistry.CryptoContact;
 import com.cryptoregistry.CryptoKeyMetadata;
@@ -44,10 +38,6 @@ import com.cryptoregistry.ec.ECFPCustomParameters;
 import com.cryptoregistry.ec.ECKeyContents;
 import com.cryptoregistry.ec.ECKeyForPublication;
 import com.cryptoregistry.ec.ECKeyMetadata;
-import com.cryptoregistry.ntru.bc.NTRUKeyContents;
-import com.cryptoregistry.ntru.bc.NTRUKeyForPublication;
-import com.cryptoregistry.ntru.bc.NTRUKeyMetadata;
-import com.cryptoregistry.ntru.bc.NTRUNamedParameters;
 import com.cryptoregistry.ntru.jneo.FullPolynomialDecoder;
 import com.cryptoregistry.ntru.jneo.JNEOKeyContents;
 import com.cryptoregistry.ntru.jneo.JNEOKeyForPublication;
@@ -68,9 +58,7 @@ import com.cryptoregistry.signature.RSASignature;
 import com.cryptoregistry.signature.SignatureMetadata;
 import com.cryptoregistry.symmetric.SymmetricKeyContents;
 import com.cryptoregistry.symmetric.SymmetricKeyMetadata;
-import com.cryptoregistry.util.ArmoredCompressedString;
 import com.cryptoregistry.util.ArmoredString;
-import com.cryptoregistry.util.ArrayUtil;
 import com.cryptoregistry.util.TimeUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.securityinnovation.jneo.math.FullPolynomial;
@@ -219,37 +207,7 @@ public class JSONReader {
 								list.add(new CryptoKeyWrapperImpl(distinguishedKey,p));
 								
 							}
-							case NTRU: {
-								NTRUEncryptionParameters params = null;
-								String paramName = null;
-								meta = new NTRUKeyMetadata(handle,createdOn,format);
-								ArmoredCompressedString _h = new ArmoredCompressedString(String.valueOf(keyData.get("h")));
-								IntegerPolynomial h = new IntegerPolynomial(ArrayUtil.unwrapCompressed(_h));
-							//	ArmoredCompressedString _fp = new ArmoredCompressedString(String.valueOf(keyData.get("fp")));
-							//	IntegerPolynomial fp = new IntegerPolynomial(ArrayUtil.unwrapIntArray(_fp));
-								if(keyData.containsKey("NTRUParams")){
-									// parse params
-									Map<String,Object> inner = (Map<String,Object>)keyData.get("NTRUParams");
-									NTRUParametersReader reader = new NTRUParametersReader(inner);
-									params = reader.parse();
-								}else{
-									paramName = String.valueOf(keyData.get("NamedParameters"));
-								//	params = NTRUNamedParameters.valueOf(paramName).getParameters();
-								}
-								
-								NTRUKeyForPublication key = null;
-								
-								if(paramName == null) {
-									key = new NTRUKeyForPublication((NTRUKeyMetadata)meta,params,h);
-								}else{
-									NTRUNamedParameters e = NTRUNamedParameters.valueOf(paramName);
-									key = new NTRUKeyForPublication((NTRUKeyMetadata)meta,e,h);
-								}
-								
-								list.add(new CryptoKeyWrapperImpl(distinguishedKey,key));
-								
-								break;
-							}
+							
 							case RSA: {
 								int strength = 0;
 								if(keyData.containsKey("Strength")){
@@ -361,77 +319,7 @@ public class JSONReader {
 								JNEOKeyContents p = new JNEOKeyContents((JNEOKeyMetadata)meta, param, h, f);
 								list.add(new CryptoKeyWrapperImpl(distinguishedKey,p));
 							}
-							case NTRU: {
-								NTRUEncryptionParameters params = null;
-								String paramName = null;
-								meta = new NTRUKeyMetadata(handle,createdOn,format);
-								ArmoredCompressedString _h = new ArmoredCompressedString(String.valueOf(keyData.get("h")));
-								IntegerPolynomial h = new IntegerPolynomial(ArrayUtil.unwrapCompressed(_h));
-								ArmoredCompressedString _fp = new ArmoredCompressedString(String.valueOf(keyData.get("fp")));
-								IntegerPolynomial fp = new IntegerPolynomial(ArrayUtil.unwrapCompressed(_fp));
-								
-								Polynomial t = null;
-								
-								if(keyData.containsKey("t0")){
-									// product form
-									int [] t0 = ArrayUtil.unwrapCompressed(
-											new ArmoredCompressedString(String.valueOf(keyData.get("t0")))
-									);
-									int [] t1 = ArrayUtil.unwrapCompressed(
-											new ArmoredCompressedString(String.valueOf(keyData.get("t1")))
-									);
-									int [] t2 = ArrayUtil.unwrapCompressed(
-											new ArmoredCompressedString(String.valueOf(keyData.get("t2")))
-									);
-									
-									t = new ProductFormPolynomial(
-											new SparseTernaryPolynomial(t0),
-											new SparseTernaryPolynomial(t1),
-											new SparseTernaryPolynomial(t2)
-									);
-									
-								}else if(keyData.containsKey("td")){
-									// dense ternary 
-									int [] td = ArrayUtil.unwrapCompressed(
-											new ArmoredCompressedString(String.valueOf(keyData.get("td")))
-									);
-									
-									t = new DenseTernaryPolynomial(td);
-									
-								}else if(keyData.containsKey("ts")){
-									// sparse ternary 
-									int [] td = ArrayUtil.unwrapCompressed(
-											new ArmoredCompressedString(String.valueOf(keyData.get("ts")))
-									);
-									
-									t = new SparseTernaryPolynomial(td);
-									
-								}
-								
-								
-								if(keyData.containsKey("NTRUParams")){
-									// parse params
-									Map<String,Object> inner = (Map<String,Object>)keyData.get("NTRUParams");
-									NTRUParametersReader reader = new NTRUParametersReader(inner);
-									params = reader.parse();
-								}else{
-									paramName = String.valueOf(keyData.get("NamedParameters"));
-								//	params = NTRUNamedParameters.valueOf(paramName).getParameters();
-								}
-								
-								NTRUKeyContents key = null;
-								
-								if(paramName == null) {
-									key = new NTRUKeyContents((NTRUKeyMetadata)meta,params,h,t,fp);
-								}else{
-									NTRUNamedParameters e = NTRUNamedParameters.valueOf(paramName);
-									key = new NTRUKeyContents((NTRUKeyMetadata)meta,e,h,t,fp);
-								}
-								
-								list.add(new CryptoKeyWrapperImpl(distinguishedKey, key));
-								
-								break;
-							}
+							
 							case RSA: {
 								meta = new RSAKeyMetadata(handle,createdOn,format);
 								BigInteger modulus = FormatUtil.unwrap(encoding, String.valueOf(keyData.get("Modulus")));

@@ -20,7 +20,6 @@ import com.cryptoregistry.ListData;
 import com.cryptoregistry.Version;
 import com.cryptoregistry.c2.key.Curve25519KeyForPublication;
 import com.cryptoregistry.ec.ECKeyForPublication;
-import com.cryptoregistry.ntru.bc.NTRUKeyForPublication;
 import com.cryptoregistry.ntru.jneo.JNEOKeyForPublication;
 import com.cryptoregistry.rsa.RSAKeyForPublication;
 import com.cryptoregistry.signature.CryptoSignature;
@@ -256,12 +255,6 @@ public class JSONFormatter {
 						case JNEO: {
 							JNEOKeyForPublication contents = (JNEOKeyForPublication)key;
 							JNEOKeyFormatter formatter = new JNEOKeyFormatter(contents);
-							formatter.formatKeys(g, writer);
-							break;
-						}
-						case NTRU: {
-							NTRUKeyForPublication contents = (NTRUKeyForPublication)key;
-							NTRUKeyFormatter formatter = new NTRUKeyFormatter(contents);
 							formatter.formatKeys(g, writer);
 							break;
 						}

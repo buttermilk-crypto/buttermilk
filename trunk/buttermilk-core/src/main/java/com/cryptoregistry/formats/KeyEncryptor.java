@@ -9,11 +9,9 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 
-import com.cryptoregistry.KeyGenerationAlgorithm;
 import com.cryptoregistry.pbe.ArmoredPBEResult;
 import com.cryptoregistry.pbe.PBE;
 import com.cryptoregistry.pbe.PBEParams;
-import com.cryptoregistry.util.ArmoredCompressedString;
 import com.cryptoregistry.util.MapIterator;
 import com.cryptoregistry.util.TimeUtil;
 import com.fasterxml.jackson.core.JsonFactory;
@@ -47,8 +45,6 @@ public class KeyEncryptor {
 			plain = formatRSAItem();
 		}else if(holder.sKeys != null){
 			plain = formatSymItem();
-		}else if(holder.ntruKeys != null){
-			plain = formatNTRUItem();
 		}
 		ArmoredPBEResult result;
 		try {
@@ -193,55 +189,4 @@ public class KeyEncryptor {
 		return privateDataWriter.toString();
 	}
 	
-	private String formatNTRUItem() {
-		StringWriter privateDataWriter = new StringWriter();
-		JsonFactory f = new JsonFactory();
-		JsonGenerator g = null;
-		try {
-			g = f.createGenerator(privateDataWriter);
-			g.useDefaultPrettyPrinter();
-			g.writeStartObject();
-			g.writeObjectFieldStart(holder.ntruKeys.metadata.handle+"-U");
-			g.writeStringField("KeyAlgorithm", KeyGenerationAlgorithm.NTRU.toString());
-			g.writeStringField("CreatedOn", TimeUtil.format(holder.ntruKeys.metadata.createdOn));
-			//g.writeStringField("Encoding", enc.toString());
-			
-			g.writeStringField("h", holder.ntruKeys.wrappedH().toString());
-			g.writeStringField("fp", holder.ntruKeys.wrappedFp().toString());
-			Object obj = holder.ntruKeys.wrappedT();
-			// product form
-			if(obj.getClass().isArray()){
-				ArmoredCompressedString [] ar = (ArmoredCompressedString[])obj;
-				g.writeStringField("t0", ar[0].toString());
-				g.writeStringField("t1", ar[1].toString());
-				g.writeStringField("t2", ar[2].toString());
-			}else{
-				if(holder.ntruKeys.params.sparse){
-					ArmoredCompressedString ar = (ArmoredCompressedString)obj;
-					g.writeStringField("ts", ar.toString());
-				}else{
-					ArmoredCompressedString ar = (ArmoredCompressedString)obj;
-					g.writeStringField("td", ar.toString());
-				}
-			}
-			
-			NTRUParametersFormatter pFormat = null;
-			if(holder.ntruKeys.parameterEnum == null) pFormat = new NTRUParametersFormatter(holder.ntruKeys.params);
-			else pFormat = new NTRUParametersFormatter(holder.ntruKeys.parameterEnum);
-			pFormat.format(g, privateDataWriter);
-			
-			g.writeEndObject();
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				g.close();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-		}
-
-		return privateDataWriter.toString();
-	}
 }

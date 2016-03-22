@@ -13,7 +13,6 @@ import com.cryptoregistry.formats.C2KeyFormatReader;
 import com.cryptoregistry.formats.ECKeyFormatReader;
 import com.cryptoregistry.formats.KeyEncryptor;
 import com.cryptoregistry.formats.KeyHolder;
-import com.cryptoregistry.formats.NTRUKeyFormatReader;
 import com.cryptoregistry.formats.RSAKeyFormatReader;
 import com.cryptoregistry.formats.SymmetricKeyFormatReader;
 import com.cryptoregistry.passwords.Password;
@@ -161,9 +160,8 @@ public class CryptoKeyWrapperImpl implements CryptoKeyWrapper {
 						wrapped = reader.read();
 						break;
 					}
-					case NTRU: {
-						NTRUKeyFormatReader reader = new NTRUKeyFormatReader(map);
-						wrapped = reader.read();
+					case JNEO: {
+						//TODO
 						break;
 					}
 					
