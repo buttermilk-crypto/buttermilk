@@ -17,8 +17,7 @@ public enum KeyGenerationAlgorithm {
 	EC('E'), 
 	RSA('R'), 
 	DSA('D'), 
-	NTRU('N'),
-	JNEO('J');
+	JNEO('N');
 	
 	public final char code;
 

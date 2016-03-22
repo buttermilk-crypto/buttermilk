@@ -99,10 +99,6 @@ public class KeyDecryptor {
 					RSAKeyFormatReader reader = new RSAKeyFormatReader(map);
 					return reader.read();
 				}
-				case NTRU: {
-					NTRUKeyFormatReader reader = new NTRUKeyFormatReader(map);
-					return reader.read();
-				}
 				
 				default: throw new RuntimeException("Unknown KeyGenerationAlgorithm: "+keyAlgorithm);
 			}
