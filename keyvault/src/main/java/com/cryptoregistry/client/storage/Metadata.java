@@ -25,7 +25,7 @@ public class Metadata implements Serializable {
 	private Map<String,String> attributes; // this is a map describing what is encrypted.
 
 	private boolean ignore; // you can mark a record as out of scope - if true, it will not be returned by queries
-	private boolean ephemeral; // intended to be an ephemeral record, will be removed via a background process
+	private boolean ephemeral; // if true, intended to be an ephemeral record, will be removed via a background process
 	private long timestamp; // record creation time
 	
 	public Metadata(String handle) {
