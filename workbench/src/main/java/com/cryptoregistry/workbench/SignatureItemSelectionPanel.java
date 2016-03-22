@@ -121,8 +121,8 @@ public class SignatureItemSelectionPanel extends JPanel {
 								}
 								sig = ecbuilder.build();
 								break;
-							case NTRU:
-								System.err.println("Not a key which can be used for digital signature.");
+							  case JNEO:
+								System.err.println("No signature available, sig algorithm withdrawn");
 								return Boolean.FALSE;
 							case RSA:	
 								RSASignatureBuilder rsabuilder = new RSASignatureBuilder(regHandle,(RSAKeyContents)key.key);
