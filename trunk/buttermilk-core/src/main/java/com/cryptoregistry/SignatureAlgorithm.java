@@ -6,11 +6,11 @@
 package com.cryptoregistry;
 
 /**
- * These are codes for the signature algorithms Buttermilk knows how to handle. 
+ * These are tokens for the signature algorithms Buttermilk knows how to handle. 
  * 
  * @author Dave
  *
  */
 public enum SignatureAlgorithm {
-	ECDSA, ECKCDSA, RSA;
+	DSA, ECDSA, ECKCDSA, RSA;
 }
