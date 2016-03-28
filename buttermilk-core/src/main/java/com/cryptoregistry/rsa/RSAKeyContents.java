@@ -103,7 +103,6 @@ public class RSAKeyContents extends RSAKeyForPublication implements Signer {
 		this.qInv = qInv;
 	}
 	
-	
 	public final RSAKeyParameters getPrivateKey() {
 		return new RSAPrivateCrtKeyParameters(modulus, publicExponent, privateExponent, p, q, dP, dQ, qInv);
 	}
