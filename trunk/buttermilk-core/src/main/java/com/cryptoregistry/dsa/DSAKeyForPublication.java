@@ -2,6 +2,8 @@ package com.cryptoregistry.dsa;
 
 import java.math.BigInteger;
 
+import org.bouncycastle.crypto.params.DSAParameters;
+
 import com.cryptoregistry.CryptoKey;
 import com.cryptoregistry.CryptoKeyMetadata;
 import com.cryptoregistry.Verifier;
@@ -22,6 +24,10 @@ public class DSAKeyForPublication implements CryptoKey,Verifier {
 		this.g = g;
 		this.y = y;
 	}
+	
+	public DSAParameters getParams() {
+		return new DSAParameters(p,q,g);
+	}
 
 	@Override
 	public CryptoKeyMetadata getMetadata() {
@@ -36,8 +42,12 @@ public class DSAKeyForPublication implements CryptoKey,Verifier {
 
 	@Override
 	public CryptoKey keyForPublication() {
-		// TODO Auto-generated method stub
-		return null;
+		return cloneForPublication();
+	}
+	
+	public DSAKeyForPublication cloneForPublication(){
+		DSAKeyMetadata meta = this.metadata.cloneForPublication();
+		return new DSAKeyForPublication(meta,this.p,this.q,this.g,this.y);
 	}
 
 }

@@ -21,6 +21,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
  * Produce an Armored confidential key. This allows a confidential key object to be "locked" or "unlocked" with a password
  * in a manner similar to a private key in a keystore. The inner encoding is JSON.
  * 
+ * This code knows about all the keys we can create in Buttermilk.
+ * 
  * @author Dave
  *
  */
@@ -33,12 +35,20 @@ public class KeyEncryptor {
 		this.holder = holder;
 	}
 	
+	/**
+	 * TODO - JNEO
+	 * 
+	 * @param params
+	 * @return
+	 */
 	public ArmoredPBEResult wrap(PBEParams params) {
 
 		String plain = null;
 		
 		if(holder.c2Keys != null){
 			plain = formatC2Item();
+		}else if(holder.dsaKeys != null){
+			plain = formatDSAItem();
 		}else if(holder.ecKeys != null){
 			plain = formatECItem();
 		}else if(holder.rsaKeys != null){
@@ -73,6 +83,38 @@ public class KeyEncryptor {
 			g.writeStringField("P", holder.c2Keys.publicKey.getBase64UrlEncoding());
 			g.writeStringField("s", holder.c2Keys.signingPrivateKey.getBase64UrlEncoding());
 			g.writeStringField("k", holder.c2Keys.agreementPrivateKey.getBase64UrlEncoding());
+			g.writeEndObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				g.close();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		return privateDataWriter.toString();
+	}
+	
+	private String formatDSAItem() {
+		StringWriter privateDataWriter = new StringWriter();
+		JsonFactory f = new JsonFactory();
+		JsonGenerator g = null;
+		try {
+			g = f.createGenerator(privateDataWriter);
+			g.useDefaultPrettyPrinter();
+			g.writeStartObject();
+			g.writeObjectFieldStart(holder.rsaKeys.metadata.getHandle()+"-U");
+			g.writeStringField("KeyAlgorithm", "DSA");
+			g.writeStringField("CreatedOn", TimeUtil.format(holder.dsaKeys.metadata.createdOn));
+			g.writeStringField("Encoding", holder.dsaKeys.metadata.format.encodingHint.toString());
+			g.writeStringField("Strength", String.valueOf(holder.dsaKeys.metadata.lengthL));
+			g.writeStringField("P", FormatUtil.wrap(holder.dsaKeys.metadata.format.encodingHint, holder.dsaKeys.p));
+			g.writeStringField("Q", FormatUtil.wrap(holder.dsaKeys.metadata.format.encodingHint, holder.dsaKeys.q));
+			g.writeStringField("G", FormatUtil.wrap(holder.dsaKeys.metadata.format.encodingHint, holder.dsaKeys.g));
+			g.writeStringField("X", FormatUtil.wrap(holder.dsaKeys.metadata.format.encodingHint, holder.dsaKeys.x));
+			g.writeStringField("Y", FormatUtil.wrap(holder.dsaKeys.metadata.format.encodingHint, holder.dsaKeys.y));
 			g.writeEndObject();
 		} catch (IOException e) {
 			e.printStackTrace();

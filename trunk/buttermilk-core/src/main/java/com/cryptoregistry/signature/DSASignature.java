@@ -1,5 +1,7 @@
 package com.cryptoregistry.signature;
 
+import java.math.BigInteger;
+
 import com.cryptoregistry.util.ArmoredString;
 
 public class DSASignature implements SignatureBytes {
@@ -11,6 +13,12 @@ public class DSASignature implements SignatureBytes {
 		super();
 		this.r = r;
 		this.s = s;
+	}
+	
+	public DSASignature(BigInteger r, BigInteger s) {
+		super();
+		this.r = new ArmoredString(r.toByteArray());
+		this.s = new ArmoredString(s.toByteArray());
 	}
 	
 	public DSASignature(byte [] r, byte [] s) {

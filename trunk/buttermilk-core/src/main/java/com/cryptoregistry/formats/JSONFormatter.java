@@ -19,6 +19,7 @@ import com.cryptoregistry.MapData;
 import com.cryptoregistry.ListData;
 import com.cryptoregistry.Version;
 import com.cryptoregistry.c2.key.Curve25519KeyForPublication;
+import com.cryptoregistry.dsa.DSAKeyForPublication;
 import com.cryptoregistry.ec.ECKeyForPublication;
 import com.cryptoregistry.ntru.jneo.JNEOKeyForPublication;
 import com.cryptoregistry.rsa.RSAKeyForPublication;
@@ -246,6 +247,12 @@ public class JSONFormatter {
 							formatter.formatKeys(g, writer);
 							break;
 						}
+						case DSA: {
+							DSAKeyForPublication contents = (DSAKeyForPublication)key;
+							DSAKeyFormatter formatter = new DSAKeyFormatter(contents);
+							formatter.formatKeys(g, writer);
+							break;
+						}
 						case EC: {
 							ECKeyForPublication contents = (ECKeyForPublication)key;
 							ECKeyFormatter formatter = new ECKeyFormatter(contents);
@@ -264,6 +271,7 @@ public class JSONFormatter {
 							formatter.formatKeys(g, writer);
 							break;
 						}
+						
 						default: throw new RuntimeException("alg not recognized: "+alg);
 					}
 				}

@@ -32,6 +32,9 @@ import com.cryptoregistry.c2.key.Curve25519KeyContents;
 import com.cryptoregistry.c2.key.Curve25519KeyForPublication;
 import com.cryptoregistry.c2.key.PublicKey;
 import com.cryptoregistry.c2.key.SigningPrivateKey;
+import com.cryptoregistry.dsa.DSAKeyContents;
+import com.cryptoregistry.dsa.DSAKeyForPublication;
+import com.cryptoregistry.dsa.DSAKeyMetadata;
 import com.cryptoregistry.ec.ECCustomParameters;
 import com.cryptoregistry.ec.ECF2MCustomParameters;
 import com.cryptoregistry.ec.ECFPCustomParameters;
@@ -51,6 +54,8 @@ import com.cryptoregistry.rsa.RSAKeyMetadata;
 import com.cryptoregistry.signature.C2CryptoSignature;
 import com.cryptoregistry.signature.C2Signature;
 import com.cryptoregistry.signature.CryptoSignature;
+import com.cryptoregistry.signature.DSACryptoSignature;
+import com.cryptoregistry.signature.DSASignature;
 import com.cryptoregistry.signature.ECDSACryptoSignature;
 import com.cryptoregistry.signature.ECDSASignature;
 import com.cryptoregistry.signature.RSACryptoSignature;
@@ -79,7 +84,6 @@ import com.securityinnovation.jneo.math.FullPolynomial;
 public class JSONReader {
 	
 	protected final Map<String,Object> map;
-	
 	
 	public JSONReader(Map<String,Object> map) {
 		this.map = map;
@@ -185,6 +189,22 @@ public class JSONReader {
 								list.add(new CryptoKeyWrapperImpl(distinguishedKey,p));
 								break;
 							}
+							case DSA: {
+								meta = new DSAKeyMetadata(handle,createdOn,format);
+								ArmoredString P = new ArmoredString(String.valueOf(keyData.get("P")));
+								ArmoredString Q = new ArmoredString(String.valueOf(keyData.get("Q")));
+								ArmoredString G = new ArmoredString(String.valueOf(keyData.get("G")));
+								ArmoredString Y = new ArmoredString(String.valueOf(keyData.get("Y")));
+								
+								DSAKeyForPublication p = new DSAKeyForPublication(
+										(DSAKeyMetadata)meta,
+										P.decodeToBigInteger(),
+										Q.decodeToBigInteger(),
+										G.decodeToBigInteger(),
+										Y.decodeToBigInteger());
+								list.add(new CryptoKeyWrapperImpl(distinguishedKey,p));
+								break;
+							}
 							case EC: {
 								meta = new ECKeyMetadata(handle,createdOn,format);
 								String curveName = String.valueOf(keyData.get("CurveName"));
@@ -218,10 +238,7 @@ public class JSONReader {
 								list.add(new CryptoKeyWrapperImpl(distinguishedKey,rPub));
 								break;
 							}
-							case DSA: {
-								// TODO
-								break;
-							}
+							
 							case Symmetric:{
 								throw new RuntimeException("Key has no public form: "+keyAlgorithm);
 							}
@@ -248,12 +265,6 @@ public class JSONReader {
 						CryptoKeyMetadata meta = null;
 						KeyGenerationAlgorithm k = KeyGenerationAlgorithm.valueOf(keyAlgorithm);
 						switch(k){
-							case Symmetric:{
-								meta = new SymmetricKeyMetadata(handle,createdOn,format);
-								ArmoredString s = new ArmoredString(String.valueOf(keyData.get("s")));
-								SymmetricKeyContents contents = new SymmetricKeyContents((SymmetricKeyMetadata)meta,s.decodeToBytes());
-								list.add(new CryptoKeyWrapperImpl(distinguishedKey, contents));
-							}
 							case Curve25519: {
 								meta = new C2KeyMetadata(handle,createdOn,format);
 								ArmoredString P = new ArmoredString(String.valueOf(keyData.get("P")));
@@ -263,6 +274,24 @@ public class JSONReader {
 								SigningPrivateKey sPrivKey = new SigningPrivateKey(s.decodeToBytes());
 								AgreementPrivateKey aPrivKey = new AgreementPrivateKey(k_.decodeToBytes());
 								Curve25519KeyContents p = new Curve25519KeyContents((C2KeyMetadata) meta,pKey,sPrivKey,aPrivKey);
+								list.add(new CryptoKeyWrapperImpl(distinguishedKey,p));
+								break;
+							}
+							case DSA: {
+								meta = new DSAKeyMetadata(handle,createdOn,format);
+								ArmoredString P = new ArmoredString(String.valueOf(keyData.get("P")));
+								ArmoredString Q = new ArmoredString(String.valueOf(keyData.get("Q")));
+								ArmoredString G = new ArmoredString(String.valueOf(keyData.get("G")));
+								ArmoredString Y = new ArmoredString(String.valueOf(keyData.get("Y")));
+								ArmoredString X = new ArmoredString(String.valueOf(keyData.get("X")));
+								
+								DSAKeyContents p = new DSAKeyContents(
+										(DSAKeyMetadata)meta,
+										P.decodeToBigInteger(),
+										Q.decodeToBigInteger(),
+										G.decodeToBigInteger(),
+										Y.decodeToBigInteger(),
+										X.decodeToBigInteger());
 								list.add(new CryptoKeyWrapperImpl(distinguishedKey,p));
 								break;
 							}
@@ -338,9 +367,11 @@ public class JSONReader {
 								list.add(new CryptoKeyWrapperImpl(distinguishedKey, rPub));
 								break;
 							}
-							case DSA: {
-								// TODO
-								break;
+							case Symmetric:{
+								meta = new SymmetricKeyMetadata(handle,createdOn,format);
+								ArmoredString s = new ArmoredString(String.valueOf(keyData.get("s")));
+								SymmetricKeyContents contents = new SymmetricKeyContents((SymmetricKeyMetadata)meta,s.decodeToBytes());
+								list.add(new CryptoKeyWrapperImpl(distinguishedKey, contents));
 							}
 							default : throw new RuntimeException("Unknown alg: "+keyAlgorithm);
 						}
@@ -402,12 +433,13 @@ public class JSONReader {
 					
 					// specific to the encoding of each CryptoSignature subclass
 					switch(sigAlg){
-						case RSA: {
-							String sval = String.valueOf(sigData.get("s"));
-							RSASignature sig = new RSASignature(new ArmoredString(sval));
-							list.add(new RSACryptoSignature(meta,dataRefs,sig));
+						case DSA: {
+							BigInteger r = new BigInteger(String.valueOf(sigData.get("r")), 16);
+							BigInteger s = new BigInteger(String.valueOf(sigData.get("s")), 16);
+							DSASignature sig = new DSASignature(r,s);
+							list.add(new DSACryptoSignature(meta,dataRefs,sig));
 							break;
-						}
+					}
 						case ECDSA: {
 							BigInteger r = new BigInteger(String.valueOf(sigData.get("r")), 16);
 							BigInteger s = new BigInteger(String.valueOf(sigData.get("s")), 16);
@@ -421,6 +453,12 @@ public class JSONReader {
 							ArmoredString r = new ArmoredString(String.valueOf(sigData.get("r")));
 							C2Signature sig = new C2Signature(v,r);
 							list.add(new C2CryptoSignature(meta,dataRefs,sig));
+							break;
+						}
+						case RSA: {
+							String sval = String.valueOf(sigData.get("s"));
+							RSASignature sig = new RSASignature(new ArmoredString(sval));
+							list.add(new RSACryptoSignature(meta,dataRefs,sig));
 							break;
 						}
 						default: {
