@@ -8,7 +8,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.digests.SHA1Digest;
-import org.bouncycastle.crypto.digests.SHA256Digest;
 import org.bouncycastle.crypto.generators.DSAKeyPairGenerator;
 import org.bouncycastle.crypto.generators.DSAParametersGenerator;
 import org.bouncycastle.crypto.params.DSAKeyGenerationParameters;
@@ -19,10 +18,8 @@ import org.bouncycastle.crypto.signers.DSASigner;
 import org.bouncycastle.crypto.signers.HMacDSAKCalculator;
 
 import com.cryptoregistry.SignatureAlgorithm;
-import com.cryptoregistry.rsa.RSAKeyForPublication;
 import com.cryptoregistry.signature.DSACryptoSignature;
 import com.cryptoregistry.signature.DSASignature;
-import com.cryptoregistry.signature.RSACryptoSignature;
 import com.cryptoregistry.signature.SignatureMetadata;
 
 public class CryptoFactory {

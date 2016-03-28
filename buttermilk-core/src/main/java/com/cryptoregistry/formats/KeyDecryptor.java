@@ -83,20 +83,28 @@ public class KeyDecryptor {
 			
 			KeyGenerationAlgorithm alg = KeyGenerationAlgorithm.valueOf(keyAlgorithm);
 			switch(alg){
-				case Symmetric: {
-					SymmetricKeyFormatReader reader = new SymmetricKeyFormatReader(map);
-					return reader.read();
-				}
 				case Curve25519: {
 					C2KeyFormatReader reader = new C2KeyFormatReader(map);
+					return reader.read();
+				}
+				case DSA: {
+					DSAKeyFormatReader reader = new DSAKeyFormatReader(map);
 					return reader.read();
 				}
 				case EC:{
 					ECKeyFormatReader reader = new ECKeyFormatReader(map);
 					return reader.read();
 				}
+				case JNEO:{
+					JNEOKeyFormatReader reader = new JNEOKeyFormatReader(map);
+					return reader.read();
+				}
 				case RSA:{
 					RSAKeyFormatReader reader = new RSAKeyFormatReader(map);
+					return reader.read();
+				}
+				case Symmetric: {
+					SymmetricKeyFormatReader reader = new SymmetricKeyFormatReader(map);
 					return reader.read();
 				}
 				

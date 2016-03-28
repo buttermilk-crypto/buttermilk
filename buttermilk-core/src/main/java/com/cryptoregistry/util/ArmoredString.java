@@ -8,6 +8,7 @@ package com.cryptoregistry.util;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 
 import net.iharder.Base64;
 
@@ -97,6 +98,15 @@ public class ArmoredString implements CharSequence,Serializable {
 		try {
 			byte [] bytes = Base64.decode(data, options);
 			return Base64.encodeBytes(bytes, Base64.NO_OPTIONS);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public BigInteger decodeToBigInteger() {
+		try {
+			byte [] bytes = Base64.decode(data, options);
+			return new BigInteger(bytes);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
