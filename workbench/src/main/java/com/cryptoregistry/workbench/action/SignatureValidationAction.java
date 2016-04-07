@@ -10,7 +10,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextPane;
 
 import asia.redact.bracket.properties.Properties;
 
@@ -31,8 +30,11 @@ public class SignatureValidationAction extends AbstractAction {
 
 	private static final long serialVersionUID = 1L;
 	private JTabbedPane tabs;
+	@SuppressWarnings("unused")
 	private Properties props;
+	@SuppressWarnings("unused")
 	private JLabel statusLabel;
+	@SuppressWarnings("unused")
 	private ExceptionHolder exception;
 
 	public SignatureValidationAction(JTabbedPane tabs, Properties props, JLabel statusLabel) {
@@ -50,7 +52,7 @@ public class SignatureValidationAction extends AbstractAction {
 		if (index == -1) return; // fail because no tabs found
 		final UUIDTextPane pane = (UUIDTextPane) ((JScrollPane) tabs.getComponentAt(index)).getViewport().getView();
 		
-		String input = pane.getSelectedText(); // do only selection
+	//	String input = pane.getSelectedText(); // do only selection
 		
 		JSONReader reader = new JSONReader(new StringReader(pane.getText()));
 		KeyMaterials km = reader.parse();
@@ -94,23 +96,6 @@ public class SignatureValidationAction extends AbstractAction {
 				return;
 			}
 	}
-	
-	/**
-	 * Return true if select start and end are not equal
-	 * 
-	 * @param pane
-	 * @return
-	 */
-	private boolean selectionFound(JTextPane pane) {
-		final int selectionStart = pane.getSelectionStart();
-		final int selectionEnd = pane.getSelectionEnd();
-		return selectionStart != selectionEnd;
-	}
-	
-	private String quoteRemover(String in){
-		if(in.startsWith("\"") && in.endsWith("\"")){
-			return in.substring(1, in.length()-1);
-		}else return in;
-	}
+
 
 }

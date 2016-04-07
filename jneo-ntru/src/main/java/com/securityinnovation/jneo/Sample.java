@@ -216,6 +216,8 @@ public class Sample {
 		} catch (java.security.GeneralSecurityException e) {
 			System.out.println("AES error: " + e);
 		}
+		
+		in.close();
 
 		// Write it
 		OutputStream out = new FileOutputStream(outFileName);

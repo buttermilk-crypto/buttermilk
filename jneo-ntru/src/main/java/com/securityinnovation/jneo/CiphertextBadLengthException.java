@@ -23,6 +23,9 @@ package com.securityinnovation.jneo;
  * on the key parameter set.
  */
 public class CiphertextBadLengthException extends NtruException {
+	
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructs a new exception a default message.
 	 *

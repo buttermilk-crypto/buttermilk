@@ -33,7 +33,6 @@ import com.cryptoregistry.c2.key.Curve25519KeyForPublication;
 import com.cryptoregistry.c2.key.PublicKey;
 import com.cryptoregistry.c2.key.SecretKey;
 import com.cryptoregistry.c2.key.SigningPrivateKey;
-import com.cryptoregistry.formats.EncodingHint;
 import com.cryptoregistry.formats.JSONFormatter;
 import com.cryptoregistry.formats.JSONReader;
 import com.cryptoregistry.formats.KeyFormat;
@@ -64,8 +63,8 @@ public class Curve25519Test {
 	
 	private static final String uuidVal = "2eb1cdc9-65fe-4f3e-b029-5fd29d035ae8";
 	private static final String date = "2015-07-11T07:08:27+0000";
-	private static final EncodingHint hint = EncodingHint.Base64url;
-	private static final char [] passwordChars = {'p','a','s','s'}; 
+//	private static final EncodingHint hint = EncodingHint.Base64url;
+//	private static final char [] passwordChars = {'p','a','s','s'}; 
 	
 	@Test
 	public void testKeyFormats() {

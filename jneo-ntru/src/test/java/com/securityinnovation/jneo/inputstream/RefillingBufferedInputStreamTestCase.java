@@ -59,7 +59,7 @@ public class RefillingBufferedInputStreamTestCase {
 
 	// This test makes sure the SkippingInputStream works.
 	@Test
-	public void test_SkippingInputStream() {
+	public void test_SkippingInputStream() throws IOException {
 		SkippingInputStream is = new SkippingInputStream();
 		byte b[] = new byte[16];
 		int i = 0;
@@ -73,6 +73,7 @@ public class RefillingBufferedInputStreamTestCase {
 		byte expected[] = { 10, 20, 30, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
 				50, 51, 60 };
 		assertArrayEquals(expected, b);
+		is.close();
 	}
 
 	// This verifies that the RefillingBufferedInputStream is
@@ -95,5 +96,6 @@ public class RefillingBufferedInputStreamTestCase {
 		byte expected[] = { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
 				23, 24, 25 };
 		assertArrayEquals(expected, b);
+		is.close();
 	}
 }

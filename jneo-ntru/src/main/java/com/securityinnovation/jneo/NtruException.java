@@ -27,6 +27,9 @@ package com.securityinnovation.jneo;
  * IllegalArgumentException for invalid array bounds or lengths.
  */
 public class NtruException extends Exception {
+	
+	private static final long serialVersionUID = 1L;
+
 	public NtruException(String msg) {
 		super(msg);
 	}

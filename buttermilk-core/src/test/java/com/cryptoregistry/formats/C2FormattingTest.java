@@ -42,7 +42,6 @@ import com.cryptoregistry.signature.builder.C2KeyContentsIterator;
 import com.cryptoregistry.signature.builder.C2SignatureCollector;
 import com.cryptoregistry.signature.builder.ContactContentsIterator;
 import com.cryptoregistry.signature.builder.MapDataContentsIterator;
-import com.cryptoregistry.signature.builder.ListDataContentsIterator;
 import com.cryptoregistry.signature.validator.SelfContainedSignatureValidator;
 import com.cryptoregistry.util.MapIterator;
 import com.cryptoregistry.util.TimeUtil;

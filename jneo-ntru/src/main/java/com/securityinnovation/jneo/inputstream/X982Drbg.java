@@ -232,7 +232,7 @@ public class X982Drbg extends InputStream {
 		int carry = 0;
 		int i = len - 1, j = accum.length - 1;
 		while ((i >= 0) && (j >= 0)) {
-			int oldCarry = carry;
+		//	int oldCarry = carry;
 			carry = (0xff & accum[j]) + (0xff & in[i]) + carry;
 			accum[j] = (byte) carry;
 			carry >>= 8;

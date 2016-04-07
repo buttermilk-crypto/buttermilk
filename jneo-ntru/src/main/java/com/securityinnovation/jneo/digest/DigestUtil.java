@@ -32,7 +32,7 @@ public class DigestUtil {
 	 * Create an instance of the specified Hash subclass using the default
 	 * constructor.
 	 */
-	public static Digest create(Class clss) {
+	public static Digest create(Class<?> clss) {
 		// The newInstance can fail if clss is not a subclass of Digest
 		// or the clss is missing the default constructor.
 		try {

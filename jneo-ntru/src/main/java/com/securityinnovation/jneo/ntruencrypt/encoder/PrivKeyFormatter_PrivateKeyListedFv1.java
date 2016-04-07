@@ -21,11 +21,7 @@
 
 package com.securityinnovation.jneo.ntruencrypt.encoder;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-
 import com.securityinnovation.jneo.math.FullPolynomial;
-import com.securityinnovation.jneo.math.MGF_TP_1;
 import com.securityinnovation.jneo.math.BitPack;
 import com.securityinnovation.jneo.ntruencrypt.KeyParams;
 import com.securityinnovation.jneo.ParamSetNotSupportedException;

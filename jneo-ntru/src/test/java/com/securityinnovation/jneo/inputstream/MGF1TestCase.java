@@ -76,6 +76,7 @@ public class MGF1TestCase {
 		offset += 4;
 		mgf.read(out, offset, out.length - offset);
 		assertArrayEquals(expectedOut, out);
+		mgf.close();
 	}
 
 	// Generated internally, to ensure future code changes don't change
@@ -131,5 +132,6 @@ public class MGF1TestCase {
 		offset += 4;
 		mgf.read(out, offset, out.length - offset);
 		assertArrayEquals(expectedOut, out);
+		mgf.close();
 	}
 }

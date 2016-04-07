@@ -22,7 +22,6 @@
 package com.securityinnovation.testvectors;
 
 import com.securityinnovation.jneo.OID;
-import com.securityinnovation.jneo.OIDMap;
 
 public class NtruEncryptTestVector {
 	public OID oid;

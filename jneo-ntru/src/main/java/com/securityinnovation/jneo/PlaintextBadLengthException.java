@@ -27,6 +27,11 @@ package com.securityinnovation.jneo;
  */
 public class PlaintextBadLengthException extends NtruException {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Constructs a new exception a default message.
 	 *
 	 * @param msgLen

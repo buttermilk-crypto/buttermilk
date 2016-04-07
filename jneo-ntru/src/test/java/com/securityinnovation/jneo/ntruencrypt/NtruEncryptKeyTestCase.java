@@ -56,6 +56,7 @@ public class NtruEncryptKeyTestCase {
 	// the test vectors.
 	// This only considers the case where m and b are their own
 	// vectors (specifically, mOffset and bOffset are 0).
+	@SuppressWarnings("unused")
 	@Test
 	public void test_form_sData() throws NtruException {
 		for (int t = 0; t < tests.length; t++) {
@@ -69,6 +70,7 @@ public class NtruEncryptKeyTestCase {
 	}
 
 	// Same as test_form_sData(), but make mOffset and bOffset non-zero.
+	@SuppressWarnings("unused")
 	@Test
 	public void test_form_sData_embedded() throws NtruException {
 		for (int t = 0; t < tests.length; t++) {
@@ -252,6 +254,7 @@ public class NtruEncryptKeyTestCase {
 	// Test that the full conversion from trinary polynomial to binary
 	// polynomial works correctly.
 	// To get a variety of sample inputs we use the test vectors.
+	@SuppressWarnings("unused")
 	@Test
 	public void test_convPolyTrinaryToBinary() throws NtruException {
 		for (int t = 0; t < tests.length; t++) {
@@ -266,6 +269,7 @@ public class NtruEncryptKeyTestCase {
 
 	// Verify that the calculation (P mod 4) works correctly for a variety
 	// of polynomials P.
+	@SuppressWarnings("unused")
 	@Test
 	public void test_calcPolyMod4Packed() throws NtruException {
 		for (int t = 0; t < tests.length; t++) {
@@ -279,6 +283,7 @@ public class NtruEncryptKeyTestCase {
 
 	// Verify that the calculation of the encryption mask polynomial
 	// from r*h is correct. Use the test vectors as sample input
+	@SuppressWarnings("unused")
 	@Test
 	public void test_calcEncryptionMask() throws NtruException {
 		for (int t = 0; t < tests.length; t++) {
@@ -411,6 +416,7 @@ public class NtruEncryptKeyTestCase {
 	// A full passthrough for each test vector:
 	// verify encrypt() produces the correct output
 	// verify decrypt() produces the correct output
+	@SuppressWarnings("unused")
 	@Test
 	public void test_encdec() throws NtruException {
 		for (int t = 0; t < tests.length; t++) {

@@ -27,6 +27,11 @@ package com.securityinnovation.jneo;
  */
 public class FormatNotSupportedException extends NtruException {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Constructs a new exception with the supplied key blob tag as the detail
 	 * message.
 	 */

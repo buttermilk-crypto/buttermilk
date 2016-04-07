@@ -167,6 +167,7 @@ class Sha1 extends Digest {
 	/** The number of bytes that have been input to the digest. */
 	private long byteCount;
 
+	@SuppressWarnings("unused")
 	private static final long MAXCNT = (1L << 61) - 1L;
 
 	/** Length of the final hash (in bytes). */

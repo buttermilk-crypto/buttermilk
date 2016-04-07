@@ -2,8 +2,6 @@ package com.cryptoregistry.parse;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +12,6 @@ import javax.json.stream.JsonParser.Event;
 import org.junit.Test;
 
 import com.cryptoregistry.MapData;
-import com.cryptoregistry.formats.JSONGenericReader;
 
 public class ParseAPITest {
 	
@@ -24,6 +21,7 @@ public class ParseAPITest {
 		try (InputStream in = this.getClass().getResourceAsStream(
 				"/believed-good-c2.json");
 				JsonParser parser = Json.createParser(in)) {
+			@SuppressWarnings("unused")
 			List<MapData> list = new ArrayList<MapData>();
 			
 		//	while (parser.hasNext()) {
@@ -44,7 +42,7 @@ public class ParseAPITest {
 					System.err.println(key);
 				}else if(e == Event.VALUE_STRING){
 					String value = parser.getString();
-					System.err.println("value");
+					System.err.println(value);
 				}
 			}
 		} catch (IOException e1) {

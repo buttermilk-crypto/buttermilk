@@ -33,6 +33,11 @@ package com.securityinnovation.jneo;
  */
 public class DecryptionFailureException extends NtruException {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Constructs a new exception a default message.
 	 */
 	public DecryptionFailureException() {

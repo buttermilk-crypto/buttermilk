@@ -32,6 +32,7 @@ import com.securityinnovation.testvectors.NtruEncryptTestVector;
 public class FullPolynomialTestCase {
 
 	// Test recentering to 0 and to a non-zero value.
+	@SuppressWarnings("unused")
 	@Test
 	public void test_recenterModQ_0() {
 		short aCoeffs[] = { 1, 2, 3, 4, 5, 6, 7, 8 };
@@ -41,6 +42,7 @@ public class FullPolynomialTestCase {
 		assertArrayEquals(a.p, aCoeffs);
 	}
 
+	@SuppressWarnings("unused")
 	@Test
 	public void test_recenterModQ_2() {
 		short aCoeffs[] = { 1, 2, 3, 4, 5, 6, 7, 8 };

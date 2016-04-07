@@ -21,9 +21,11 @@
 
 package com.securityinnovation.jneo.inputstream;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import java.io.IOException;
 
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 import static com.securityinnovation.jneo.digest.DigestAlgorithm.*;
 
 public class X982DrbgTestCase {
@@ -36,6 +38,9 @@ public class X982DrbgTestCase {
 		assertEquals(n, drbg.read(out, 0, n));
 		byte expected[] = subarray(sha1_ans, n);
 		assertArrayEquals(expected, out);
+		try {
+			drbg.close();
+		} catch (IOException e) {}
 	}
 
 	@Test
@@ -46,6 +51,9 @@ public class X982DrbgTestCase {
 		assertEquals(n, drbg.read(out, 0, n));
 		byte expected[] = subarray(sha1_ans, n);
 		assertArrayEquals(expected, out);
+		try {
+			drbg.close();
+		} catch (IOException e) {}
 	}
 
 	@Test
@@ -56,6 +64,9 @@ public class X982DrbgTestCase {
 		assertEquals(n, drbg.read(out, 0, n));
 		byte expected[] = subarray(sha1_ans, n);
 		assertArrayEquals(expected, out);
+		try {
+			drbg.close();
+		} catch (IOException e) {}
 	}
 
 	@Test
@@ -70,6 +81,9 @@ public class X982DrbgTestCase {
 		assertEquals(n, drbg.read(out, 0, n));
 		expected = subarray(sha1_ans2, n);
 		assertArrayEquals(expected, out);
+		try {
+			drbg.close();
+		} catch (IOException e) {}
 	}
 
 	@Test
@@ -86,6 +100,9 @@ public class X982DrbgTestCase {
 		assertEquals(n, drbg.read(out, 0, n));
 		expected = subarray(sha1_ansr, n);
 		assertArrayEquals(expected, out);
+		try {
+			drbg.close();
+		} catch (IOException e) {}
 	}
 
 	static byte sha256_seed[] = { (byte) 0xe3, (byte) 0xb2, (byte) 0x01,
@@ -198,6 +215,9 @@ public class X982DrbgTestCase {
 		drbg.reseed(sha256_reseed2);
 		assertEquals(n, drbg.read(out, 0, n));
 		assertArrayEquals(sha256_ans80r2_1, out);
+		try {
+			drbg.close();
+		} catch (IOException e) {}
 	}
 
 	private static byte[] subarray(byte a[], int n) {

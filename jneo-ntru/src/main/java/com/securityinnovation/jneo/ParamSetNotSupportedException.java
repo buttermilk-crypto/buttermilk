@@ -27,6 +27,11 @@ package com.securityinnovation.jneo;
  */
 public class ParamSetNotSupportedException extends NtruException {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Constructs a new exception with the supplied OID as the detail message,
 	 * formatted as "w.x.y.z".
 	 */

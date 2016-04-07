@@ -25,6 +25,11 @@ package com.securityinnovation.jneo;
  */
 public class NoPrivateKeyException extends NtruException {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Constructs a new exception a default message.
 	 */
 	public NoPrivateKeyException() {

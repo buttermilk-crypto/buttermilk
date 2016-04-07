@@ -164,7 +164,7 @@ public class BitPack {
 				// stream. Then clear cur, and mask the used bits out
 				// of next.
 				int shift = cb + nb - 8;
-				int tmp = 0xff & (cur | (next >> shift));
+			//	int tmp = 0xff & (cur | (next >> shift));
 				tgt[j++] = (byte) (cur | (next >> shift));
 				cur = 0;
 				cb = 0;
