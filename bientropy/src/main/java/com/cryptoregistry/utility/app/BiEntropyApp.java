@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.iharder.Base64;
-import x.org.bouncycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import com.cryptoregistry.util.CmdLineParser;
 import com.cryptoregistry.util.CmdLineParser.Option;
