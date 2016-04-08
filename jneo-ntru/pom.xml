@@ -65,6 +65,47 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	<url>https://www.cryptoregistry.com/</url>
+	<licenses>
+		<license>
+			<name>GPLv2</name>
+			<url>http://www.gnu.org/licenses/gpl-2.0.html</url>
+			<distribution>repo</distribution>
+		</license>
+		<license>
+			<name>Free and Open Source Software (FOSS) Exception</name>
+			<url>https://github.com/NTRUOpenSourceProject/ntru-crypto/blob/master/FOSS%20Exception.md</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<inceptionYear>2011</inceptionYear>
+	<organization>
+		<name>David R. Smith</name>
+		<url>https://www.cryptoregistry.com/</url>
+	</organization>
+	<scm>
+		<connection>scm:git:git://github.com/buttermilk-crypto/buttermilk.git</connection>
+		<developerConnection>scm:git:git://github.com/buttermilk-crypto/buttermilk.git</developerConnection>
+		<url>https://github.com/buttermilk-crypto</url>
+	</scm>
+	<developers>
+		<developer>
+			<id>1</id>
+			<name>David R. Smith</name>
+			<email>dave@cryptoregistry.com</email>
+		</developer>
+	</developers>
+	
+	<issueManagement>
+		<url>https://github.com/buttermilk-crypto/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
+	
+	<ciManagement>
+		<system>None</system>
+	</ciManagement>
  
     
     <properties>

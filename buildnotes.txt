@@ -1,0 +1,9 @@
+Buttermilk Crypto Build Notes
+
+This code was written in Eclipse Luna running on a Windows 7 PC.
+
+Use Java 1.8 to build. Code is mainly at 1.7 level for source. 
+
+The keyvault project uses a few 1.8 constructs. 
+
+The workbench project GUI was designed with WindowBuilder, which required Java 1.7 in design mode.
