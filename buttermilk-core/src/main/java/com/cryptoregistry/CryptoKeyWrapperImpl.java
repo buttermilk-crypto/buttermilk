@@ -10,7 +10,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.cryptoregistry.formats.C2KeyFormatReader;
+import com.cryptoregistry.formats.DSAKeyFormatReader;
 import com.cryptoregistry.formats.ECKeyFormatReader;
+import com.cryptoregistry.formats.JNEOKeyFormatReader;
 import com.cryptoregistry.formats.KeyEncryptor;
 import com.cryptoregistry.formats.KeyHolder;
 import com.cryptoregistry.formats.RSAKeyFormatReader;
@@ -150,6 +152,11 @@ public class CryptoKeyWrapperImpl implements CryptoKeyWrapper {
 						wrapped = reader.read();
 						break;
 					}
+					case DSA: {
+						DSAKeyFormatReader reader = new DSAKeyFormatReader(map);
+						wrapped = reader.read();
+						break;
+					}
 					case EC:{
 						ECKeyFormatReader reader = new ECKeyFormatReader(map);
 						wrapped = reader.read();
@@ -161,7 +168,8 @@ public class CryptoKeyWrapperImpl implements CryptoKeyWrapper {
 						break;
 					}
 					case JNEO: {
-						//TODO
+						JNEOKeyFormatReader reader = new JNEOKeyFormatReader(map);
+						wrapped = reader.read();
 						break;
 					}
 					

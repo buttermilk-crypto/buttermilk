@@ -1,12 +1,13 @@
 /*
  *  This file is part of Buttermilk
- *  Copyright 2011-2014 David R. Smith All Rights Reserved.
+ *  Copyright 2011-2016 David R. Smith. All Rights Reserved.
  *
  */
 package com.cryptoregistry;
 
 import com.cryptoregistry.passwords.Password;
 import com.cryptoregistry.pbe.PBEParams;
+
 
 public interface CryptoKeyWrapper {
 

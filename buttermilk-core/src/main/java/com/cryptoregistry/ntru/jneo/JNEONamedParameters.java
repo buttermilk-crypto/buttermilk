@@ -8,6 +8,12 @@ package com.cryptoregistry.ntru.jneo;
 import com.securityinnovation.jneo.OID;
 import com.securityinnovation.jneo.ntruencrypt.KeyParams;
 
+/**
+ * Wrap the OIDs into enums for ease of use in our scheme. We don't care about OIDs
+ * 
+ * @author Dave
+ *
+ */
 public enum JNEONamedParameters {
 	
 	EES401EP1(KeyParams.getKeyParams(OID.ees401ep1)),

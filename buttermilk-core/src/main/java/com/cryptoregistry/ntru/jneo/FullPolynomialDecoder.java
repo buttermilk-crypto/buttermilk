@@ -1,3 +1,8 @@
+/*
+ *  This file is part of Buttermilk
+ *  Copyright 2011-2016 David R. Smith. All Rights Reserved.
+ *
+ */
 package com.cryptoregistry.ntru.jneo;
 
 import java.io.IOException;
@@ -9,6 +14,12 @@ import net.iharder.Base64;
 
 import com.securityinnovation.jneo.math.FullPolynomial;
 
+/**
+ * Decoder for polynomial encoded with the FullPolynomialEncoder class.
+ *  
+ * @author Dave
+ *
+ */
 public class FullPolynomialDecoder {
 
 	// final prevents reuse - encourages good thread-safety

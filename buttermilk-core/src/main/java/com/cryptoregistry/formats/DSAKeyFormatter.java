@@ -116,7 +116,7 @@ class DSAKeyFormatter {
 	protected void formatOpen(JsonGenerator g, EncodingHint enc, Writer writer)
 			throws JsonGenerationException, IOException {
 
-		g.writeObjectFieldStart(dsaKeys.getMetadata().getDistinguishedHandle());
+		g.writeObjectFieldStart(dsaKeys.getMetadata().getHandle()+"-U");
 		g.writeStringField("KeyAlgorithm", "DSA");
 		g.writeStringField("CreatedOn", TimeUtil.format(dsaKeys.metadata.createdOn));
 		g.writeStringField("Encoding", enc.toString());
@@ -134,7 +134,7 @@ class DSAKeyFormatter {
 	protected void formatForPublication(JsonGenerator g, EncodingHint enc,
 			Writer writer) throws JsonGenerationException, IOException {
 
-		g.writeObjectFieldStart(dsaKeys.getMetadata().getDistinguishedHandle());
+		g.writeObjectFieldStart(dsaKeys.getMetadata().getHandle()+"-P");
 		g.writeStringField("KeyAlgorithm", "DSA");
 		g.writeStringField("CreatedOn", TimeUtil.format(dsaKeys.metadata.createdOn));
 		g.writeStringField("Encoding", enc.toString());

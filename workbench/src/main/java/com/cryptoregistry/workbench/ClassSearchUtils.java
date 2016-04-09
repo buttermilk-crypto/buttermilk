@@ -1,7 +1,11 @@
-package com.cryptoregistry.workbench;
-
 /*
- * $Id: ClassSearchUtils.java,v 1.1 2009/03/01 12:01:11 rah003 Exp $
+ *  This file is part of Buttermilk
+ *  Copyright 2011-2016 David R. Smith. All Rights Reserved.
+ *
+ */
+package com.cryptoregistry.workbench;
+/*
+
  *
  * Copyright 2009 Sun Microsystems, Inc., 4150 Network Circle,
  * Santa Clara, California 95054, U.S.A. All rights reserved.

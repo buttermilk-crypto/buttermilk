@@ -1,6 +1,6 @@
 /*
  *  This file is part of Buttermilk
- *  Copyright 2011-2014 David R. Smith All Rights Reserved.
+ *  Copyright 2011-2016 David R. Smith. All Rights Reserved.
  *
  */
 package com.cryptoregistry;
@@ -47,8 +47,6 @@ public class CryptoContact {
 	/**
 	 * Validates content values for length - security feature
 	 *  
-	 * @param handle
-	 * @param contents
 	 */
 	public CryptoContact(String handle, Map<String,Object> contents) {
 		map = new LinkedHashMap<String,String>();

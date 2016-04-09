@@ -1,3 +1,8 @@
+/*
+ *  This file is part of Buttermilk
+ *  Copyright 2011-2016 David R. Smith. All Rights Reserved.
+ *
+ */
 package com.cryptoregistry.workbench;
 
 import java.awt.BorderLayout;
@@ -62,6 +67,15 @@ import asia.redact.bracket.properties.Properties;
 import asia.redact.bracket.properties.mgmt.PropertiesReference;
 import asia.redact.bracket.properties.mgmt.ReferenceType;
 
+/**
+ * The class with our main method. The basic idea of the workbench is to show that key materials encoded
+ * in JSON are easier to work with than keys encoded in ASN.1. The workbench also gives us a platform for
+ * making web service calls and so on. I was originally going to build some eclipse plugins but like
+ * everything apparently the Eclipse plugin framework is in transition. So a Swing GUI was the fast approach.
+ * 
+ * @author Dave
+ *
+ */
 public class WorkbenchGUI implements ChangeListener, PasswordListener,
 		RegHandleListener, CreateKeyListener {
 

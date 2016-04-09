@@ -5,6 +5,12 @@
  */
 package com.cryptoregistry.client.security;
 
+/**
+ * Currently we don't use this but the idea is in some cases you want a token which is unique per machine.
+ * 
+ * @author Dave
+ *
+ */
 final class HardwareData {
 	
 	public final String baseboardSerialNumber;

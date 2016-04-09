@@ -1,3 +1,8 @@
+/*
+ *  This file is part of Buttermilk
+ *  Copyright 2011-2016 David R. Smith. All Rights Reserved.
+ *
+ */
 package com.cryptoregistry.ntru.jneo;
 
 import java.io.ByteArrayOutputStream;
@@ -9,6 +14,12 @@ import net.iharder.Base64;
 
 import com.securityinnovation.jneo.math.FullPolynomial;
 
+/**
+ * The premise here is just to use a byte array and zip compression to save space - really simple.
+ * 
+ * @author Dave
+ *
+ */
 public class FullPolynomialEncoder {
 
 	// final prevents reuse - encourages good thread-safety

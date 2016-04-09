@@ -19,6 +19,12 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.securityinnovation.jneo.math.FullPolynomial;
 
+/**
+ * The full key contents
+ * 
+ * @author Dave
+ *
+ */
 public class JNEOKeyContents extends JNEOKeyForPublication implements Signer {
 	
 	// the confidential key

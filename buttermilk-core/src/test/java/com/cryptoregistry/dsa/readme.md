@@ -69,4 +69,8 @@ Here's the output:
 	    }
 	  }
 	}
+
+Note: Obviously you would not normally publish the secured key, just the public part which is in the block at the top.
+
+
 	

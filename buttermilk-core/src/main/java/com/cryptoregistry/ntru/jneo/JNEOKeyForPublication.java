@@ -19,6 +19,12 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.securityinnovation.jneo.math.FullPolynomial;
 
+/**
+ * The for-publication key
+ * 
+ * @author Dave
+ *
+ */
 public class JNEOKeyForPublication implements CryptoKey, Verifier {
 	
 	public final JNEOKeyMetadata metadata;

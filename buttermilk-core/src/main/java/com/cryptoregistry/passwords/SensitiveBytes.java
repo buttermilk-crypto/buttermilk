@@ -1,3 +1,8 @@
+/*
+ *  This file is part of Buttermilk
+ *  Copyright 2011-2016 David R. Smith. All Rights Reserved.
+ *
+ */
 package com.cryptoregistry.passwords;
 
 import java.nio.ByteBuffer;
@@ -7,8 +12,9 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 
 /**
- * Generalized wrapper for bytes we do not wish to leave in heap memory to whim
- * of the GC. After use they can be zeroed out.
+ * Generalized wrapper for bytes we do not wish to leave in heap memory to the whim
+ * of the GC. After use they can be zeroed out. I don't like "SensitiveBytes" as a term it sounds
+ * like we are hurting their feelings. But I have not yet thought of a better term.
  * 
  * @author Dave
  * 

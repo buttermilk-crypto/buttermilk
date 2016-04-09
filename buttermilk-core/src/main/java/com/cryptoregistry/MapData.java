@@ -1,6 +1,6 @@
 /*
  *  This file is part of Buttermilk
- *  Copyright 2011-2014 David R. Smith All Rights Reserved.
+ *  Copyright 2011-2016 David R. Smith. All Rights Reserved.
  *
  */
 package com.cryptoregistry;
@@ -15,6 +15,12 @@ import java.util.UUID;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 
+/**
+ * Basic data structure, a named map.
+ * 
+ * @author Dave
+ *
+ */
 public class MapData {
 
 	public final String uuid;

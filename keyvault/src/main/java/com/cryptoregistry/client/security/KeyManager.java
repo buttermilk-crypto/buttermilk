@@ -7,6 +7,12 @@ package com.cryptoregistry.client.security;
 
 import com.cryptoregistry.passwords.SensitiveBytes;
 
+/**
+ * Key Manager is responsible to load the key which will be used for encryption
+ *  
+ * @author Dave
+ *
+ */
 public interface KeyManager {
 
 	SensitiveBytes loadKey();

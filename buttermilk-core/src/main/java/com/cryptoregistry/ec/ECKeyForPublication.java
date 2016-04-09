@@ -30,7 +30,7 @@ import org.bouncycastle.math.ec.ECPoint;
  * 
  * Custom Curve support:
  * 
- * if "curveName" is null, then customCurveDefinition will be defined or vice versa.
+ * if "curveName" is null, then customCurveDefinition will be defined or vice versa (but never both)
  * 
  * @author Dave
  *

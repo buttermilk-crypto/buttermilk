@@ -21,7 +21,7 @@ import java.util.Scanner;
  * https://github.com/sarxos/secure-tokens/blob/master/src/main/java/com/github/sarxos/securetoken/impl/Hardware4Win.java
  * 
  * The below should work on any contemporary Windows host BUT wmic has to be in the PATH. This is by no means
- * guaranteed.
+ * guaranteed which is why I am not currently using it.
  * 
  * </pre>
  * 

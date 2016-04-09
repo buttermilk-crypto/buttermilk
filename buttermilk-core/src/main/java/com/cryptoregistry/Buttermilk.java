@@ -1,12 +1,13 @@
 /*
  *  This file is part of Buttermilk
- *  Copyright 2011-2014 David R. Smith All Rights Reserved.
+ *  Copyright 2011-2016 David R. Smith. All Rights Reserved.
  *
  */
 package com.cryptoregistry;
 
 import com.cryptoregistry.c2.key.C2KeyMetadata;
 import com.cryptoregistry.c2.key.Curve25519KeyContents;
+import com.cryptoregistry.dsa.DSAKeyContents;
 import com.cryptoregistry.ec.ECCustomParameters;
 import com.cryptoregistry.ec.ECKeyContents;
 import com.cryptoregistry.ec.ECKeyMetadata;
@@ -81,6 +82,15 @@ public class Buttermilk {
 	
 	public final RSAKeyContents generateRSAKeys(RSAKeyMetadata meta) {
 		return com.cryptoregistry.rsa.CryptoFactory.INSTANCE.generateKeys(meta);
+	}
+	
+	public final DSAKeyContents generateDSAKeys(char [] pass) {
+		return com.cryptoregistry.dsa.CryptoFactory.INSTANCE.generateKeys(pass);
+	}
+	
+	public final DSAKeyContents generateDSAKeys(char [] pass, int strength, int certainty) {
+		if(strength%1024 != 0) throw new RuntimeException("Bad key size: "+strength);
+		return com.cryptoregistry.dsa.CryptoFactory.INSTANCE.generateKeys(pass,strength,certainty);
 	}
 	
 	public final JNEOKeyContents generateJNEOKeys(){
