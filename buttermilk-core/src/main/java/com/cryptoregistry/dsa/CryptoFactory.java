@@ -22,6 +22,12 @@ import com.cryptoregistry.signature.DSACryptoSignature;
 import com.cryptoregistry.signature.DSASignature;
 import com.cryptoregistry.signature.SignatureMetadata;
 
+/**
+ * DSA implementation. The key generation methods can take a while.
+ * 
+ * @author Dave
+ *
+ */
 public class CryptoFactory {
 
 	private final ReentrantLock lock;

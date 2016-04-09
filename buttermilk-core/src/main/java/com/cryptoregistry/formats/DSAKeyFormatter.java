@@ -78,7 +78,7 @@ class DSAKeyFormatter {
 		}
 
 		g.writeObjectFieldStart(dsaKeys.getMetadata().getDistinguishedHandle());
-		g.writeStringField("KeyData.Type", "RSA");
+		g.writeStringField("KeyData.Type", "DSA");
 		g.writeStringField("KeyData.Strength", String.valueOf(dsaKeys.metadata.lengthL));
 		g.writeStringField("KeyData.PBEAlgorithm", pbeParams.getAlg().toString());
 		
@@ -135,14 +135,14 @@ class DSAKeyFormatter {
 			Writer writer) throws JsonGenerationException, IOException {
 
 		g.writeObjectFieldStart(dsaKeys.getMetadata().getDistinguishedHandle());
-		g.writeStringField("KeyAlgorithm", "RSA");
+		g.writeStringField("KeyAlgorithm", "DSA");
 		g.writeStringField("CreatedOn", TimeUtil.format(dsaKeys.metadata.createdOn));
 		g.writeStringField("Encoding", enc.toString());
 		g.writeStringField("Strength", String.valueOf(dsaKeys.metadata.lengthL));
 		g.writeStringField("P", FormatUtil.wrap(enc, dsaKeys.p));
 		g.writeStringField("Q", FormatUtil.wrap(enc, dsaKeys.q));
 		g.writeStringField("G", FormatUtil.wrap(enc, dsaKeys.g));
-		
+		// do not print the private key part, X
 		g.writeStringField("Y", FormatUtil.wrap(enc, dsaKeys.y));
 		g.writeEndObject();
 
@@ -157,10 +157,9 @@ class DSAKeyFormatter {
 			g.useDefaultPrettyPrinter();
 			g.writeStartObject();
 			g.writeObjectFieldStart(dsaKeys.metadata.getHandle()+"-U");
-			g.writeStringField("KeyAlgorithm", "RSA");
+			g.writeStringField("KeyAlgorithm", "DSA");
 			g.writeStringField("CreatedOn", TimeUtil.format(dsaKeys.metadata.createdOn));
 			g.writeStringField("Encoding", enc.toString());
-			g.writeStringField("KeyAlgorithm", "DSA");
 			g.writeStringField("CreatedOn", TimeUtil.format(dsaKeys.metadata.createdOn));
 			g.writeStringField("Encoding", enc.toString());
 			g.writeStringField("Strength", String.valueOf(dsaKeys.metadata.lengthL));
