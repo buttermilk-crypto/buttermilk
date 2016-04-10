@@ -7,7 +7,6 @@
  </parent>
   <artifactId>bientropy</artifactId>
   <packaging>jar</packaging>
-  <version>1.0</version>
   
   <dependencies>
 		<dependency>
@@ -29,6 +28,52 @@
           <target>1.7</target>
         </configuration>
       </plugin>
+      
+      <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<show>private</show>
+					<nohelp>true</nohelp>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.2.1</version>
+				<configuration>
+					<attach>true</attach>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+      
+      
+      
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.5.5</version>
@@ -54,4 +99,11 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+		<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		
+		<!--  needed to get my inadequate comments to parse in Java 1.8 javadoc -->
+		<additionalparam>-Xdoclint:none</additionalparam>
+	</properties>
 </project>

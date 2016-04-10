@@ -9,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -36,12 +35,7 @@ public class BiEntropyApp {
 
 	public static final void main(String[] argv) {
 		
-		try {
-			rand = SecureRandom.getInstanceStrong();
-		} catch (NoSuchAlgorithmException e1) {
-			e1.printStackTrace();
-			return;
-		}
+		rand = new SecureRandom();
 		
 		CmdLineParser parser = new CmdLineParser();
 		

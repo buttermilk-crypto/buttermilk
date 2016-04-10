@@ -3,6 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
 
     <groupId>com.cryptoregistry</groupId>
     <artifactId>buttermilk</artifactId>
@@ -12,11 +18,15 @@
     <name>Buttermilk is a library for new cryptographic key and digital signature formats and dependencies for a new PKI</name>
 
     <modules>
+        <module>jneo-ntru</module>
         <module>bientropy</module>
-        <module>buttermilk-core</module>
+        <module>buttermilk-core</module> 
+        <!--  coming soon --> 
+        <!--  
+         <module>compat</module>
         <module>keyvault</module>
         <module>workbench</module>
-        <module>jneo-ntru</module>
+        -->
     </modules>
 
     <build>
@@ -63,8 +73,7 @@
 	
 	<dependency>
 	<groupId>org.bouncycastle</groupId>
-	<!--  includes NTRU code which we don't use -->
-	<!--  	<artifactId>bcprov-ext-jdk15on</artifactId> -->
+	<!--  lightweight api would work here! bcprov is only really needed for the compat package -->
 	<artifactId>bcprov-jdk15on</artifactId>
 	<version>${bc.version}</version>
 	</dependency>
@@ -75,9 +84,11 @@
     <properties>
             <junit.version>4.8.2</junit.version>
             <iharder.version>2.3.8</iharder.version>
-            <jackson.version>2.5.3</jackson.version>
+            <jackson.version>2.7.3</jackson.version>
             <bc.version>1.54</bc.version>
             <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+            	<!--  needed to get my inadequate comments to parse in Java 1.8 javadoc -->
+			<additionalparam>-Xdoclint:none</additionalparam>
     </properties>
     
 </project>

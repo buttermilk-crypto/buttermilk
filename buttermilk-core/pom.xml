@@ -13,14 +13,11 @@
 
 	<dependencies>
 		<!-- mostly moved to parent -->
-
 		<dependency>
 			<groupId>com.cryptoregistry</groupId>
 			<artifactId>jneo-ntru</artifactId>
 			<version>1.0.0</version>
 		</dependency>
-
-
 	</dependencies>
 
 	<build>
@@ -58,12 +55,20 @@
 				</executions>
 			</plugin>
 
-
-
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-gpg-plugin</artifactId> 
-				<version>1.4</version> <executions> <execution> <id>sign-artifacts</id> <phase>verify</phase> 
-				<goals> <goal>sign</goal> </goals> </execution> </executions> </plugin> -->
-
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
@@ -73,7 +78,6 @@
 					<nohelp>true</nohelp>
 				</configuration>
 			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -91,6 +95,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			
 		</plugins>
 	</build>
 
@@ -120,18 +125,20 @@
 			<email>dave@cryptoregistry.com</email>
 		</developer>
 	</developers>
-	
+
 	<issueManagement>
 		<url>https://github.com/buttermilk-crypto/issues</url>
 		<system>GitHub Issues</system>
 	</issueManagement>
-	
+
 	<ciManagement>
 		<system>None</system>
 	</ciManagement>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+			<!--  needed to get my inadequate comments to parse in Java 1.8 javadoc -->
+		<additionalparam>-Xdoclint:none</additionalparam>
 	</properties>
 
 </project>

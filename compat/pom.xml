@@ -22,7 +22,7 @@
 		<dependency>
 			<groupId>com.cryptoregistry</groupId>
 			<artifactId>buttermilk-core</artifactId>
-			<version>LATEST</version>
+			<version>1.0.0</version>
 		</dependency>
 
 	</dependencies>
