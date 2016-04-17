@@ -12,5 +12,5 @@ package com.cryptoregistry;
  *
  */
 public enum SignatureAlgorithm {
-	DSA, ECDSA, ECKCDSA, RSA;
+	DSA, ECDSA, ECKCDSA, RSA, Rainbow;
 }

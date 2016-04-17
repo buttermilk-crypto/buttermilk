@@ -12,24 +12,24 @@ package com.cryptoregistry;
  *
  */
 public enum KeyGenerationAlgorithm {
-	Symmetric('S'), 
-	Curve25519('C'), 
-	EC('E'), 
-	RSA('R'), 
-	DSA('D'), 
-	JNEO('N');
-	
-	public final char code;
+	Symmetric, 
+	Curve25519, 
+	EC, 
+	RSA, 
+	DSA, 
+	JNEO,
+	Rainbow;
 
-	private KeyGenerationAlgorithm(char code) {
-		this.code = code;
+	private KeyGenerationAlgorithm() {
+		
 	}
 	
 	public static KeyGenerationAlgorithm [] usableForSignature(){
-		KeyGenerationAlgorithm [] a = new KeyGenerationAlgorithm[3];
+		KeyGenerationAlgorithm [] a = new KeyGenerationAlgorithm[4];
 		a[0]=Curve25519;
 		a[1]=EC;
 		a[2]=RSA;
+		a[3]=Rainbow;
 		return a;
 	}
 	

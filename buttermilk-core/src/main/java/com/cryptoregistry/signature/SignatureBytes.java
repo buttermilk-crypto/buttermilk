@@ -8,7 +8,7 @@ package com.cryptoregistry.signature;
 /**
  * Currently all the supported signature algorithms have either one or two parts as their output, 
  * each of which can be represented by a byte array. This interface is implemented by classes
- * for representation of all supported signature results
+ * for representation of all the supported signature results
  * 
  * @author Dave
  *
