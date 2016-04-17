@@ -1,6 +1,5 @@
 package com.cryptoregistry.rainbow;
 
-import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.concurrent.locks.ReentrantLock;
@@ -52,7 +51,7 @@ public class CryptoFactory {
 		AsymmetricCipherKeyPair pair = rainbowKeyGen.generateKeyPair();
 		RainbowPrivateKeyParameters privKey = (RainbowPrivateKeyParameters) pair.getPrivate();
 		RainbowPublicKeyParameters pubKey = (RainbowPublicKeyParameters) pair.getPublic();
-		return new RainbowKeyContents(pubKey,privKey);
+		return new RainbowKeyContents(RainbowKeyMetadata.createUnsecured(), pubKey,privKey);
 		}finally{
 			lock.unlock();
 		}
@@ -80,7 +79,12 @@ public class CryptoFactory {
 	}
 	
 	public boolean verify(RainbowCryptoSignature sig, RainbowKeyForPublication verifierKey, byte [] msgDigest){
-		
-		return false;
+		DigestingMessageSigner rainbowSigner = new DigestingMessageSigner(
+				new RainbowSigner(), new SHA224Digest()
+		);
+
+		rainbowSigner.init(false, verifierKey.getPublicKey());
+		rainbowSigner.update(msgDigest, 0, msgDigest.length);
+		return rainbowSigner.verifySignature(sig.signature.b1());
 	}
 }

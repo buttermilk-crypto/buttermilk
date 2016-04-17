@@ -38,13 +38,13 @@ public class RainbowKeyForPublication implements CryptoKey, Verifier {
 		this.meta = meta;
 	}
 	
-	RainbowKeyForPublication(RainbowPublicKeyParameters pubKey){
+	RainbowKeyForPublication(RainbowKeyMetadata meta, RainbowPublicKeyParameters pubKey){
 		super();
 		this.docLength = pubKey.getDocLength();
 		this.coeffQuadratic = new Coefficient2D(pubKey.getCoeffQuadratic());
 		this.coeffSingular = new Coefficient2D(pubKey.getCoeffSingular());
 		this.coeffScalar = new Coefficient1D(pubKey.getCoeffScalar());
-		this.meta = RainbowKeyMetadata.createForPublication();
+		this.meta = meta;
 	}
 	
 	public RainbowPublicKeyParameters getPublicKey() {
@@ -67,7 +67,8 @@ public class RainbowKeyForPublication implements CryptoKey, Verifier {
 
 	@Override
 	public CryptoKey keyForPublication() {
-		return new RainbowKeyForPublication(meta,docLength,
+		return new RainbowKeyForPublication(meta.cloneForPublication(),
+				docLength,
 			coeffQuadratic, coeffSingular, coeffScalar);
 	}
 	

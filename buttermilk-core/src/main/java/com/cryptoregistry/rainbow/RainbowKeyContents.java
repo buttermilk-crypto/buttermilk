@@ -2,7 +2,6 @@ package com.cryptoregistry.rainbow;
 
 import java.util.List;
 
-import org.bouncycastle.pqc.crypto.rainbow.Layer;
 import org.bouncycastle.pqc.crypto.rainbow.RainbowPrivateKeyParameters;
 import org.bouncycastle.pqc.crypto.rainbow.RainbowPublicKeyParameters;
 
@@ -12,12 +11,12 @@ import com.cryptoregistry.pbe.PBEParams;
 
 public class RainbowKeyContents extends RainbowKeyForPublication implements Signer {
 
-	final Coefficient2D A1inv;
-	final Coefficient1D b1;
-	final Coefficient2D A2inv;
-	final Coefficient1D b2;
-	final  int[] vi;
-	final List<RainbowLayer> layers;
+	public final Coefficient2D A1inv;
+	public final Coefficient1D b1;
+	public final Coefficient2D A2inv;
+	public final Coefficient1D b2;
+	public final  int[] vi;
+	public final List<RainbowLayer> layers;
 
 	public RainbowKeyContents(Coefficient2D A1inv, Coefficient1D b1,
 			Coefficient2D A2inv, Coefficient1D b2, int[] vi,
@@ -50,8 +49,8 @@ public class RainbowKeyContents extends RainbowKeyForPublication implements Sign
 	 * @param pubKey
 	 * @param privKey
 	 */
-	RainbowKeyContents(RainbowPublicKeyParameters pubKey, RainbowPrivateKeyParameters privKey){
-		super(pubKey);	
+	RainbowKeyContents(RainbowKeyMetadata meta, RainbowPublicKeyParameters pubKey, RainbowPrivateKeyParameters privKey){
+		super(meta, pubKey);	
 		this.A1inv= new Coefficient2D(privKey.getInvA1());
 		this.b1= new Coefficient1D(privKey.getB1());
 		this.A2inv= new Coefficient2D(privKey.getInvA2());

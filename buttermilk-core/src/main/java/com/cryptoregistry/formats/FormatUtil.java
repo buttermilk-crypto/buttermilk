@@ -21,11 +21,7 @@ import net.iharder.Base64;
 
 public class FormatUtil {
 	
-	//private static ReentrantLock lock0 = new ReentrantLock();
 	private static ReentrantLock lock1 = new ReentrantLock();
-	private static ReentrantLock lock2 = new ReentrantLock();
-	private static ReentrantLock lock3 = new ReentrantLock();
-	private static ReentrantLock lock4 = new ReentrantLock();
 	
 	public static String wrap(EncodingHint enc, BigInteger bi) {
 		
@@ -72,7 +68,7 @@ public class FormatUtil {
 		
 		if(s == null) return null;
 		
-			lock2.lock();
+			lock1.lock();
 			try {
 				
 				switch (enc) {
@@ -105,7 +101,7 @@ public class FormatUtil {
 				}
 			
 		}finally{
-			lock2.unlock();
+			lock1.unlock();
 		}
 	}
 	
@@ -117,7 +113,7 @@ public class FormatUtil {
 	 * @return
 	 */
 	public static String serializeECPoint(ECPoint p, EncodingHint enc){
-		lock3.lock();
+		lock1.lock();
 		try {
 			BigInteger biX = new BigInteger(p.getAffineXCoord().toString(),16);
 			BigInteger biY  = new BigInteger(p.getAffineYCoord().toString(),16);
@@ -127,7 +123,7 @@ public class FormatUtil {
 			buf.append(wrap(enc,biY));
 			return buf.toString();
 		}finally{
-			lock3.unlock();
+			lock1.unlock();
 		}
 	}
 	
@@ -139,7 +135,7 @@ public class FormatUtil {
 	 * @return
 	 */
 	public static ECPoint parseECPoint(String curveName, EncodingHint enc, String in){
-		lock4.lock();
+		lock1.lock();
 		try {
 			String [] xy = in.split("\\,");
 			BigInteger biX = unwrap(enc,xy[0]);
@@ -147,7 +143,7 @@ public class FormatUtil {
 			ECCurve curve = CurveFactory.getCurveForName(curveName).getCurve();
 			return curve.createPoint(biX, biY);
 		}finally{
-			lock4.unlock();
+			lock1.unlock();
 		}
 	}
 	
@@ -160,14 +156,14 @@ public class FormatUtil {
 	 * @return
 	 */
 	public static ECPoint parseECPoint(ECCurve curve, EncodingHint enc, String in){
-		lock4.lock();
+		lock1.lock();
 		try {
 			String [] xy = in.split("\\,");
 			BigInteger biX = unwrap(enc,xy[0]);
 			BigInteger biY = unwrap(enc,xy[1]);
 			return curve.createPoint(biX, biY);
 		}finally{
-			lock4.unlock();
+			lock1.unlock();
 		}
 	}
 

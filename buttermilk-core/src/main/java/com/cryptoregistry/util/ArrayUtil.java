@@ -149,7 +149,7 @@ public class ArrayUtil {
 						}
 					}
 				}
-				return Base64.encodeBytes(orig.toByteArray(), Base64.URL_SAFE);
+				return Base64.encodeBytes(orig.toByteArray(), Base64.URL_SAFE|Base64.GZIP);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
@@ -164,7 +164,7 @@ public class ArrayUtil {
 			short[][][] primary = null;
 		
 			try {
-				byte[] inbytes = Base64.decode(encoded, Base64.URL_SAFE);
+				byte[] inbytes = Base64.decode(encoded, Base64.URL_SAFE|Base64.GZIP);
 				ByteArrayInputStream in = new ByteArrayInputStream(inbytes);
 				DataInputStream instream = new DataInputStream(in);
 				int firstLevel = instream.readShort();
@@ -210,7 +210,7 @@ public class ArrayUtil {
 						out.writeShort(inner[j]);
 					}
 				}
-				return Base64.encodeBytes(orig.toByteArray(), Base64.URL_SAFE);
+				return Base64.encodeBytes(orig.toByteArray(), Base64.URL_SAFE|Base64.GZIP);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
@@ -224,7 +224,7 @@ public class ArrayUtil {
 		try {
 			short[][] primary = null;
 			try {
-				byte[] inbytes = Base64.decode(encoded, Base64.URL_SAFE);
+				byte[] inbytes = Base64.decode(encoded, Base64.URL_SAFE|Base64.GZIP);
 				ByteArrayInputStream in = new ByteArrayInputStream(inbytes);
 				DataInputStream instream = new DataInputStream(in);
 				int firstLevel = instream.readShort();
@@ -265,7 +265,7 @@ public class ArrayUtil {
 				for (int i = 0; i < outerSize; i++) {
 						out.writeShort(array[i]);
 				}
-				return Base64.encodeBytes(orig.toByteArray(), Base64.URL_SAFE);
+				return Base64.encodeBytes(orig.toByteArray(), Base64.URL_SAFE|Base64.GZIP);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
@@ -279,7 +279,7 @@ public class ArrayUtil {
 		try {
 			short[] primary = null;
 			try {
-				byte[] inbytes = Base64.decode(encoded, Base64.URL_SAFE);
+				byte[] inbytes = Base64.decode(encoded, Base64.URL_SAFE|Base64.GZIP);
 				ByteArrayInputStream in = new ByteArrayInputStream(inbytes);
 				DataInputStream instream = new DataInputStream(in);
 				int firstLevel = instream.readShort();

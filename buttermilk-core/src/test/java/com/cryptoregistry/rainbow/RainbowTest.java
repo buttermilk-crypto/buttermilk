@@ -7,7 +7,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
@@ -15,6 +17,7 @@ import net.iharder.Base64;
 
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.digests.SHA224Digest;
+import org.bouncycastle.crypto.digests.SHA256Digest;
 import org.bouncycastle.crypto.params.ParametersWithRandom;
 import org.bouncycastle.crypto.prng.FixedSecureRandom;
 import org.bouncycastle.pqc.crypto.DigestingMessageSigner;
@@ -29,6 +32,8 @@ import org.bouncycastle.util.encoders.Hex;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.cryptoregistry.formats.JSONFormatter;
+import com.cryptoregistry.signature.RainbowCryptoSignature;
 import com.cryptoregistry.util.ArrayUtil;
 
 public class RainbowTest {
@@ -178,7 +183,27 @@ public class RainbowTest {
 	@Test
 	public void test1() {
 		RainbowKeyContents contents = CryptoFactory.INSTANCE.generateKeys();
-		
+		String msg = "hello rainbow!";
+		byte [] bytes = msg.getBytes(StandardCharsets.UTF_8);
+		SHA256Digest d = new SHA256Digest();
+		d.update(bytes, 0, bytes.length);
+		byte [] result = new byte[d.getDigestSize()];
+		d.doFinal(result, 0);
+		RainbowCryptoSignature sig = CryptoFactory.INSTANCE.sign("Chinese Knees", contents, result);
+		if(!CryptoFactory.INSTANCE.verify(sig, (RainbowKeyForPublication)contents.keyForPublication(), result)){
+			Assert.fail();
+		}
+	}
+	
+	@Test
+	public void test2() {
+		RainbowKeyContents contents = CryptoFactory.INSTANCE.generateKeys();
+		JSONFormatter formatter = new JSONFormatter("Chinese Knees", "dave@cryptoregistry.com");
+		formatter.add(contents);
+		formatter.add(contents.keyForPublication());
+		StringWriter w = new StringWriter();
+		formatter.format(w);
+		System.err.println(w.toString().length());
 	}
 
 }

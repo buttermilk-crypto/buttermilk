@@ -7,12 +7,12 @@ import org.bouncycastle.pqc.crypto.rainbow.Layer;
 
 public class RainbowLayer {
 
-	int vi;
-	int viNext; 
-	Coefficient3D coeffAlpha;
-	Coefficient3D coeffBeta; 
-	Coefficient2D coeffGamma;
-	Coefficient1D coeffEta;
+	public final int vi;
+	public final int viNext; 
+	public final Coefficient3D coeffAlpha;
+	public final Coefficient3D coeffBeta; 
+	public final Coefficient2D coeffGamma;
+	public final Coefficient1D coeffEta;
 	
 	public RainbowLayer(int vi, int viNext, Coefficient3D coeffAlpha,
 			Coefficient3D coeffBeta, Coefficient2D coeffGamma,
@@ -26,8 +26,8 @@ public class RainbowLayer {
 		this.coeffEta = coeffEta;
 	}
 	
-	public static List<RainbowLayer> convert(Layer[]layers){
-		List<RainbowLayer> list = new ArrayList<RainbowLayer>();
+	public static List<RainbowLayer> convert(final Layer[]layers){
+		final List<RainbowLayer> list = new ArrayList<RainbowLayer>();
 		for(Layer l: layers){
 			RainbowLayer rl = new RainbowLayer(
 					l.getVi(),
@@ -42,8 +42,8 @@ public class RainbowLayer {
 		return list;
 	}
 	
-	public static Layer [] convert(List<RainbowLayer> layers){
-		Layer [] array = new Layer[layers.size()];
+	public static Layer [] convert(final List<RainbowLayer> layers){
+		final Layer [] array = new Layer[layers.size()];
 		int i = 0;
 		for(RainbowLayer l: layers){
 			Layer layer = new Layer(
@@ -58,4 +58,5 @@ public class RainbowLayer {
 		}
 		return array;
 	}
+	
 }
