@@ -53,7 +53,7 @@ public class KeyHolder {
 				
 				break;
 			}
-			case JNEO: {
+			case JNEO_NTRU: {
 				sKeys = null;
 				dsaKeys = null;
 				c2Keys = null;

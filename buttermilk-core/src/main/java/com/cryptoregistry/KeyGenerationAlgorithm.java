@@ -17,7 +17,7 @@ public enum KeyGenerationAlgorithm {
 	EC, 
 	RSA, 
 	DSA, 
-	JNEO,
+	JNEO_NTRU,
 	Rainbow;
 
 	private KeyGenerationAlgorithm() {

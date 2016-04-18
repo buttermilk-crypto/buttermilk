@@ -78,7 +78,7 @@ class JNEOKeyFormatter {
 		}
 
 		g.writeObjectFieldStart(jneoKeys.getMetadata().getHandle().toString()+"-S");
-		g.writeStringField("KeyData.Type", "JNEO");
+		g.writeStringField("KeyData.Type", "JNEO_NTRU");
 		g.writeStringField("KeyData.PBEAlgorithm", pbeParams.getAlg().toString());
 		
 //		g.writeStringField("KeyData.EncryptedData", result.base64Enc);
@@ -116,7 +116,7 @@ class JNEOKeyFormatter {
 			throws JsonGenerationException, IOException {
 
 		g.writeObjectFieldStart(jneoKeys.getMetadata().getHandle().toString()+"-U");
-		g.writeStringField("KeyAlgorithm", "JNEO");
+		g.writeStringField("KeyAlgorithm", "JNEO_NTRU");
 		g.writeStringField("CreatedOn", TimeUtil.format(jneoKeys.getMetadata().getCreatedOn()));
 		g.writeStringField("Encoding", enc.toString());
 		g.writeStringField("ParameterSet", jneoKeys.getNamedParameterSet().name());
@@ -145,7 +145,7 @@ class JNEOKeyFormatter {
 			Writer writer) throws JsonGenerationException, IOException {
 
 		g.writeObjectFieldStart(jneoKeys.getMetadata().getHandle().toString()+"-P");
-		g.writeStringField("KeyAlgorithm", "JNEO");
+		g.writeStringField("KeyAlgorithm", "JNEO_NTRU");
 		g.writeStringField("CreatedOn", TimeUtil.format(jneoKeys.getMetadata().getCreatedOn()));
 		g.writeStringField("Encoding", enc.toString());
 		g.writeStringField("ParameterSet", jneoKeys.getNamedParameterSet().name());
@@ -171,7 +171,7 @@ class JNEOKeyFormatter {
 			g.useDefaultPrettyPrinter();
 			g.writeStartObject();
 			g.writeObjectFieldStart(jneoKeys.getMetadata().getHandle().toString()+"-U");
-			g.writeStringField("KeyAlgorithm", "JNEO");
+			g.writeStringField("KeyAlgorithm", "JNEO_NTRU");
 			g.writeStringField("CreatedOn", TimeUtil.format(jneoKeys.getMetadata().getCreatedOn()));
 			g.writeStringField("Encoding", enc.toString());
 			g.writeStringField("ParameterSet", jneoKeys.getNamedParameterSet().name());

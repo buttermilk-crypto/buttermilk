@@ -167,7 +167,7 @@ public class CryptoKeyWrapperImpl implements CryptoKeyWrapper {
 						wrapped = reader.read();
 						break;
 					}
-					case JNEO: {
+					case JNEO_NTRU: {
 						JNEOKeyFormatReader reader = new JNEOKeyFormatReader(map);
 						wrapped = reader.read();
 						break;

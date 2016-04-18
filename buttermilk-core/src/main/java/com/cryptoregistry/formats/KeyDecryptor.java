@@ -95,7 +95,7 @@ public class KeyDecryptor {
 					ECKeyFormatReader reader = new ECKeyFormatReader(map);
 					return reader.read();
 				}
-				case JNEO:{
+				case JNEO_NTRU:{
 					JNEOKeyFormatReader reader = new JNEOKeyFormatReader(map);
 					return reader.read();
 				}

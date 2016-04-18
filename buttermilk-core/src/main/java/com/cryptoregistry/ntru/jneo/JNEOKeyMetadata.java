@@ -72,7 +72,7 @@ public class JNEOKeyMetadata implements CryptoKeyMetadata {
 
 	@Override
 	public KeyGenerationAlgorithm getKeyAlgorithm() {
-		return KeyGenerationAlgorithm.JNEO;
+		return KeyGenerationAlgorithm.JNEO_NTRU;
 	}
 
 	@Override

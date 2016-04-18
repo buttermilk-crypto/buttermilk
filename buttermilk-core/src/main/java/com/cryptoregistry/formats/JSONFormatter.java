@@ -260,7 +260,7 @@ public class JSONFormatter {
 							formatter.formatKeys(g, writer);
 							break;
 						}
-						case JNEO: {
+						case JNEO_NTRU: {
 							JNEOKeyForPublication contents = (JNEOKeyForPublication)key;
 							JNEOKeyFormatter formatter = new JNEOKeyFormatter(contents);
 							formatter.formatKeys(g, writer);

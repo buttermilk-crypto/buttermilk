@@ -214,7 +214,7 @@ public class JSONReader {
 								list.add(new CryptoKeyWrapperImpl(distinguishedKey,p));
 								break;
 							}
-							case JNEO: {
+							case JNEO_NTRU: {
 								meta = new JNEOKeyMetadata(handle,createdOn,format);
 								JNEONamedParameters param = JNEONamedParameters.valueOf((String)keyData.get("ParameterSet"));
 								FullPolynomialDecoder decoderH = new FullPolynomialDecoder((String)keyData.get("h"));
@@ -332,7 +332,7 @@ public class JSONReader {
 								}
 								break;
 							}
-							case JNEO: {
+							case JNEO_NTRU: {
 								meta = new JNEOKeyMetadata(handle,createdOn,format);
 								JNEONamedParameters param = JNEONamedParameters.valueOf((String)keyData.get("ParameterSet"));
 								FullPolynomialDecoder decoderH = new FullPolynomialDecoder((String)keyData.get("h"));
